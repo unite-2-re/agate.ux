@@ -1,5 +1,7 @@
 # Concepts
 
+> Concepts for 2025 "2REmembrance" generation.
+
 1. Rotate by orientation index: `calc(var(--orient, 0) * 100grad)`
 
 ## How is works?
