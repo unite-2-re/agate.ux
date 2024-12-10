@@ -180,21 +180,6 @@ export const html = (source, type: DOMParserSupportedType = 'text/html') => {
 };
 
 //
-export const detectMobile = () => {
-    //
-    const toMatch = [
-        /Android/i,
-        /webOS/i,
-        /iPhone/i,
-        /iPad/i,
-        /iPod/i,
-        /BlackBerry/i,
-        /Windows Phone/i
-    ];
-    return toMatch.some(navigator.userAgent.match.bind(navigator.userAgent)) && (navigator.maxTouchPoints || 'ontouchstart' in document.documentElement) && window.matchMedia("(pointer: coarse)").matches;
-};
-
-//
 export const MOC = (element: HTMLElement | null, selector: string): boolean => {
     return (!!element?.matches?.(selector) || !!element?.closest?.(selector));
 };

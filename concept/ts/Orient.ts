@@ -62,13 +62,6 @@ const pts = Object.assign({}, ptsLandscape);
 const currentOrient = Object.assign({}, orient0deg);
 
 //
-const isMobile = ()=>{
-    const f1 = matchMedia("(hover: none) and (pointer: coarse) and (display-mode: fullscreen)").matches;
-    const f2 = 'ontouchstart' in window || 'onmsgesturechange' in window;
-    return f1 && f2;
-}
-
-//
 export const updateOrientation = (_) => {
     switch (getCorrectOrientation()) {
         case "portrait-primary":
@@ -142,25 +135,44 @@ export const updateOrientation = (_) => {
     }
 };
 
+
+
 //
-export const viewportHandler = (event?: any) => {
-    const layoutViewport = document.body;
-    const viewport = event?.target || visualViewport;
+export const orientationNumberMap = {
+    "portrait-primary": 0,
+    "landscape-primary": 1,
+    "portrait-secondary": 2,
+    "landscape-secondary": 3
+}
+
+//
+export const convertPointerPxToOrientPx = ($pointerPx: [number, number], gridArgs: GridArgsType): [number, number] => {
+    const orientation = getCorrectOrientation();
+    const boxInPx = [...gridArgs.size];
+    const pointerPx: [number, number] = [...$pointerPx];
+    const orientIndex = orientationNumberMap[orientation] || 0;
 
     //
-    document.documentElement.style.setProperty(
-        "--visual-width",
-        (viewport?.width || 1) + "px",
-        ""
-    );
+    if (orientIndex%2) { boxInPx.reverse(); pointerPx.reverse(); }
+    return [
+        ((orientIndex==0 || orientIndex==3) ? pointerPx[0] : boxInPx[0] - pointerPx[0]) || 0,
+        ((orientIndex==0 || orientIndex==1) ? pointerPx[1] : boxInPx[1] - pointerPx[1]) || 0
+    ];
+}
+
+//
+export const convertOrientPxToPointerPx = ($orientPx: [number, number], gridArgs: GridArgsType): [number, number] => {
+    const orientation = getCorrectOrientation();
+    const boxInPx = [...gridArgs.size];
+    const orientPx: [number, number] = [...$orientPx];
+    const orientIndex = orientationNumberMap[orientation] || 0;
 
     //
-    const vvh = viewport?.height || 1;
-    const dff = vvh - (layoutViewport.getBoundingClientRect().height || window.innerHeight || 1);
-    const cvh = Math.min(Math.max(vvh - dff, viewport?.offsetTop || 0) - (viewport?.offsetTop || 0), (screen.availHeight || screen.height || 1));
-    document.documentElement.style.setProperty(
-        "--visual-height",
-        cvh + "px",
-        ""
-    );
-};
+    if (orientIndex%2) { boxInPx.reverse(); }
+    const pointerPx: [number, number] = [
+        ((orientIndex==0 || orientIndex==3) ? orientPx[0] : boxInPx[0] - orientPx[0]) || 0,
+        ((orientIndex==0 || orientIndex==1) ? orientPx[1] : boxInPx[1] - orientPx[1]) || 0
+    ];
+    if (orientIndex%2) { pointerPx.reverse(); }
+    return pointerPx;
+}
