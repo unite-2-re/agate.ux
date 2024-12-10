@@ -78,3 +78,22 @@ Planned to made those CSS properties.
 - In insets or sizing, `self-size-x` and `self-size-y` is offset parent size.
 - Transforms always uses client-space if not transformed before.
 - Sizes and insets may be swapped in `inline` and `block` units.
+
+## Potential implementation
+
+May have those types.
+
+**By layout:**
+
+- Fixed/absolute position based (insets)
+- CSS Houdini (layout work-lets)
+
+**By orientation:**
+
+- Inline/Block with `writing-mode` and `direction`.
+- Transform-based (aka. `rotate`).
+- In some cases may be mixed or combined.
+
+## New position concepts
+
+Currently we using more stable `inset` position for semi-static, and `translate` for dynamics, such as dragging or animations.
