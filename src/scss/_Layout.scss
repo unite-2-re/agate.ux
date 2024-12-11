@@ -3,56 +3,56 @@
 
     // reversion condition
     @supports (opacity: sign(0.5)) {
-        --im-rev-cond-x: #{slg.lor(slg.eq(var(--orient, 0), 0), slg.eq(var(--orient, 0), 1))};
-        --im-rev-cond-y: #{slg.lor(slg.eq(var(--orient, 0), 0), slg.eq(var(--orient, 0), 3))};
+        --in-rev-cond-x: #{slg.lor(slg.eq(var(--orient, 0), 0), slg.eq(var(--orient, 0), 1))};
+        --in-rev-cond-y: #{slg.lor(slg.eq(var(--orient, 0), 0), slg.eq(var(--orient, 0), 3))};
     }
 
     // reversion condition (alt)
     @supports not (opacity: sign(0.5)){
-        --im-rev-cond-x: #{flg.lor(flg.eq(var(--orient, 0), 0), flg.eq(var(--orient, 0), 1))};
-        --im-rev-cond-y: #{flg.lor(flg.eq(var(--orient, 0), 0), flg.eq(var(--orient, 0), 3))};
+        --in-rev-cond-x: #{flg.lor(flg.eq(var(--orient, 0), 0), flg.eq(var(--orient, 0), 1))};
+        --in-rev-cond-y: #{flg.lor(flg.eq(var(--orient, 0), 0), flg.eq(var(--orient, 0), 3))};
     }
 
     //
     & { // compute swap condition
-        --im-swap-cond: rem(var(--orient, 0), 2); // for coordinate swap condition
+        --in-swap-cond: rem(var(--orient, 0), 2); // for coordinate swap condition
     }
 
     //
     & { // component swap condition
-        --im-swap-x: #{slg.mix(var(--os-inset-y, 0px), var(--os-inset-x, 0px), var(--im-swap-cond, 0))};
-        --im-swap-y: #{slg.mix(var(--os-inset-x, 0px), var(--os-inset-y, 0px), var(--im-swap-cond, 0))};
+        --in-swap-x: #{slg.mix(var(--os-inset-y, 0px), var(--os-inset-x, 0px), var(--in-swap-cond, 0))};
+        --in-swap-y: #{slg.mix(var(--os-inset-x, 0px), var(--os-inset-y, 0px), var(--in-swap-cond, 0))};
 
         //
-        --im-drag-x: #{slg.mix(var(--os-drag-y, 0px), var(--os-drag-x, 0px), var(--im-swap-cond, 0))};
-        --im-drag-y: #{slg.mix(var(--os-drag-x, 0px), var(--os-drag-y, 0px), var(--im-swap-cond, 0))};
+        --in-drag-x: #{slg.mix(var(--os-drag-y, 0px), var(--os-drag-x, 0px), var(--in-swap-cond, 0))};
+        --in-drag-y: #{slg.mix(var(--os-drag-x, 0px), var(--os-drag-y, 0px), var(--in-swap-cond, 0))};
     }
 
     // size swapping
     & { //
-        --cs-size-x: #{slg.mix(var(--os-size-y, 0px), var(--os-size-x, 0px), var(--im-swap-cond, 0))};
-        --cs-size-y: #{slg.mix(var(--os-size-x, 0px), var(--os-size-y, 0px), var(--im-swap-cond, 0))};
+        --cs-size-x: #{slg.mix(var(--os-size-y, 0px), var(--os-size-x, 0px), var(--in-swap-cond, 0))};
+        --cs-size-y: #{slg.mix(var(--os-size-x, 0px), var(--os-size-y, 0px), var(--in-swap-cond, 0))};
 
         //
-        --cs-self-size-x: #{slg.mix(var(--os-self-size-y, 100cqb), var(--os-self-size-x, 100cqi), var(--im-swap-cond, 0))};
-        --cs-self-size-y: #{slg.mix(var(--os-self-size-x, 100cqi), var(--os-self-size-y, 100cqb), var(--im-swap-cond, 0))};
+        --cs-self-size-x: #{slg.mix(var(--os-self-size-y, 100cqb), var(--os-self-size-x, 100cqi), var(--in-swap-cond, 0))};
+        --cs-self-size-y: #{slg.mix(var(--os-self-size-x, 100cqi), var(--os-self-size-y, 100cqb), var(--in-swap-cond, 0))};
     }
 
     // inset position with reverse
     & {
-        --cs-inset-x: #{slg.mix(var(--im-swap-x, 0px), calc(var(--cs-size-x, 100cqi) - var(--im-swap-x, 0px)), var(--im-rev-cond-x, 0))};
-        --cs-inset-y: #{slg.mix(var(--im-swap-y, 0px), calc(var(--cs-size-y, 100cqb) - var(--im-swap-y, 0px)), var(--im-rev-cond-y, 0))};
+        --cs-inset-x: #{slg.mix(var(--in-swap-x, 0px), calc(var(--cs-size-x, 100cqi) - var(--in-swap-x, 0px)), var(--in-rev-cond-x, 0))};
+        --cs-inset-y: #{slg.mix(var(--in-swap-y, 0px), calc(var(--cs-size-y, 100cqb) - var(--in-swap-y, 0px)), var(--in-rev-cond-y, 0))};
     }
 
     // drag offset with reversion
     & {
         // compute as negate coefficient
-        --im-v-swap-x: calc(var(--im-rev-cond-x, 1) * 2 - 1);
-        --im-v-swap-y: calc(var(--im-rev-cond-y, 1) * 2 - 1);
+        --in-v-swap-x: calc(var(--in-rev-cond-x, 1) * 2 - 1);
+        --in-v-swap-y: calc(var(--in-rev-cond-y, 1) * 2 - 1);
 
         //
-        --cs-drag-x: calc(var(--im-drag-x, 0px) * var(--im-v-swap-x, 1));
-        --cs-drag-y: calc(var(--im-drag-y, 0px) * var(--im-v-swap-y, 1));
+        --cs-drag-x: calc(var(--in-drag-x, 0px) * var(--in-v-swap-x, 1));
+        --cs-drag-y: calc(var(--in-drag-y, 0px) * var(--in-v-swap-y, 1));
     }
 
 }
