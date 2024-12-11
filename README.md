@@ -29,11 +29,9 @@
 
 > Concepts for 2025 "2REmembrance" generation.
 
-1. Rotate by orientation index:
-    - `calc(var(--orient, 0) * 100grad)`
-    - `calc(var(--orient, 0) * 0.25turn)`
-    - `calc(var(--orient, 0) * 90deg)`
-    - `<in rad will bit more complex>`
+1. Rotate by orientation index: `calc(var(--orient, 0) * <A>)`, where `<A>` is: `100grad`, `0.25turn` or `90deg`...
+2. Centering element relative by-self: `translate(-50%, -50%)`, where `transform-origin: 0px 0px;`.
+3. Combined centered element with drag: `translate(calc(var(--drag-x, 0px) - 50%), calc(var(--drag-y, 0px) - 50%))`.
 
 ### How is works?
 
@@ -74,42 +72,27 @@ Planned to made those CSS properties.
 
 **Oriented-Space:**
 
-- `--os-inset-x`
-- `--os-inset-y`
-- `--os-drag-x`
-- `--os-drag-y`
-- `--os-size-x`
-- `--os-size-y`
-- `--os-self-size-x`
-- `--os-self-size-y`
-- `--os-offset-x` (relative of offsetParent)
-- `--os-offset-y` (relative of offsetParent)
+- `--os-inset-x`, `--os-inset-y`
+- `--os-drag-x`, `--os-drag-y`
+- `--os-size-x`, `--os-size-y`
+- `--os-self-size-x`, `--os-self-size-y`
+- `--os-offset-x`, `--os-offset-y` (relative of offsetParent)
 
 **Client-Space:**
 
-- `--cs-inset-x`
-- `--cs-inset-y`
-- `--cs-drag-x`
-- `--cs-drag-y`
-- `--cs-size-x`
-- `--cs-size-y`
-- `--cs-self-size-x`
-- `--cs-self-size-y`
-- `--cs-offset-x` (relative of offsetParent)
-- `--cs-offset-y` (relative of offsetParent)
+- `--cs-inset-x`, `--cs-inset-y`
+- `--cs-drag-x`, `--cs-drag-y`
+- `--cs-size-x`, `--cs-size-y`
+- `--cs-self-size-x`, `--cs-self-size-y`
+- `--cs-offset-x`, `--cs-offset-y` (relative of offsetParent)
 
 **Implementation-Dependent:**
 
-- `--im-inset-x`
-- `--im-inset-y`
-- `--im-drag-x`
-- `--im-drag-y`
-- `--im-size-x`
-- `--im-size-y`
-- `--im-self-size-x`
-- `--im-self-size-y`
-- `--im-offset-x` (relative of offsetParent)
-- `--im-offset-y` (relative of offsetParent)
+- `--im-inset-x`, `--im-inset-y`
+- `--im-drag-x`, `--im-drag-y`
+- `--im-size-x`, `--im-size-y`
+- `--im-self-size-x`, `--im-self-size-y`
+- `--im-offset-x`, `--im-offset-y` (relative of offsetParent)
 
 ### Some details
 
@@ -129,8 +112,8 @@ May have those types.
 
 **By orientation:**
 
-- Inline/Block with `writing-mode` and `direction`.
-- Transform-based (aka. `rotate`).
+- `inline`/`block` with `writing-mode` and `direction`.
+- `transform`-based (aka. `rotate`).
 - In some cases may be mixed or combined.
 
 ### New policy concepts
