@@ -62,6 +62,7 @@ Will be made special version of getBoundingClientRect, clientX and clientY with 
 
 - CSS `zoom` (recommended)
 - CSS `scale` (legacy)
+- Using `rem`/`em` units
 
 ### Events
 
