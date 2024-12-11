@@ -1,6 +1,4 @@
-// conversion from virtual space to client space by orientation
-@mixin compute_from_os_to_cs {
-
+@mixin compute_os_conditions {
     // reversion condition
     @supports (opacity: sign(0.5)) {
         --in-rev-cond-x: #{slg.lor(slg.eq(var(--orient, 0), 0), slg.eq(var(--orient, 0), 1))};
@@ -16,17 +14,15 @@
     //
     & { // compute swap condition
         --in-swap-cond: rem(var(--orient, 0), 2); // for coordinate swap condition
-    }
 
-    //
-    & { // component swap condition
-        --in-swap-x: #{slg.mix(var(--os-inset-y, 0px), var(--os-inset-x, 0px), var(--in-swap-cond, 0))};
-        --in-swap-y: #{slg.mix(var(--os-inset-x, 0px), var(--os-inset-y, 0px), var(--in-swap-cond, 0))};
-
-        //
-        --in-drag-x: #{slg.mix(var(--os-drag-y, 0px), var(--os-drag-x, 0px), var(--in-swap-cond, 0))};
-        --in-drag-y: #{slg.mix(var(--os-drag-x, 0px), var(--os-drag-y, 0px), var(--in-swap-cond, 0))};
+        // compute as negate coefficient
+        --in-v-swap-x: calc(var(--in-rev-cond-x, 1) * 2 - 1);
+        --in-v-swap-y: calc(var(--in-rev-cond-y, 1) * 2 - 1);
     }
+}
+
+// conversion from virtual space to client space by orientation
+@mixin compute_from_os_to_cs {
 
     // size swapping
     & { //
@@ -38,21 +34,68 @@
         --cs-self-size-y: #{slg.mix(var(--os-self-size-x, 100cqi), var(--os-self-size-y, 100cqb), var(--in-swap-cond, 0))};
     }
 
+
+
+    //
+    & { // component swap condition
+        --in-inset-x: #{slg.mix(var(--os-inset-y, 0px), var(--os-inset-x, 0px), var(--in-swap-cond, 0))};
+        --in-inset-y: #{slg.mix(var(--os-inset-x, 0px), var(--os-inset-y, 0px), var(--in-swap-cond, 0))};
+
+        //
+        --in-drag-x: #{slg.mix(var(--os-drag-y, 0px), var(--os-drag-x, 0px), var(--in-swap-cond, 0))};
+        --in-drag-y: #{slg.mix(var(--os-drag-x, 0px), var(--os-drag-y, 0px), var(--in-swap-cond, 0))};
+    }
+
+    // as alternative, you can swap before with os-size
     // inset position with reverse
     & {
-        --cs-inset-x: #{slg.mix(var(--in-swap-x, 0px), calc(var(--cs-size-x, 100cqi) - var(--in-swap-x, 0px)), var(--in-rev-cond-x, 0))};
-        --cs-inset-y: #{slg.mix(var(--in-swap-y, 0px), calc(var(--cs-size-y, 100cqb) - var(--in-swap-y, 0px)), var(--in-rev-cond-y, 0))};
+        --cs-inset-x: #{slg.mix(var(--in-inset-x, 0px), calc(var(--cs-size-x, 100cqi) - var(--in-inset-x, 0px)), var(--in-rev-cond-x, 0))};
+        --cs-inset-y: #{slg.mix(var(--in-inset-y, 0px), calc(var(--cs-size-y, 100cqb) - var(--in-inset-y, 0px)), var(--in-rev-cond-y, 0))};
     }
 
     // drag offset with reversion
     & {
-        // compute as negate coefficient
-        --in-v-swap-x: calc(var(--in-rev-cond-x, 1) * 2 - 1);
-        --in-v-swap-y: calc(var(--in-rev-cond-y, 1) * 2 - 1);
-
-        //
         --cs-drag-x: calc(var(--in-drag-x, 0px) * var(--in-v-swap-x, 1));
         --cs-drag-y: calc(var(--in-drag-y, 0px) * var(--in-v-swap-y, 1));
+    }
+
+}
+
+
+
+// conversion from client space to virtual space by orientation
+@mixin compute_from_cs_to_os {
+
+    // size swapping
+    & { //
+        --os-size-x: #{slg.mix(var(--cs-size-y, 0px), var(--cs-size-x, 0px), var(--in-swap-cond, 0))};
+        --os-size-y: #{slg.mix(var(--cs-size-x, 0px), var(--cs-size-y, 0px), var(--in-swap-cond, 0))};
+
+        //
+        --os-self-size-x: #{slg.mix(var(--cs-self-size-y, 100cqb), var(--cs-self-size-x, 100cqi), var(--in-swap-cond, 0))};
+        --os-self-size-y: #{slg.mix(var(--cs-self-size-x, 100cqi), var(--cs-self-size-y, 100cqb), var(--in-swap-cond, 0))};
+    }
+
+
+
+    // as alternative, you can swap with os-size after
+    & { // component swap condition
+        --in-inset-x: #{slg.mix(var(--cs-inset-x, 0px), calc(var(--cs-size-x, 100cqi) - var(--cs-inset-x, 0px)), var(--in-rev-cond-x, 0))};
+        --in-inset-y: #{slg.mix(var(--cs-inset-y, 0px), calc(var(--cs-size-y, 100cqi) - var(--cs-inset-y, 0px)), var(--in-rev-cond-y, 0))};
+
+        //
+        --in-drag-x: calc(var(--cs-drag-x, 0px) * var(--in-v-swap-x, 1));
+        --in-drag-y: calc(var(--cs-drag-y, 0px) * var(--in-v-swap-y, 1));
+    }
+
+    // reverse for orientation space
+    & {
+        --os-inset-x: #{slg.mix(var(--in-inset-y, 0px), var(--in-inset-x, 0px), var(--in-swap-cond, 0))};
+        --os-inset-y: #{slg.mix(var(--in-inset-x, 0px), var(--in-inset-y, 0px), var(--in-swap-cond, 0))};
+
+        //
+        --os-drag-x: #{slg.mix(var(--in-drag-y, 0px), var(--in-drag-x, 0px), var(--in-swap-cond, 0))};
+        --os-drag-y: #{slg.mix(var(--in-drag-x, 0px), var(--in-drag-y, 0px), var(--in-swap-cond, 0))};
     }
 
 }
