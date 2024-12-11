@@ -2,13 +2,18 @@
 
 > Under consideration for Q2 or Q3 or 2025 years.
 
-Agate.UX - multi-dimensional UX/interaction library/framework.
+**Agate.UX** - multi-dimensional UX/interaction library/framework.
 
-**This is logical dedication/separation and continue from:**
+**This is logical dedication/separation and continue from (how affects):**
 
-- [DOM.ts](https://github.com/unite-2-re/dom.ts)
-- [Interact.ts](https://github.com/unite-2-re/interact.ts)
-- [Web.core](https://github.com/unite-2-re/web.core)
+- **[DOM.ts](https://github.com/unite-2-re/dom.ts)** - move some features, remove deprecated.
+- **[Interact.ts](https://github.com/unite-2-re/interact.ts)** - full rework to new reality.
+- **[Web.core](https://github.com/unite-2-re/web.core)** - simplify, exclude deprecated.
+- **[Grid.core](https://github.com/unite-2-re/grid.core)** - simplify, use one virtual orientation.
+
+**No viable of significant effects:**
+
+- **[Image.wcomp](https://github.com/unite-2-re/image.wcomp)** - due of using `<canvas>`, and has own sub-system.
 
 ## Future Features
 
@@ -52,6 +57,11 @@ Agate.UX - multi-dimensional UX/interaction library/framework.
 ### Scaling
 
 Will be made special version of getBoundingClientRect, clientX and clientY with software or virtual scaling accounting. Also, will recomputed view-ports size values.
+
+**For scaling may be used:**
+
+- CSS `zoom` (recommended)
+- CSS `scale` (legacy)
 
 ### Events
 
