@@ -37,4 +37,4 @@ export const viewportHandler = (event?: any) => {
         cvh + "px",
         ""
     );
-};
+}

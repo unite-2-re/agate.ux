@@ -1,6 +1,3 @@
-//
-import {zoomOf} from "../_Zoom";
-
 // @ts-ignore
 import styles from "./OrientBox.scss?inline&compress";
 

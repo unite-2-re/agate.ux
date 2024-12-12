@@ -27,7 +27,7 @@ export const zoomOf = (element = document.documentElement) => {
     const container = ((element.matches("ui-orientbox") ? element : null) || element.closest("ui-orientbox") || document.body) as HTMLElement;
     const computed  = container ? getComputedStyle(container) : null;
     return parseFloat(computed?.zIndex || "1") || 1;
-};
+}
 
 //
 export const changeZoom = (scale = 1) => {
@@ -71,4 +71,4 @@ export const getBoundingOrientRect = (element, orient = null)=>{
     const [right, bottom] = cvt_cs_to_os([nbx.right, nbx.top], size, or_i);
     const [width, height] = (or_i%2) ? [nbx.height, nbx.width] : [nbx.width, nbx.height];
     return { left, top, right, bottom, width, height };
-};
+}

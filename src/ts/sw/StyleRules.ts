@@ -45,13 +45,13 @@ const setStyleURL = (base: [any, any], url: string)=>{
     } else {
         base[0][base[1]] = url;
     }
-}
+};
 
 //
 const hash = async (string: string) => {
     const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(string));
     return "sha256-" + btoa(String.fromCharCode.apply(null, new Uint8Array(hashBuffer) as unknown as number[]));
-}
+};
 
 //
 const loadStyleSheet = async (inline: string, base?: [any, any], integrity?: string|Promise<string>)=>{
@@ -65,7 +65,7 @@ const loadStyleSheet = async (inline: string, base?: [any, any], integrity?: str
         }
     }
     if (base) setStyleURL(base, url);
-}
+};
 
 //
 export const loadBlobStyle = (inline: string)=>{
@@ -77,7 +77,7 @@ export const loadBlobStyle = (inline: string)=>{
     loadStyleSheet(inline, [style, "href"]);
     document.head.appendChild(style);
     return style;
-}
+};
 
 //
 export const loadInlineStyle = (inline: string, rootElement = document.head)=>{
@@ -89,5 +89,4 @@ export const loadInlineStyle = (inline: string, rootElement = document.head)=>{
     style.dataset.owner = OWNER;
     loadStyleSheet(inline, [style, "innerHTML"]);
     PLACE.appendChild(style);
-}
-
+};
