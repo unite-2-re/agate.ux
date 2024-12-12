@@ -6,7 +6,7 @@ export const getZoom = ()=>{
     const zoomSupport = "currentCSSZoom" in document.documentElement;
     // @ts-ignore
     if (zoomSupport) { return ((document.documentElement.currentCSSZoom as number) || 1); }
-    return parseFloat(document.documentElement.style.getPropertyValue("--scaling")) || 1;
+    return parseFloat(document.documentElement.style.getPropertyValue("--scaling") || "1") || 1;
 }
 
 //
@@ -42,12 +42,12 @@ export const changeZoom = (scale = 1) => {
 
 //
 export const fixedClientZoom = (element = document.documentElement)=>{
-    return (element?.currentCSSZoom != null ? 1 : zoomOf(element));
+    return ((element?.currentCSSZoom != null ? 1 : zoomOf(element))) || 1;
 }
 
 //
 export const unfixedClientZoom = (element = document.documentElement)=>{
-    return (element?.currentCSSZoom == null ? 1 : element?.currentCSSZoom);
+    return ((element?.currentCSSZoom == null ? 1 : element?.currentCSSZoom)) || 1;
 }
 
 //
@@ -66,7 +66,7 @@ export const getBoundingOrientRect = (element, orient = null)=>{
     //
     const container = ((element.matches("ui-orientbox") ? element : null) || element.closest("ui-orientbox") || document.body) as HTMLElement;
     const or_i: number = orient || (container as any)?.orient || 0;
-    const size: [number, number] = [document.body.clientWidth, document.body.clientHeight];
+    const size: [number, number] = [document.body.clientWidth / zoom, document.body.clientHeight / zoom];
     const [left, top] = cvt_cs_to_os([nbx.left, nbx.top], size, or_i);
     const [right, bottom] = cvt_cs_to_os([nbx.right, nbx.top], size, or_i);
     const [width, height] = (or_i%2) ? [nbx.height, nbx.width] : [nbx.width, nbx.height];
