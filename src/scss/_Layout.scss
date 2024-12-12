@@ -38,14 +38,14 @@ export const orientationNumberMap = {
 @mixin compute_os_conditions {
     // reversion condition
     @supports (opacity: sign(0.5)) {
-        --in-rev-cond-x: #{slg.lor(slg.eq(var(--orient, 0), 0), slg.eq(var(--orient, 0), 1))};
-        --in-rev-cond-y: #{slg.lor(slg.eq(var(--orient, 0), 0), slg.eq(var(--orient, 0), 3))};
+        --in-rev-cond-x: calc(1 - #{slg.lor(slg.eq(var(--orient, 0), 0), slg.eq(var(--orient, 0), 1))} );
+        --in-rev-cond-y: calc(1 - #{slg.lor(slg.eq(var(--orient, 0), 0), slg.eq(var(--orient, 0), 3))} );
     }
 
     // reversion condition (alt)
     @supports not (opacity: sign(0.5)){
-        --in-rev-cond-x: #{flg.lor(flg.eq(var(--orient, 0), 0), flg.eq(var(--orient, 0), 1))};
-        --in-rev-cond-y: #{flg.lor(flg.eq(var(--orient, 0), 0), flg.eq(var(--orient, 0), 3))};
+        --in-rev-cond-x: calc(1 - #{flg.lor(flg.eq(var(--orient, 0), 0), flg.eq(var(--orient, 0), 1))} );
+        --in-rev-cond-y: calc(1 - #{flg.lor(flg.eq(var(--orient, 0), 0), flg.eq(var(--orient, 0), 3))} );
     }
 
     //
@@ -64,8 +64,8 @@ export const orientationNumberMap = {
 @mixin compute_os_size_to_cs {
     // size swapping
     & { //
-        --cs-size-x: #{slg.mix(var(--os-size-y, 0px), var(--os-size-x, 0px), var(--in-swap-cond, 0))};
-        --cs-size-y: #{slg.mix(var(--os-size-x, 0px), var(--os-size-y, 0px), var(--in-swap-cond, 0))};
+        --cs-size-x: #{slg.mix(var(--os-size-y, 100cqb), var(--os-size-x, 100cqi), var(--in-swap-cond, 0))};
+        --cs-size-y: #{slg.mix(var(--os-size-x, 100cqi), var(--os-size-y, 100cqb), var(--in-swap-cond, 0))};
 
         //
         --cs-self-size-x: #{slg.mix(var(--os-self-size-y, 100cqb), var(--os-self-size-x, 100cqi), var(--in-swap-cond, 0))};
@@ -77,8 +77,8 @@ export const orientationNumberMap = {
 @mixin compute_cs_size_to_os {
     // size swapping
     & { //
-        --os-size-x: #{slg.mix(var(--cs-size-y, 0px), var(--cs-size-x, 0px), var(--in-swap-cond, 0))};
-        --os-size-y: #{slg.mix(var(--cs-size-x, 0px), var(--cs-size-y, 0px), var(--in-swap-cond, 0))};
+        --os-size-x: #{slg.mix(var(--cs-size-y, 100cqb), var(--cs-size-x, 100cqi), var(--in-swap-cond, 0))};
+        --os-size-y: #{slg.mix(var(--cs-size-x, 100cqi), var(--cs-size-y, 100cqb), var(--in-swap-cond, 0))};
 
         //
         --os-self-size-x: #{slg.mix(var(--cs-self-size-y, 100cqb), var(--cs-self-size-x, 100cqi), var(--in-swap-cond, 0))};
@@ -152,14 +152,14 @@ export const orientationNumberMap = {
     @supports(writing-mode: sideways-lr)  { --wm: sideways-lr; --dir: ltr; --rot: 0deg; --i-rot: 0deg; }
 }
 
-//
+// in client-space, depends of writing-mode...
 @mixin portrait-size {
                                     & { --cqi: 100cqi; --cqb: 100cqb; }
     @media (orientation: portrait)    { --cqi: 100cqi; --cqb: 100cqb; }
     @media (orientation: landscape)   { --cqi: 100cqb; --cqb: 100cqi; }
 }
 
-//
+// in client-space, depends of writing-mode...
 @mixin landscape-size {
                                     & { --cqi: 100cqi; --cqb: 100cqb; }
     @media (orientation: landscape)   { --cqi: 100cqi; --cqb: 100cqb; }
@@ -172,4 +172,28 @@ export const orientationNumberMap = {
 @mixin init-os-size-by-native {
     --os-size-x: var(--cqi, 100cqi);
     --os-size-y: var(--cqb, 100cqb);
+}
+
+// in client-space, without writing-mode...
+@mixin init-cs-size {
+    --cs-size-x: 100cqw; //100cqi
+    --cs-size-y: 100cqh; //100cqb
+}
+
+
+
+//
+@mixin centered-self($transforms: null) {
+    transform-origin: 0% 0%;
+    transform: translate(-50%, -50%) #{$transforms};
+}
+
+//
+@mixin centered-with-offset {
+    @include centered-self("translate(var(--cs-drag-x, 0px), var(--cs-drag-y, 0px))");
+}
+
+//
+@mixin use-inset {
+    inset: var(--cs-inset-y) auto auto var(--cs-inset-x);
 }

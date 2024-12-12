@@ -135,3 +135,52 @@
         inherits: true;
     }
 };
+
+
+//
+@scope(:root, :host, :scope) {
+
+    //
+    @property --in-rev-cond-x { syntax: "<number>"; initial-value: 0; inherits: true; };
+    @property --in-rev-cond-y { syntax: "<number>"; initial-value: 0; inherits: true; };
+    @property --in-swap-cond { syntax: "<number>"; initial-value: 0; inherits: true; };
+    @property --in-rev-vx { syntax: "<number>"; initial-value: 0; inherits: true; };
+    @property --in-rev-vy { syntax: "<number>"; initial-value: 0; inherits: true; };
+
+    //
+    @property --cs-inset-x { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
+    @property --cs-inset-y { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
+    @property --os-inset-x { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
+    @property --os-inset-y { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
+    @property --in-inset-x { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
+    @property --in-inset-y { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
+
+    //
+    @property --cs-drag-x { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
+    @property --cs-drag-y { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
+    @property --os-drag-x { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
+    @property --os-drag-y { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
+    @property --in-drag-x { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
+    @property --in-drag-y { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
+
+    //
+    @property --cs-size-x { syntax: "<length-percentage>"; initial-value: 100cqi; inherits: true; };
+    @property --cs-size-y { syntax: "<length-percentage>"; initial-value: 100cqb; inherits: true; };
+    @property --os-size-x { syntax: "<length-percentage>"; initial-value: 100cqi; inherits: true; };
+    @property --os-size-y { syntax: "<length-percentage>"; initial-value: 100cqb; inherits: true; };
+
+    //
+    @property --cs-self-size-x { syntax: "<length-percentage>"; initial-value: 100%; inherits: true; };
+    @property --cs-self-size-y { syntax: "<length-percentage>"; initial-value: 100%; inherits: true; };
+    @property --os-self-size-x { syntax: "<length-percentage>"; initial-value: 100%; inherits: true; };
+    @property --os-self-size-y { syntax: "<length-percentage>"; initial-value: 100%; inherits: true; };
+
+    //
+    @property --cqi { syntax: "<length-percentage>"; initial-value: 100cqi; inherits: true; };
+    @property --cqb { syntax: "<length-percentage>"; initial-value: 100cqb; inherits: true; };
+
+    //
+    @property --rot   { syntax: "<angle>"; initial-value: 0deg; inherits: true; };
+    @property --i-rot { syntax: "<angle>"; initial-value: 0deg; inherits: true; };
+
+}
