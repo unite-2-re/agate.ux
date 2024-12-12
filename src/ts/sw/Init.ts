@@ -1,6 +1,11 @@
+import { classes, loadBlobStyle, setStyleRules } from "./StyleRules.ts";
+import { whenAnyScreenChanges } from "./Utils.ts";
+import { viewportHandler } from "./Viewport.ts";
+
 //
 const initialize = ()=>{
-    loadBlobStyle(styles);
+    // TODO!
+    //loadBlobStyle(styles);
 
     //
     window?.visualViewport?.addEventListener?.("scroll", viewportHandler);
@@ -27,3 +32,6 @@ const initialize = ()=>{
 
 //
 export default initialize;
+function updateOrientation(e: any) {
+    throw new Error("Function not implemented.");
+}

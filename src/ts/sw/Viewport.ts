@@ -1,5 +1,7 @@
+import { isMobile } from "../_Detect.ts";
+
 //
-const getAvailSize = ()=>{
+export const getAvailSize = ()=>{
     const mob = isMobile();
     return {
         "--avail-width": ((mob ? screen.availWidth : Math.max(window.innerWidth, screen.availWidth)) || 0) + "px",
@@ -9,8 +11,8 @@ const getAvailSize = ()=>{
 }
 
 //
-const availSize = getAvailSize();
-const updateVP = ()=>{
+export const availSize = getAvailSize();
+export const updateVP = ()=>{
     Object.assign(availSize, getAvailSize());
 }
 

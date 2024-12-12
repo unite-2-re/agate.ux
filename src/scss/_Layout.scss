@@ -99,3 +99,39 @@
     }
 
 }
+
+
+
+/*
+export const orientationNumberMap = {
+    "portrait-primary": 0,
+    "landscape-primary": 1,
+    "portrait-secondary": 2,
+    "landscape-secondary": 3
+}
+*/
+
+
+// relative from main orientation
+// for inline/block layouts
+@mixin prop-180deg { --wm: horizontal-tb; --dir: ltr; --rot: 180deg; }
+@mixin prop-0deg   { --wm: horizontal-tb; --dir: ltr; --rot: 0deg; }
+@mixin prop-90deg  { --wm: vertical-rl;   --dir: ltr; --rot: 0deg; }
+@mixin prop-270deg {
+                                        & { --wm: vertical-lr; --dir: rtl; --rot: 0deg; }
+    @supports(writing-mode: sideways-lr)  { --wm: sideways-lr; --dir: ltr; --rot: 0deg; }
+}
+
+//
+@mixin portrait-size {
+                                    & { --cqi: 100cqi; --cqb: 100cqb; }
+    @media (orientation: portrait)    { --cqi: 100cqi; --cqb: 100cqb; }
+    @media (orientation: landscape)   { --cqi: 100cqb; --cqb: 100cqi; }
+}
+
+//
+@mixin landscape-size {
+                                    & { --cqi: 100cqi; --cqb: 100cqb; }
+    @media (orientation: landscape)   { --cqi: 100cqi; --cqb: 100cqb; }
+    @media (orientation: portrait)    { --cqi: 100cqb; --cqb: 100cqi; }
+}

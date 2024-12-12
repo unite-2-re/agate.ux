@@ -1,3 +1,4 @@
+import { availSize } from "./Viewport.ts";
 
 //
 export type StyleTuple = [selector: string, sheet: object];
@@ -31,15 +32,8 @@ export const setStyleRules = (classes: StyleTuple[]) => {
 };
 
 //
-const classes: StyleTuple[] = [
-    [":root, :host, :scope", portrait],
-    [":root, :host, :scope", landscape],
-    [":root, :host, :scope", displayPortrait],
-    [":root, :host, :scope", displayLandscape],
-    [":root, :host, :scope", lts],
-    [":root, :host, :scope", pts],
-    [":root, :host, :scope", availSize],
-    [":root, :host, :scope", currentOrient]
+export const classes: StyleTuple[] = [
+    [":root, :host, :scope", availSize]
 ];
 
 // @ts-ignore
@@ -79,7 +73,7 @@ const loadStyleSheet = async (inline: string, base?: [any, any], integrity?: str
 }
 
 //
-const loadBlobStyle = (inline: string)=>{
+export const loadBlobStyle = (inline: string)=>{
     const style = document.createElement("link");
     style.rel = "stylesheet";
     style.type = "text/css";
@@ -91,7 +85,7 @@ const loadBlobStyle = (inline: string)=>{
 }
 
 //
-const loadInlineStyle = (inline: string, rootElement = document.head)=>{
+export const loadInlineStyle = (inline: string, rootElement = document.head)=>{
     const PLACE = (rootElement.querySelector("head") ?? rootElement);
     if (PLACE instanceof HTMLHeadElement) { loadBlobStyle(inline); }
 
