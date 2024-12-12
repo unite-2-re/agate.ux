@@ -2,11 +2,17 @@
 @scope(:root, :host, :scope) {
 
     //
-    @property --orient { syntax: "<number>"; initial-value: 0; inherits: true; }
+    @property --ox-orient { syntax: "<number>"; initial-value: 0; inherits: true; }
+    @property --os-orient { syntax: "<number>"; initial-value: 0; inherits: true; }
+    @property --in-orient { syntax: "<number>"; initial-value: 0; inherits: true; }
+
+    //
     @property --resize-x { syntax: "<number>"; initial-value: 0; inherits: true; }
     @property --resize-y { syntax: "<number>"; initial-value: 0; inherits: true; }
     @property --drag-x { syntax: "<number>"; initial-value: 0; inherits: true; }
     @property --drag-y { syntax: "<number>"; initial-value: 0; inherits: true; }
+    @property --orient { syntax: "<number>"; initial-value: 0; inherits: true; }
+    @property --zoom { syntax: "<number>"; initial-value: 1; inherits: true; }
 
     //
     @property --vp-i-size {
@@ -182,5 +188,4 @@
     //
     @property --rot   { syntax: "<angle>"; initial-value: 0deg; inherits: true; };
     @property --i-rot { syntax: "<angle>"; initial-value: 0deg; inherits: true; };
-
 }

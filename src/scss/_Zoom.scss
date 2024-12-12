@@ -18,7 +18,7 @@
 
         //
         & body { zoom: calc(1 / max(var(--zoom, 1), 0.125)); };
-        & .app-container { zoom: max(var(--zoom, 1), 0.125); }
+        & .app-container { zoom: max(var(--zoom, 1), 0.125); };
     }
 
     //

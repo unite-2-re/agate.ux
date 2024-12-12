@@ -186,6 +186,7 @@ export const orientationNumberMap = {
 @mixin centered-self($transforms: null) {
     transform-origin: 0% 0%;
     transform: translate(-50%, -50%) #{$transforms};
+    place-self: center;
 }
 
 //
@@ -195,5 +196,64 @@ export const orientationNumberMap = {
 
 //
 @mixin use-inset {
-    inset: var(--cs-inset-y) auto auto var(--cs-inset-x);
+    inset: var(--cs-inset-y, 0px) auto auto var(--cs-inset-x, 0px);
+}
+
+
+
+//
+ui-orientbox {
+    @include compute_cs_size_to_os;
+    @include compute_from_os_to_cs;
+
+    //
+    & {
+        position: relative !important;
+        container-type: size !important;
+        contain: strict !important;
+
+        //
+        grid-column: 1 / -1;
+        grid-row: 1 / -1;
+        place-self: center;
+
+        //
+        min-inline-size: 1px;
+        min-block-size: 1px;
+        inline-size: 100%;
+        block-size: 100%;
+        max-inline-size: 100%;
+        max-block-size: 100%;
+
+        //
+        inset: 0px;
+
+        //
+        zoom: max(var(--zoom, 1), 0.125);
+        font-size: 16px;
+    }
+
+    //
+    & {
+        //
+        --zoom: max(var(--scaling, 1), 0.125);
+        --zpx: calc(1px / max(var(--zoom, 1), 0.125));
+        --ppx: calc(1px / max(var(--pixel-ratio, 1), 0.125));
+    }
+
+    //
+    :where(*) {
+        @include compute_cs_size_to_os;
+        @include compute_from_os_to_cs;
+    }
+
+    //
+    .center-self {
+        @include use-inset;
+        @include centered-with-offset();
+    }
+
+    //
+    .fixed { @include use-inset; position: fixed !important; }
+    .absolute { @include use-inset; position: absolute !important; }
 }
