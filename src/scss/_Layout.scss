@@ -1,3 +1,40 @@
+/* // note about counter-clock-wise from portrait
+export const orientationNumberMap = {
+    "portrait-primary": 0, // as 0deg, aka. 360deg
+    "landscape-primary": 1, // as -90deg, aka. 270deg
+    "portrait-secondary": 2, // as -180deg, aka. 180deg
+    "landscape-secondary": 3 // as -270deg, aka. 90deg
+}
+*/
+
+/* // also from landscape basis (by counter-clock-wise)
+export const orientationNumberMap = {
+    "landscape-primary": 0, // as 0deg, aka. 360deg
+    "portrait-secondary": 1, // as -90deg, aka. 270deg
+    "landscape-secondary": 2 // as -180deg, aka. 180deg
+    "portrait-primary": 3, // as -270deg, aka. 90deg
+}
+*/
+
+
+
+/* //orient coordinate swap (if counter-clock-size)
+    0: [ x,  y],
+    1: [ y, -x],
+    2: [-x, -y],
+    3: [-y,  x]
+*/
+
+/* //orient coordinate swap (if clock-size)
+    0: [ x,  y],
+    1: [-y,  x], // swapped
+    2: [-x, -y],
+    3: [ y, -x]  // swapped
+*/
+
+
+
+//
 @mixin compute_os_conditions {
     // reversion condition
     @supports (opacity: sign(0.5)) {
@@ -16,14 +53,15 @@
         --in-swap-cond: rem(var(--orient, 0), 2); // for coordinate swap condition
 
         // compute as negate coefficient
-        --in-v-swap-x: calc(var(--in-rev-cond-x, 1) * 2 - 1);
-        --in-v-swap-y: calc(var(--in-rev-cond-y, 1) * 2 - 1);
+        --in-rev-vx: calc(var(--in-rev-cond-x, 1) * 2 - 1);
+        --in-rev-vy: calc(var(--in-rev-cond-y, 1) * 2 - 1);
     }
 }
 
-// conversion from virtual space to client space by orientation
-@mixin compute_from_os_to_cs {
 
+
+//
+@mixin compute_os_size_to_cs {
     // size swapping
     & { //
         --cs-size-x: #{slg.mix(var(--os-size-y, 0px), var(--os-size-x, 0px), var(--in-swap-cond, 0))};
@@ -33,8 +71,25 @@
         --cs-self-size-x: #{slg.mix(var(--os-self-size-y, 100cqb), var(--os-self-size-x, 100cqi), var(--in-swap-cond, 0))};
         --cs-self-size-y: #{slg.mix(var(--os-self-size-x, 100cqi), var(--os-self-size-y, 100cqb), var(--in-swap-cond, 0))};
     }
+}
+
+//
+@mixin compute_cs_size_to_os {
+    // size swapping
+    & { //
+        --os-size-x: #{slg.mix(var(--cs-size-y, 0px), var(--cs-size-x, 0px), var(--in-swap-cond, 0))};
+        --os-size-y: #{slg.mix(var(--cs-size-x, 0px), var(--cs-size-y, 0px), var(--in-swap-cond, 0))};
+
+        //
+        --os-self-size-x: #{slg.mix(var(--cs-self-size-y, 100cqb), var(--cs-self-size-x, 100cqi), var(--in-swap-cond, 0))};
+        --os-self-size-y: #{slg.mix(var(--cs-self-size-x, 100cqi), var(--cs-self-size-y, 100cqb), var(--in-swap-cond, 0))};
+    }
+}
 
 
+
+// conversion from virtual space to client space by orientation
+@mixin compute_from_os_to_cs {
 
     //
     & { // component swap condition
@@ -47,36 +102,19 @@
     }
 
     // as alternative, you can swap before with os-size
-    // inset position with reverse
-    & {
+    & { // inset position with reverse
         --cs-inset-x: #{slg.mix(var(--in-inset-x, 0px), calc(var(--cs-size-x, 100cqi) - var(--in-inset-x, 0px)), var(--in-rev-cond-x, 0))};
         --cs-inset-y: #{slg.mix(var(--in-inset-y, 0px), calc(var(--cs-size-y, 100cqb) - var(--in-inset-y, 0px)), var(--in-rev-cond-y, 0))};
-    }
 
-    // drag offset with reversion
-    & {
-        --cs-drag-x: calc(var(--in-drag-x, 0px) * var(--in-v-swap-x, 1));
-        --cs-drag-y: calc(var(--in-drag-y, 0px) * var(--in-v-swap-y, 1));
+        // drag offset with reversion
+        --cs-drag-x: calc(var(--in-drag-x, 0px) * var(--in-rev-vx, 1));
+        --cs-drag-y: calc(var(--in-drag-y, 0px) * var(--in-rev-vy, 1));
     }
 
 }
 
-
-
 // conversion from client space to virtual space by orientation
 @mixin compute_from_cs_to_os {
-
-    // size swapping
-    & { //
-        --os-size-x: #{slg.mix(var(--cs-size-y, 0px), var(--cs-size-x, 0px), var(--in-swap-cond, 0))};
-        --os-size-y: #{slg.mix(var(--cs-size-x, 0px), var(--cs-size-y, 0px), var(--in-swap-cond, 0))};
-
-        //
-        --os-self-size-x: #{slg.mix(var(--cs-self-size-y, 100cqb), var(--cs-self-size-x, 100cqi), var(--in-swap-cond, 0))};
-        --os-self-size-y: #{slg.mix(var(--cs-self-size-x, 100cqi), var(--cs-self-size-y, 100cqb), var(--in-swap-cond, 0))};
-    }
-
-
 
     // as alternative, you can swap with os-size after
     & { // component swap condition
@@ -84,8 +122,8 @@
         --in-inset-y: #{slg.mix(var(--cs-inset-y, 0px), calc(var(--cs-size-y, 100cqi) - var(--cs-inset-y, 0px)), var(--in-rev-cond-y, 0))};
 
         //
-        --in-drag-x: calc(var(--cs-drag-x, 0px) * var(--in-v-swap-x, 1));
-        --in-drag-y: calc(var(--cs-drag-y, 0px) * var(--in-v-swap-y, 1));
+        --in-drag-x: calc(var(--cs-drag-x, 0px) * var(--in-rev-vx, 1));
+        --in-drag-y: calc(var(--cs-drag-y, 0px) * var(--in-rev-vy, 1));
     }
 
     // reverse for orientation space
@@ -102,24 +140,16 @@
 
 
 
-/*
-export const orientationNumberMap = {
-    "portrait-primary": 0,
-    "landscape-primary": 1,
-    "portrait-secondary": 2,
-    "landscape-secondary": 3
-}
-*/
-
-
 // relative from main orientation
 // for inline/block layouts
-@mixin prop-180deg { --wm: horizontal-tb; --dir: ltr; --rot: 180deg; }
-@mixin prop-0deg   { --wm: horizontal-tb; --dir: ltr; --rot: 0deg; }
-@mixin prop-90deg  { --wm: vertical-rl;   --dir: ltr; --rot: 0deg; }
+// rotate layout by clock-wise
+// also, only for LTR layouts
+@mixin prop-0deg   { --wm: horizontal-tb; --dir: ltr; --rot: 0deg; --i-rot: 0deg; } // default
+@mixin prop-90deg  { --wm: vertical-rl;   --dir: ltr; --rot: 0deg; --i-rot: 0deg; }
+@mixin prop-180deg { --wm: horizontal-tb; --dir: ltr; --rot: 180deg; --i-rot: 180deg; }
 @mixin prop-270deg {
-                                        & { --wm: vertical-lr; --dir: rtl; --rot: 0deg; }
-    @supports(writing-mode: sideways-lr)  { --wm: sideways-lr; --dir: ltr; --rot: 0deg; }
+                                        & { --wm: vertical-lr; --dir: rtl; --rot: 0deg; --i-rot: 180deg; }
+    @supports(writing-mode: sideways-lr)  { --wm: sideways-lr; --dir: ltr; --rot: 0deg; --i-rot: 0deg; }
 }
 
 //
@@ -134,4 +164,12 @@ export const orientationNumberMap = {
                                     & { --cqi: 100cqi; --cqb: 100cqb; }
     @media (orientation: landscape)   { --cqi: 100cqi; --cqb: 100cqb; }
     @media (orientation: portrait)    { --cqi: 100cqb; --cqb: 100cqi; }
+}
+
+
+
+//
+@mixin init-os-size-by-native {
+    --os-size-x: var(--cqi, 100cqi);
+    --os-size-y: var(--cqb, 100cqb);
 }
