@@ -1,5 +1,5 @@
 //
-import {zoomOf} from "../sw/Zoom";
+import {zoomOf} from "../_Zoom";
 
 // @ts-ignore
 import styles from "./OrientBox.scss?inline&compress";
@@ -20,11 +20,11 @@ export default class UIOrientBox extends HTMLElement {
 
     //
     get orient() { return parseInt(this.getAttribute("orient") || "0"); };
-    set orient(ox) { this.setAttribute("orient", (ox || 0).toFixed(0)); };
+    set orient(ox) { this.setAttribute("orient", (ox || 0)?.toFixed?.(0) || (""+(ox || 0))); };
 
     //
     get zoom() { return parseFloat(this.getAttribute("zoom") || "1") || 1; };
-    set zoom(ox) { this.setAttribute("zoom", (ox || 1).toFixed(0)); };
+    set zoom(ox) { this.setAttribute("zoom", (ox || 1)?.toFixed?.(0) || (""+(ox || 1))); };
 
     //
     constructor() {
