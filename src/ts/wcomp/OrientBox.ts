@@ -11,7 +11,7 @@ import html from "./OrientBox.html?raw";
 const preInit = URL.createObjectURL(new Blob([styles], {type: "text/css"}));
 
 //
-export default class UIOrientBox extends HTMLElement {
+export class UIOrientBox extends HTMLElement {
     static observedAttributes = ["orient", "zoom"];
 
     //
@@ -80,3 +80,4 @@ export default class UIOrientBox extends HTMLElement {
 
 //
 customElements.define("ui-orientbox", UIOrientBox);
+export default UIOrientBox;

@@ -1,14 +1,12 @@
 import { availSize } from "./Viewport.ts";
 
 //
-export type StyleTuple = [selector: string, sheet: object];
-
-//
 const styleElement = document.createElement("style");
 document.querySelector("head")?.appendChild?.(styleElement);
 styleElement.dataset.owner = "core";
 
 //
+export type StyleTuple = [selector: string, sheet: object];
 export const setStyleRule = (selector: string, sheet: object) => {
     const styleRules = styleElement.sheet;
     let ruleId = Array.from(styleRules?.cssRules || []).findIndex((rule) => (rule instanceof CSSStyleRule ? (selector == rule?.selectorText) : false));
@@ -36,11 +34,8 @@ export const classes: StyleTuple[] = [
     [":root, :host, :scope", availSize]
 ];
 
-// @ts-ignore
-//import styles from "../$scss$/_Module.scss?inline&compress";
-
 //
-const OWNER = "core";
+const OWNER = "agate";
 
 //
 const setStyleURL = (base: [any, any], url: string)=>{
