@@ -1,5 +1,5 @@
 //import { getBoundingOrientRect } from "./Zoom";
-import { cvt_cs_to_os } from "./_Utils.ts";
+import { cvt_cs_to_os } from "./_Utils";
 
 //
 export const getZoom = ()=>{

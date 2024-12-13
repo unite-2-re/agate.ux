@@ -1,4 +1,4 @@
-import { availSize } from "./Viewport.ts";
+import { availSize } from "./Viewport";
 
 //
 const styleElement = document.createElement("style");

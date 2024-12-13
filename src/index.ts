@@ -1,6 +1,6 @@
-import { classes, loadBlobStyle, setStyleRules } from "./ts/sw/StyleRules.ts";
-import { viewportHandler } from "./ts/sw/Viewport.ts";
-import { UIOrientBox } from "./ts/wcomp/OrientBox.ts";
+import { classes, loadBlobStyle, setStyleRules } from "./ts/sw/StyleRules";
+import { viewportHandler } from "./ts/sw/Viewport";
+import { UIOrientBox } from "./ts/wcomp/OrientBox";
 
 //
 export const getCorrectOrientation = () => {
@@ -36,7 +36,7 @@ export const whenAnyScreenChanges = (cb)=>{
 };
 
 // @ts-ignore
-import styles from "../$scss$/_Main.scss?inline&compress";
+import styles from "./scss/_Main.scss?inline&compress";
 
 //
 const initialize = ()=>{
@@ -73,6 +73,6 @@ const updateOrientation = (e: any) => {
 };
 
 //
-export * from "./ts/_Utils.ts";
-export * from "./ts/_Detect.ts";
-export * from "./ts/_Zoom.ts";
+export * from "./ts/_Utils";
+export * from "./ts/_Detect";
+export * from "./ts/_Zoom";

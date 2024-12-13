@@ -35,6 +35,10 @@ export const orientationNumberMap = {
 
 
 //
+@use "LogicFb" as flg;
+@use "LogicSign" as slg;
+
+//
 @mixin compute_os_conditions {
     // reversion condition
     @supports (opacity: sign(0.5)) {

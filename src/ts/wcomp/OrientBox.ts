@@ -3,7 +3,7 @@ import styles from "./OrientBox.scss?inline&compress";
 
 // @ts-ignore
 import html from "./OrientBox.html?raw";
-import { cvt_cs_to_os } from "../_Utils.ts";
+import { cvt_cs_to_os } from "../_Utils";
 
 //
 const preInit = URL.createObjectURL(new Blob([styles], {type: "text/css"}));

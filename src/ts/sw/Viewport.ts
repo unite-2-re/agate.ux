@@ -1,4 +1,4 @@
-import { isMobile } from "../_Detect.ts";
+import { isMobile } from "../_Detect";
 
 //
 export const getAvailSize = ()=>{
