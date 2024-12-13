@@ -54,32 +54,64 @@ export class UIOrientBox extends HTMLElement {
         this.style.setProperty("--zoom", this.getAttribute("zoom"));
 
         //
+        const pointerMap   = new Map<number, any>();
+        const pointerCache = new Map<number, any>();
         const pxy_event: [any, any] = [(ev)=>{
-            const state: any = {
+            const cache: any = pointerCache?.get?.(ev?.pointerId || 0) || {
                 client: null,
                 orient: null,
                 boundingBox: null
             };
+
+            //
+            cache.orient = null;
+            cache.client = null;
+
+            //
+            const pointer = pointerMap?.get?.(ev?.pointerId || 0) || {
+                type: "ag-" + (ev?.type||"pointer"),
+                event: ev,
+                target: ev?.target || this,
+                cs_box: size,
+                pointerId: ev?.pointerId || 0,
+                cap_element: null,
+
+                //
+                get client() { return (cache.client ??= [ev?.clientX || 0, ev?.clientY || 0]); },
+                get orient() { return (cache.orient ??= cvt_cs_to_os(cache.client ??= [ev?.clientX || 0, ev?.clientY || 0], size, this.orient)); },
+                get boundingBox() { return (cache.boundingBox ??= getBoundingOrientRect(ev?.target || this)); },
+
+                //
+                capture(element = ev?.target || this) {
+                    return (pointer.cap_element = element?.setPointerCapture?.(ev?.pointerId || 0));
+                },
+                release(element = null) {
+                    (element || pointer.cap_element || ev?.target || this)?.releasePointerCapture?.(ev?.pointerId || 0);
+                    pointer.cap_element = null;
+                },
+            };
+
+            //
+            if (!pointerMap?.has?.(ev?.pointerId || 0)) {
+                pointerMap?.set?.(ev?.pointerId || 0, pointer);
+                pointerCache?.set?.(ev?.pointerId || 0, cache);
+            }
+
+            //
             if (!(ev?.target || this)?.dispatchEvent?.(new CustomEvent("ag-" + (ev?.type||"pointer"), {
                 bubbles: true,
                 cancelable: true,
-                detail: {
-                    type: "ag-" + (ev?.type||"pointer"),
-                    event: ev,
-                    target: ev?.target || this,
-                    cs_box: size,
-                    pointerId: ev?.pointerId || 0,
-                    get client() { return (state.client ??= [ev?.clientX || 0, ev?.clientY || 0]); },
-                    get orient() { return (state.orient ??= cvt_cs_to_os(state.client ??= [ev?.clientX || 0, ev?.clientY || 0], size, this.orient)); },
-                    get boundingBox() { return (state.boundingBox ??= getBoundingOrientRect(ev?.target || this)); },
-                    capture(element = ev?.target || this) {
-                        return element?.setPointerCapture?.(ev?.pointerId || 0);
-                    },
-                    release(element = ev?.target || this) {
-                        return element?.releasePointerCapture?.(ev?.pointerId || 0);
-                    },
-                }
+                detail: pointer
             }))) { ev?.preventDefault?.(); };
+
+            //
+            if (ev?.type == "pointerup" || ev?.type == "pointercancel") {
+                pointerMap.delete(ev?.pointerId || 0);
+                pointerCache.delete(ev?.pointerId || 0);
+                if (ev?.type == "pointercancel") {
+                    pointer?.release?.();
+                }
+            }
         }, {passive: false, capture: true, once: false}];
 
         //
@@ -106,9 +138,6 @@ export class UIOrientBox extends HTMLElement {
         this.addEventListener("pointerout", ...pxy_event);
         this.addEventListener("pointerup", ...pxy_event);
         this.addEventListener("click", ...pxy_event);
-
-        //
-        console.log(this);
     }
 
     //
@@ -139,4 +168,3 @@ export default UIOrientBox;
 function getBoundingOrientRect(arg0: any) {
     throw new Error("Function not implemented.");
 }
-
