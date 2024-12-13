@@ -55,25 +55,29 @@ export class UIOrientBox extends HTMLElement {
 
         //
         const pxy_event: [any, any] = [(ev)=>{
-            if (!(ev?.target || this).dispatchEvent(new CustomEvent("ag-" + (ev?.type||"pointer"), {
+            const state: any = {
+                client: null,
+                orient: null,
+                boundingBox: null
+            };
+            if (!(ev?.target || this)?.dispatchEvent?.(new CustomEvent("ag-" + (ev?.type||"pointer"), {
                 bubbles: true,
                 cancelable: true,
                 detail: {
+                    type: "ag-" + (ev?.type||"pointer"),
+                    event: ev,
+                    target: ev?.target || this,
+                    cs_box: size,
+                    pointerId: ev?.pointerId || 0,
+                    get client() { return (state.client ??= [ev?.clientX || 0, ev?.clientY || 0]); },
+                    get orient() { return (state.orient ??= cvt_cs_to_os(state.client ??= [ev?.clientX || 0, ev?.clientY || 0], size, this.orient)); },
+                    get boundingBox() { return (state.boundingBox ??= getBoundingOrientRect(ev?.target || this)); },
                     capture(element = ev?.target || this) {
                         return element?.setPointerCapture?.(ev?.pointerId || 0);
                     },
                     release(element = ev?.target || this) {
                         return element?.releasePointerCapture?.(ev?.pointerId || 0);
                     },
-                    pointerId: ev?.pointerId || 0,
-                    event: ev,
-                    target: ev?.target || this,
-                    cs_box: size,
-                    orient: cvt_cs_to_os([ev?.clientX || 0, ev?.clientY || 0], size, this.orient),
-                    client: [ev?.clientX || 0, ev?.clientY || 0],
-                    get boundingBox() {
-                        return getBoundingOrientRect(ev?.target || this);
-                    }
                 }
             }))) { ev?.preventDefault?.(); };
         }, {passive: false, capture: true, once: false}];
