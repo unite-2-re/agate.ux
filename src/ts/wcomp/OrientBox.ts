@@ -76,12 +76,13 @@ export class UIOrientBox extends HTMLElement {
                 cs_box: size,
                 pointerId: ev?.pointerId || 0,
                 cap_element: null,
+                __client: ()=>{
+                    const zoom = zoomOf(ev?.target || this);//cache.client ? 1 : zoomOf(ev?.target || this);
+                    return [(ev?.clientX || 0) / zoom, (ev?.clientY || 0) / zoom];
+                },
 
                 //
-                get client() {
-                    const zoom = cache.client ? 1 : zoomOf(ev?.target || this);
-                    return (cache.client ??= [(ev?.clientX || 0) / zoom, (ev?.clientY || 0) / zoom]);
-                },
+                get client() { return (cache.client ??= pointer?.__client?.()); },
                 get orient() { return (cache.orient ??= cvt_cs_to_os(pointer.client, size, this.orient)); },
                 get boundingBox() { return (cache.boundingBox ??= getBoundingOrientRect(ev?.target || this)); },
 
@@ -94,6 +95,19 @@ export class UIOrientBox extends HTMLElement {
                     pointer.cap_element = null;
                 },
             };
+
+            //
+            Object.assign(pointer, {
+                type: "ag-" + (ev?.type||"pointer"),
+                event: ev,
+                target: ev?.target || this,
+                cs_box: size,
+                pointerId: ev?.pointerId || 0,
+                __client: ()=>{
+                    const zoom = cache.client ? 1 : zoomOf(ev?.target || this);
+                    return [(ev?.clientX || 0) / zoom, (ev?.clientY || 0) / zoom];
+                },
+            });
 
             //
             if (!pointerMap?.has?.(ev?.pointerId || 0)) {
