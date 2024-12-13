@@ -55,6 +55,7 @@ export class UIOrientBox extends HTMLElement {
         this.style.setProperty("--zoom", this.getAttribute("zoom"));
 
         //
+        const self = this;
         const pointerMap   = new Map<number, any>();
         const pointerCache = new Map<number, any>();
         const pxy_event: [any, any] = [(ev)=>{
@@ -72,26 +73,26 @@ export class UIOrientBox extends HTMLElement {
             const pointer = pointerMap?.get?.(ev?.pointerId || 0) || {
                 type: "ag-" + (ev?.type||"pointer"),
                 event: ev,
-                target: ev?.target || this,
+                target: ev?.target || self,
                 cs_box: size,
                 pointerId: ev?.pointerId || 0,
                 cap_element: null,
                 __client: ()=>{
-                    const zoom = zoomOf(ev?.target || this);//cache.client ? 1 : zoomOf(ev?.target || this);
+                    const zoom = zoomOf(ev?.target || self);//cache.client ? 1 : zoomOf(ev?.target || this);
                     return [(ev?.clientX || 0) / zoom, (ev?.clientY || 0) / zoom];
                 },
 
                 //
                 get client() { return (cache.client ??= pointer?.__client?.()); },
-                get orient() { return (cache.orient ??= cvt_cs_to_os(pointer.client, size, this.orient)); },
-                get boundingBox() { return (cache.boundingBox ??= getBoundingOrientRect(ev?.target || this)); },
+                get orient() { return (cache.orient ??= cvt_cs_to_os(pointer.client, size, self.orient)); },
+                get boundingBox() { return (cache.boundingBox ??= getBoundingOrientRect(ev?.target || self)); },
 
                 //
-                capture(element = ev?.target || this) {
+                capture(element = ev?.target || self) {
                     return (pointer.cap_element = element?.setPointerCapture?.(ev?.pointerId || 0));
                 },
                 release(element = null) {
-                    (element || pointer.cap_element || ev?.target || this)?.releasePointerCapture?.(ev?.pointerId || 0);
+                    (element || pointer.cap_element || ev?.target || self)?.releasePointerCapture?.(ev?.pointerId || 0);
                     pointer.cap_element = null;
                 },
             };
@@ -100,11 +101,11 @@ export class UIOrientBox extends HTMLElement {
             Object.assign(pointer, {
                 type: "ag-" + (ev?.type||"pointer"),
                 event: ev,
-                target: ev?.target || this,
+                target: ev?.target || self,
                 cs_box: size,
                 pointerId: ev?.pointerId || 0,
                 __client: ()=>{
-                    const zoom = cache.client ? 1 : zoomOf(ev?.target || this);
+                    const zoom = cache.client ? 1 : zoomOf(ev?.target || self);
                     return [(ev?.clientX || 0) / zoom, (ev?.clientY || 0) / zoom];
                 },
             });
@@ -116,7 +117,7 @@ export class UIOrientBox extends HTMLElement {
             }
 
             //
-            if (!(ev?.target || this)?.dispatchEvent?.(new CustomEvent("ag-" + (ev?.type||"pointer"), {
+            if (!(ev?.target || self)?.dispatchEvent?.(new CustomEvent("ag-" + (ev?.type||"pointer"), {
                 bubbles: true,
                 cancelable: true,
                 detail: pointer

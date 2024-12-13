@@ -8,8 +8,8 @@ export const cvt_cs_to_os = (pos_in_cs: [number, number], size_in_cs: [number, n
 
     // compute rotation
     return [
-        ((or_i==0 || or_i==3) ? pos_in_swap[0] : size_in_os[0] - pos_in_swap[0]) || 0,
-        ((or_i==0 || or_i==1) ? pos_in_swap[1] : size_in_os[1] - pos_in_swap[1]) || 0
+        ((or_i==0 || or_i==3) ? pos_in_swap[0] : (size_in_os[0] - pos_in_swap[0])) || 0,
+        ((or_i==0 || or_i==1) ? pos_in_swap[1] : (size_in_os[1] - pos_in_swap[1])) || 0
     ];
 };
 
@@ -23,8 +23,8 @@ export const cvt_os_to_cs = (pos_in_os: [number, number], size_in_cs: [number, n
 
     // back-reversion in orientation space
     const pos_in_cs: [number, number] = [
-        ((or_i==0 || or_i==3) ? pos_in_cp[0] : size_in_os[0] - pos_in_cp[0]) || 0,
-        ((or_i==0 || or_i==1) ? pos_in_cp[1] : size_in_os[1] - pos_in_cp[1]) || 0
+        ((or_i==0 || or_i==3) ? pos_in_cp[0] : (size_in_os[0] - pos_in_cp[0])) || 0,
+        ((or_i==0 || or_i==1) ? pos_in_cp[1] : (size_in_os[1] - pos_in_cp[1])) || 0
     ];
 
     // back-swap to client-space
