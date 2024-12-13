@@ -109,7 +109,7 @@ export class UIOrientBox extends HTMLElement {
             }))) { ev?.preventDefault?.(); };
 
             //
-            if (ev?.type == "pointerup" || ev?.type == "pointercancel") {
+            if (ev?.type == "contextmenu" || ev?.type == "click" || ev?.type == "pointerup" || ev?.type == "pointercancel") {
                 pointerMap.delete(ev?.pointerId || 0);
                 pointerCache.delete(ev?.pointerId || 0);
                 if (ev?.type == "pointercancel") {
