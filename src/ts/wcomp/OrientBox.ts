@@ -4,6 +4,7 @@ import styles from "./OrientBox.scss?inline&compress";
 // @ts-ignore
 import html from "./OrientBox.html?raw";
 import { cvt_cs_to_os } from "../_Utils";
+import { getBoundingOrientRect, getZoom, zoomOf } from "../_Zoom.js";
 
 //
 const preInit = URL.createObjectURL(new Blob([styles], {type: "text/css"}));
@@ -77,8 +78,11 @@ export class UIOrientBox extends HTMLElement {
                 cap_element: null,
 
                 //
-                get client() { return (cache.client ??= [ev?.clientX || 0, ev?.clientY || 0]); },
-                get orient() { return (cache.orient ??= cvt_cs_to_os(cache.client ??= [ev?.clientX || 0, ev?.clientY || 0], size, this.orient)); },
+                get client() {
+                    const zoom = cache.client ? 1 : zoomOf(ev?.target || this);
+                    return (cache.client ??= [(ev?.clientX || 0) / zoom, (ev?.clientY || 0) / zoom]);
+                },
+                get orient() { return (cache.orient ??= cvt_cs_to_os(pointer.client, size, this.orient)); },
                 get boundingBox() { return (cache.boundingBox ??= getBoundingOrientRect(ev?.target || this)); },
 
                 //
@@ -119,9 +123,10 @@ export class UIOrientBox extends HTMLElement {
         const resizeObserver = new ResizeObserver((entries) => {
             for (const entry of entries) {
                 if (entry?.contentBoxSize) {
+                    //const zoom = zoomOf(this);
                     const contentBoxSize = entry?.contentBoxSize?.[0];
-                    size[0] = contentBoxSize?.inlineSize || this.clientWidth;
-                    size[1] = contentBoxSize?.blockSize || this.clientHeight;
+                    size[0] = (contentBoxSize?.inlineSize || this.clientWidth);
+                    size[1] = (contentBoxSize?.blockSize || this.clientHeight);
                 }
             }
         });
@@ -165,6 +170,3 @@ export class UIOrientBox extends HTMLElement {
 //
 customElements.define("ui-orientbox", UIOrientBox);
 export default UIOrientBox;
-function getBoundingOrientRect(arg0: any) {
-    throw new Error("Function not implemented.");
-}
