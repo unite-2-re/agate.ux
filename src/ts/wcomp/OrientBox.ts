@@ -106,6 +106,9 @@ export class UIOrientBox extends HTMLElement {
         this.addEventListener("pointerout", ...pxy_event);
         this.addEventListener("pointerup", ...pxy_event);
         this.addEventListener("click", ...pxy_event);
+
+        //
+        console.log(this);
     }
 
     //

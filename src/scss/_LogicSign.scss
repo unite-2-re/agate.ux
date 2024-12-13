@@ -42,7 +42,7 @@ $cps: 0.00001;
 }
 
 @function mix($a, $b, $i) {
-    @return string.unquote("calc(#{$a} * #{$i} + #{$b} * calc(1 - #{$i}))");
+    @return string.unquote("calc(#{$b} * #{$i} + #{$a} * calc(1 - #{$i}))");
 }
 
 @function land($a, $b) {

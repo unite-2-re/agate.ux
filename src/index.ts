@@ -69,7 +69,7 @@ const initialize = ()=>{
 export { UIOrientBox };
 export default initialize;
 const updateOrientation = (e: any) => {
-    throw new Error("Function not implemented.");
+    //throw new Error("Function not implemented.");
 };
 
 //

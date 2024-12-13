@@ -207,11 +207,16 @@ export const orientationNumberMap = {
 
 //
 ui-orientbox {
+    @include compute_os_conditions;
     @include compute_cs_size_to_os;
     @include compute_from_os_to_cs;
 
     //
     & {
+        --cs-size-x: 100cqi;
+        --cs-size-y: 100cqb;
+
+        //
         position: relative !important;
         container-type: size !important;
         contain: strict !important;
@@ -247,6 +252,7 @@ ui-orientbox {
 
     //
     :where(*) {
+        @include compute_os_conditions;
         @include compute_cs_size_to_os;
         @include compute_from_os_to_cs;
     }
