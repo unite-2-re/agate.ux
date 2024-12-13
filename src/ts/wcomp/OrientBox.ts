@@ -139,10 +139,10 @@ export class UIOrientBox extends HTMLElement {
         this.addEventListener("pointermove", ...pxy_event);
         this.addEventListener("pointerenter", ...pxy_event);
         this.addEventListener("pointerleave", ...pxy_event);
-        this.addEventListener("pointercancel", ...pxy_event);
         this.addEventListener("pointerout", ...pxy_event);
-        this.addEventListener("pointerup", ...pxy_event);
         this.addEventListener("click", ...pxy_event);
+        this.addEventListener("pointerup", ...pxy_event);
+        this.addEventListener("pointercancel", ...pxy_event);
     }
 
     //
