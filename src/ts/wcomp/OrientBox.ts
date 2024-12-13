@@ -3,6 +3,7 @@ import styles from "./OrientBox.scss?inline&compress";
 
 // @ts-ignore
 import html from "./OrientBox.html?raw";
+import { cvt_cs_to_os } from "../_Utils.ts";
 
 //
 const preInit = URL.createObjectURL(new Blob([styles], {type: "text/css"}));
@@ -27,8 +28,6 @@ export class UIOrientBox extends HTMLElement {
     constructor() {
         super();
         const shadowRoot = this.attachShadow({mode: "open"});
-        const parser = new DOMParser();
-        const dom = parser.parseFromString(html, "text/html");
 
         // @ts-ignore
         const THEME_URL = "/externals/core/theme.js";
@@ -39,6 +38,8 @@ export class UIOrientBox extends HTMLElement {
         }).catch(console.warn.bind(console));
 
         //
+        const parser = new DOMParser();
+        const dom = parser.parseFromString(html, "text/html");
         dom.querySelector("template")?.content?.childNodes.forEach(cp => {
             shadowRoot.appendChild(cp.cloneNode(true));
         });
@@ -51,6 +52,54 @@ export class UIOrientBox extends HTMLElement {
         shadowRoot.appendChild(style);
         this.style.setProperty("--orient", this.getAttribute("orient"));
         this.style.setProperty("--zoom", this.getAttribute("zoom"));
+
+        //
+        const pxy_event: [any, any] = [(ev)=>{
+            if (!(ev?.target || this).dispatchEvent(new CustomEvent("ag-" + (ev?.type||"pointer"), {
+                bubbles: true,
+                cancelable: true,
+                detail: {
+                    capture(element = ev?.target || this) {
+                        return element?.setPointerCapture?.(ev?.pointerId || 0);
+                    },
+                    release(element = ev?.target || this) {
+                        return element?.releasePointerCapture?.(ev?.pointerId || 0);
+                    },
+                    pointerId: ev?.pointerId || 0,
+                    event: ev,
+                    orient: cvt_cs_to_os([ev?.clientX || 0, ev?.clientY || 0], size, this.orient),
+                    client: [ev?.clientX || 0, ev?.clientY || 0],
+                    get boundingBox() {
+                        return getBoundingOrientRect(ev?.target || this);
+                    }
+                }
+            }))) { ev?.preventDefault?.(); };
+        }, {passive: false, capture: true, once: false}];
+
+        //
+        const size: [number, number] = [this.clientWidth, this.clientHeight];
+        const resizeObserver = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                if (entry?.contentBoxSize) {
+                    const contentBoxSize = entry?.contentBoxSize?.[0];
+                    size[0] = contentBoxSize?.inlineSize || this.clientWidth;
+                    size[1] = contentBoxSize?.blockSize || this.clientHeight;
+                }
+            }
+        });
+
+        //
+        resizeObserver.observe(this, {box: "content-box"});
+        this.addEventListener("contextmenu", ...pxy_event);
+        this.addEventListener("pointerover", ...pxy_event);
+        this.addEventListener("pointerdown", ...pxy_event);
+        this.addEventListener("pointermove", ...pxy_event);
+        this.addEventListener("pointerenter", ...pxy_event);
+        this.addEventListener("pointerleave", ...pxy_event);
+        this.addEventListener("pointercancel", ...pxy_event);
+        this.addEventListener("pointerout", ...pxy_event);
+        this.addEventListener("pointerup", ...pxy_event);
+        this.addEventListener("click", ...pxy_event);
     }
 
     //
@@ -78,3 +127,7 @@ export class UIOrientBox extends HTMLElement {
 //
 customElements.define("ui-orientbox", UIOrientBox);
 export default UIOrientBox;
+function getBoundingOrientRect(arg0: any) {
+    throw new Error("Function not implemented.");
+}
+
