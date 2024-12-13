@@ -67,6 +67,8 @@ export class UIOrientBox extends HTMLElement {
                     },
                     pointerId: ev?.pointerId || 0,
                     event: ev,
+                    target: ev?.target || this,
+                    cs_box: size,
                     orient: cvt_cs_to_os([ev?.clientX || 0, ev?.clientY || 0], size, this.orient),
                     client: [ev?.clientX || 0, ev?.clientY || 0],
                     get boundingBox() {
