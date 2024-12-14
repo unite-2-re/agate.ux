@@ -13,13 +13,21 @@ export const getAvailSize = ()=>{
 //
 export const availSize = getAvailSize();
 export const updateVP = ()=>{
+    const rule = document.documentElement;
     Object.assign(availSize, getAvailSize());
+    Object.entries(availSize).forEach(([propName, propValue]) => {
+        const exists = rule?.style?.getPropertyValue(propName);
+        if (!exists || exists != propValue) {
+            rule?.style?.setProperty?.(propName, (propValue || "") as string, "");
+        }
+    });
 }
 
 //
 export const viewportHandler = (event?: any) => {
     const layoutViewport = document.body;
     const viewport = event?.target || visualViewport;
+    updateVP();
 
     //
     document.documentElement.style.setProperty(
