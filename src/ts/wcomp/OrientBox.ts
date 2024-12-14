@@ -8,6 +8,7 @@ import { getBoundingOrientRect, getZoom, zoomOf } from "../_Zoom.js";
 
 //
 const preInit = URL.createObjectURL(new Blob([styles], {type: "text/css"}));
+const root = document.documentElement;
 
 //
 export class UIOrientBox extends HTMLElement {
@@ -59,6 +60,10 @@ export class UIOrientBox extends HTMLElement {
         const pointerMap   = new Map<number, any>();
         const pointerCache = new Map<number, any>();
         const pxy_event: [any, any] = [(ev)=>{
+            const el = (ev.target.matches("ui-orientbox") ? ev.target : null) ?? ev.target.closest("ui-orientbox");
+            if (!(el == self || !el)) { return; };
+
+            //
             const cache: any = pointerCache?.get?.(ev?.pointerId || 0) || {
                 client: null,
                 orient: null,
@@ -149,16 +154,16 @@ export class UIOrientBox extends HTMLElement {
 
         //
         resizeObserver.observe(this, {box: "content-box"});
-        this.addEventListener("contextmenu", ...pxy_event);
-        this.addEventListener("pointerover", ...pxy_event);
-        this.addEventListener("pointerdown", ...pxy_event);
-        this.addEventListener("pointermove", ...pxy_event);
-        this.addEventListener("pointerenter", ...pxy_event);
-        this.addEventListener("pointerleave", ...pxy_event);
-        this.addEventListener("pointerout", ...pxy_event);
-        this.addEventListener("click", ...pxy_event);
-        this.addEventListener("pointerup", ...pxy_event);
-        this.addEventListener("pointercancel", ...pxy_event);
+        root.addEventListener("contextmenu", ...pxy_event);
+        root.addEventListener("pointerover", ...pxy_event);
+        root.addEventListener("pointerdown", ...pxy_event);
+        root.addEventListener("pointermove", ...pxy_event);
+        root.addEventListener("pointerenter", ...pxy_event);
+        root.addEventListener("pointerleave", ...pxy_event);
+        root.addEventListener("pointerout", ...pxy_event);
+        root.addEventListener("click", ...pxy_event);
+        root.addEventListener("pointerup", ...pxy_event);
+        root.addEventListener("pointercancel", ...pxy_event);
     }
 
     //
