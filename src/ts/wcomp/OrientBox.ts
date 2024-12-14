@@ -75,6 +75,7 @@ export class UIOrientBox extends HTMLElement {
                 event: ev,
                 target: ev?.target || self,
                 cs_box: size,
+                pointerType: ev?.pointerType || "mouse",
                 pointerId: ev?.pointerId || 0,
                 cap_element: null,
                 __client: ()=>{
