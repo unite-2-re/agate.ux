@@ -4,7 +4,7 @@ import styles from "./OrientBox.scss?inline&compress";
 // @ts-ignore
 import html from "./OrientBox.html?raw";
 import { cvt_cs_to_os } from "../_Utils";
-import { getBoundingOrientRect, getZoom, zoomOf } from "../_Zoom.js";
+import { getBoundingOrientRect, getZoom, orientOf, zoomOf } from "../_Zoom.js";
 
 //
 const preInit = URL.createObjectURL(new Blob([styles], {type: "text/css"}));
@@ -90,8 +90,8 @@ export class UIOrientBox extends HTMLElement {
 
                 //
                 get client() { return (cache.client ??= pointer?.__client?.()); },
-                get orient() { return (cache.orient ??= cvt_cs_to_os([...pointer.client] as [number, number], size, (el || self).orient || 0)); },
-                get boundingBox() { return (cache.boundingBox ??= getBoundingOrientRect(ev?.target || el)); },
+                get orient() { return (cache.orient ??= cvt_cs_to_os([...pointer.client] as [number, number], size, orientOf(ev.target || el))); },
+                get boundingBox() { return (cache.boundingBox ??= getBoundingOrientRect(ev?.target || el, orientOf(ev.target || el))); },
 
                 //
                 capture(element = ev?.target || el) {
