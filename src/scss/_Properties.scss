@@ -56,19 +56,6 @@
         inherits: true;
     }
 
-    //
-    @property --translate-x {
-        syntax: "<length-percentage>";
-        initial-value: 0px;
-        inherits: true;
-    }
-
-    //
-    @property --translate-y {
-        syntax: "<length-percentage>";
-        initial-value: 0px;
-        inherits: true;
-    }
 
     //
     @property --border-width {

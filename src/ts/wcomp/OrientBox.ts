@@ -85,7 +85,7 @@ export class UIOrientBox extends HTMLElement {
 
                 //
                 get client() { return (cache.client ??= pointer?.__client?.()); },
-                get orient() { return (cache.orient ??= cvt_cs_to_os(pointer.client, size, self.orient)); },
+                get orient() { return (cache.orient ??= cvt_cs_to_os([...pointer.client] as [number, number], size, self.orient)); },
                 get boundingBox() { return (cache.boundingBox ??= getBoundingOrientRect(ev?.target || self)); },
 
                 //

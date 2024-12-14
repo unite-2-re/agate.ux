@@ -51,9 +51,18 @@ export const unfixedClientZoom = (element = document.documentElement)=>{
 }
 
 //
+export const orientOf = (element = document.documentElement) => {
+    // legacy browser
+    const container: any = ((element.matches("ui-orientbox") ? element : null) || element.closest("ui-orientbox") || element);
+    if (container?.orient != null) return container?.orient;
+    const computed = element ? getComputedStyle(element) : null;
+    return parseFloat(computed?.getPropertyValue("--orient") || "0") || 0;
+}
+
+//
 export const getBoundingOrientRect = (element, orient = null)=>{
     const zoom = unfixedClientZoom(element) || 1;
-    const box = element?.getBoundingOrientRect?.();
+    const box = element?.getBoundingClientRect?.();
     const nbx = {
         left: box?.left / zoom,
         right: box?.right / zoom,
@@ -64,20 +73,16 @@ export const getBoundingOrientRect = (element, orient = null)=>{
     };
 
     //
-    const container = ((element.matches("ui-orientbox") ? element : null) || element.closest("ui-orientbox") || document.body) as HTMLElement;
-    const or_i: number = orient || (container as any)?.orient || 0;
+    const or_i: number = orient || orientOf(element) || 0;
     const size: [number, number] = [document.body.clientWidth / zoom, document.body.clientHeight / zoom];
-    const [left, top] = cvt_cs_to_os([nbx.left, nbx.top], size, or_i);
-    const [right, bottom] = cvt_cs_to_os([nbx.right, nbx.top], size, or_i);
+    const [left_, top_] = cvt_cs_to_os([nbx.left, nbx.top], size, or_i);
+    const [right_, bottom_] = cvt_cs_to_os([nbx.right, nbx.bottom], size, or_i);
+
+    //
+    const [left, right] = (or_i==0 || or_i==3) ? [left_, right_] : [right_, left_];
+    const [top, bottom] = (or_i==0 || or_i==1) ? [top_, bottom_] : [bottom_, top_];
+
+    //
     const [width, height] = (or_i%2) ? [nbx.height, nbx.width] : [nbx.width, nbx.height];
     return { left, top, right, bottom, width, height };
-}
-
-//
-export const orientOf = (element = document.documentElement) => {
-    // legacy browser
-    const container: any = ((element.matches("ui-orientbox") ? element : null) || element.closest("ui-orientbox") || element);
-    if (container?.orient != null) return container?.orient;
-    const computed = element ? getComputedStyle(element) : null;
-    return parseFloat(computed?.getPropertyValue("--orient") || "0") || 0;
 }
