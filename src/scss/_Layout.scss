@@ -62,7 +62,12 @@ export const orientationNumberMap = {
     }
 }
 
-
+//
+@mixin native-optimized-swap-in-portrait {
+    & { --in-swap-cond: 0; };
+    @media (orientation: portrait) { --in-swap-cond: 0; };
+    @media (orientation: landscape) { --in-swap-cond: 1; };
+}
 
 //
 @mixin compute_os_size_to_cs {
@@ -313,6 +318,11 @@ export const orientationNumberMap = {
     //
     :where(body) {
         @include fit-viewport();
+    }
+
+    //
+    .native-portrait-optimized {
+        @include native-optimized-swap-in-portrait;
     }
 
 }

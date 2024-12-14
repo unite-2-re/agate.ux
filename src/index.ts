@@ -61,11 +61,13 @@ export const orientationNumberMap = {
 
 //
 export const fixOrientToScreen = (element)=>{
-    whenAnyScreenChanges(()=>{
-        const orient = orientationNumberMap?.[getCorrectOrientation()] || 0;
-        element.style.setProperty("--orient", orient);
-        element.orient = orient;
-    });
+    if (!element?.classList?.contains?.("native-portrait-optimized")) {
+        element?.classList?.add?.("native-portrait-optimized");
+        whenAnyScreenChanges(()=>{
+            const orient = orientationNumberMap?.[getCorrectOrientation()] || 0;
+            element.orient = orient;
+        });
+    }
 }
 
 //
