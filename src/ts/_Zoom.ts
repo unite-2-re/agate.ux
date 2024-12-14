@@ -72,3 +72,12 @@ export const getBoundingOrientRect = (element, orient = null)=>{
     const [width, height] = (or_i%2) ? [nbx.height, nbx.width] : [nbx.width, nbx.height];
     return { left, top, right, bottom, width, height };
 }
+
+//
+export const orientOf = (element = document.documentElement) => {
+    // legacy browser
+    const container: any = ((element.matches("ui-orientbox") ? element : null) || element.closest("ui-orientbox") || element);
+    if (container?.orient != null) return container?.orient;
+    const computed = element ? getComputedStyle(element) : null;
+    return parseFloat(computed?.getPropertyValue("--orient") || "0") || 0;
+}

@@ -60,7 +60,7 @@ const initialize = ()=>{
     //
     requestIdleCallback(viewportHandler, {timeout: 1000});
     whenAnyScreenChanges((e?: any) => {
-        updateOrientation(e);
+        //updateOrientation(e);
         setStyleRules(classes);
     });
 };
@@ -68,9 +68,21 @@ const initialize = ()=>{
 //
 export { UIOrientBox };
 export default initialize;
-const updateOrientation = (e: any) => {
-    //throw new Error("Function not implemented.");
-};
+
+//
+export const orientationNumberMap = {
+    "portrait-primary": 0, // as 0deg, aka. 360deg
+    "landscape-primary": 1, // as -90deg, aka. 270deg
+    "portrait-secondary": 2, // as -180deg, aka. 180deg
+    "landscape-secondary": 3 // as -270deg, aka. 90deg
+}
+
+//
+export const fixOrientToScreen = (element)=>{
+    whenAnyScreenChanges(()=>{
+        element.orient = orientationNumberMap?.[getCorrectOrientation()] || 0;
+    });
+}
 
 //
 export * from "./ts/_Utils";
