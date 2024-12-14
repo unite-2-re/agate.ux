@@ -3,9 +3,12 @@ import { isMobile } from "../_Detect";
 //
 export const getAvailSize = ()=>{
     const mob = isMobile();
+    const l = matchMedia("(orientation: landscape)")?.matches;
+    const w = ((mob ? screen.availWidth : Math.max(window.innerWidth, screen.availWidth)) || 0) + "px";
+    const h = ((mob ? screen.availHeight : Math.max(window.innerHeight, screen.availHeight)) || 0) + "px";
     return {
-        "--avail-width": ((mob ? screen.availWidth : Math.max(window.innerWidth, screen.availWidth)) || 0) + "px",
-        "--avail-height": ((mob ? screen.availHeight : Math.max(window.innerHeight, screen.availHeight)) || 0) + "px",
+        "--avail-width": l ? h : w,
+        "--avail-height": l ? w : h,
         "--pixel-ratio": devicePixelRatio || 1,
     };
 }

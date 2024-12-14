@@ -207,39 +207,38 @@ export const orientationNumberMap = {
 
 //
 @mixin vp-vars {
+    & { --avi: 100dvmin; --avb: 100dvmax; };
+    @media (orientation: portrait) { --avi: 100dvi; --avb: 100dvb; };
+    @media (orientation: landscape) { --avi: 100dvb; --avb: 100dvi; };
+
+    //
     & {
-        --vp-i-size: 100dvi;
-        --vp-b-size: 100dvb;
+        --vp-i-size: var(--avi, 100dvmin);
+        --vp-b-size: var(--avb, 100dvmax);
     }
 
     //
     @media screen and ((display-mode: fullscreen) or (display-mode: standalone)) {
-        --vp-i-size: min(var(--avail-width), 100dvi);
-        --vp-b-size: min(var(--avail-height), 100dvb);
+        --vp-i-size: min(var(--avail-width, 100dvi), var(--avi, 100dvmin));
+        --vp-b-size: min(var(--avail-height, 100dvb), var(--avb, 100dvmax));
     }
 
     //
     @at-root :fullscreen & {
-        --vp-i-size: min(var(--avail-width), 100dvi);
-        --vp-b-size: min(var(--avail-height), 100dvb);
+        --vp-i-size: min(var(--avail-width, 100dvi), var(--avi, 100dvmin));
+        --vp-b-size: min(var(--avail-height, 100dvb), var(--avb, 100dvmax));
     }
 };
 
-// depends from virtual keyboards
+//
 @mixin fit-viewport {
     @include vp-vars;
 
     //
-    & {
-        inline-size: min(var(--vp-i-size, 100dvi), 100dvi);
-        block-size: min(var(--vp-b-size, 100dvb), 100dvb);
-
-        //
-        max-inline-size: min(var(--vp-i-size, 100dvi), 100dvi);
-        max-block-size: min(var(--vp-b-size, 100dvb), 100dvb);
-    }
+    & { inline-size: min(var(--vp-i-size, 100dvmin), 100dvmin); block-size: min(var(--vp-b-size, 100dvmax), 100dvmax); max-inline-size: min(var(--vp-i-size, 100dvmin), 100dvmin); max-block-size: min(var(--vp-b-size, 100dvmax), 100dvmax); }
+    @media (orientation: portrait) { inline-size: min(var(--vp-i-size, 100dvi), 100dvi); block-size: min(var(--vp-b-size, 100dvb), 100dvb); max-inline-size: min(var(--vp-i-size, 100dvi), 100dvi); max-block-size: min(var(--vp-b-size, 100dvb), 100dvb); };
+    @media (orientation: landscape) { inline-size: min(var(--vp-b-size, 100dvi), 100dvi); block-size: min(var(--vp-i-size, 100dvb), 100dvb); max-inline-size: min(var(--vp-b-size, 100dvi), 100dvi); max-block-size: min(var(--vp-i-size, 100dvb), 100dvb); };
 };
-
 
 //
 @layer ux-agate {

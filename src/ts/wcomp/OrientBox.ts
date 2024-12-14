@@ -20,7 +20,7 @@ export class UIOrientBox extends HTMLElement {
 
     //
     get orient() { return parseInt(this.getAttribute("orient") || "0"); };
-    set orient(ox) { this.setAttribute("orient", (ox || 0)?.toFixed?.(0) || (""+(ox || 0))); };
+    set orient(ox) { const nw = (ox || 0)?.toFixed?.(0) || (""+(ox || 0)); if (this.getAttribute("orient") != nw) { this.setAttribute("orient", nw); }; };
 
     //
     get zoom() { return parseFloat(this.getAttribute("zoom") || "1") || 1; };
@@ -52,8 +52,8 @@ export class UIOrientBox extends HTMLElement {
 
         //
         shadowRoot.appendChild(style);
-        this.style.setProperty("--orient", this.getAttribute("orient"));
-        this.style.setProperty("--zoom", this.getAttribute("zoom"));
+        this.style.setProperty("--orient", this.getAttribute("orient") || "0");
+        this.style.setProperty("--zoom", this.getAttribute("zoom") || "1");
 
         //
         const self = this;
@@ -171,8 +171,8 @@ export class UIOrientBox extends HTMLElement {
         if (this.#initialized) return this;
         const shadowRoot = this.shadowRoot;
         this.#initialized = true;
-        this.style.setProperty("--orient", this.getAttribute("orient"));
-        this.style.setProperty("--zoom", this.getAttribute("zoom"));
+        this.style.setProperty("--orient", this.getAttribute("orient") || "0");
+        this.style.setProperty("--zoom", this.getAttribute("zoom") || "1");
         return this;
     }
 
@@ -183,8 +183,8 @@ export class UIOrientBox extends HTMLElement {
 
     //
     attributeChangedCallback(name, oldValue, newValue) {
-        if (name == "orient") { this.style.setProperty("--orient", newValue); };
-        if (name == "zoom") { this.style.setProperty("--zoom", newValue); };
+        if (name == "orient" && oldValue != newValue) { this.style.setProperty("--orient", newValue); };
+        if (name == "zoom" && oldValue != newValue) { this.style.setProperty("--zoom", newValue); };
     }
 }
 
