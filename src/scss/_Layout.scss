@@ -206,67 +206,111 @@ export const orientationNumberMap = {
 
 
 //
-ui-orientbox {
-    @include compute_os_conditions;
-    @include compute_cs_size_to_os;
-    @include compute_from_os_to_cs;
-
-    //
+@mixin vp-vars {
     & {
-        --cs-size-x: 100cqi;
-        --cs-size-y: 100cqb;
-
-        //
-        position: relative;
-        container-type: size !important;
-        contain: strict !important;
-
-        //
-        grid-column: 1 / -1;
-        grid-row: 1 / -1;
-        place-self: center;
-
-        //
-        min-inline-size: 1px;
-        min-block-size: 1px;
-        inline-size: 100%;
-        block-size: 100%;
-        max-inline-size: 100%;
-        max-block-size: 100%;
-
-        //
-        inset: 0px;
-
-        //
-        zoom: max(var(--zoom, 1), 0.125);
-        font-size: 16px;
-
-        //
-        pointer-events: none;
+        --vp-i-size: 100dvi;
+        --vp-b-size: 100dvb;
     }
 
     //
-    & {
-        //
-        --zoom: max(var(--scaling, 1), 0.125);
-        --zpx: calc(1px / max(var(--zoom, 1), 0.125));
-        --ppx: calc(1px / max(var(--pixel-ratio, 1), 0.125));
+    @media screen and ((display-mode: fullscreen) or (display-mode: standalone)) {
+        --vp-i-size: min(var(--avail-width), 100dvi);
+        --vp-b-size: min(var(--avail-height), 100dvb);
     }
 
     //
-    :where(*) {
+    @at-root :fullscreen & {
+        --vp-i-size: min(var(--avail-width), 100dvi);
+        --vp-b-size: min(var(--avail-height), 100dvb);
+    }
+};
+
+// depends from virtual keyboards
+@mixin fit-viewport {
+    @include vp-vars;
+
+    //
+    inline-size: min(var(--vp-i-size, 100dvi), 100dvi);
+    block-size: min(var(--vp-b-size, 100dvb), 100dvb);
+
+    //
+    max-inline-size: min(var(--vp-i-size, 100dvi), 100dvi);
+    max-block-size: min(var(--vp-b-size, 100dvb), 100dvb);
+};
+
+
+//
+@layer ux-agate {
+
+    //
+    ui-orientbox {
         @include compute_os_conditions;
         @include compute_cs_size_to_os;
         @include compute_from_os_to_cs;
+
+        //
+        & {
+            --cs-size-x: 100cqi;
+            --cs-size-y: 100cqb;
+
+            //
+            position: relative;
+            container-type: size !important;
+            contain: strict !important;
+
+            //
+            grid-column: 1 / -1;
+            grid-row: 1 / -1;
+            place-self: center;
+
+            //
+            min-inline-size: 1px;
+            min-block-size: 1px;
+            inline-size: 100%;
+            block-size: 100%;
+            max-inline-size: 100%;
+            max-block-size: 100%;
+
+            //
+            inset: 0px;
+
+            //
+            zoom: max(var(--zoom, 1), 0.125);
+            font-size: 16px;
+
+            //
+            pointer-events: none;
+        }
+
+        //
+        & {
+            //
+            --zoom: max(var(--scaling, 1), 0.125);
+            --zpx: calc(1px / max(var(--zoom, 1), 0.125));
+            --ppx: calc(1px / max(var(--pixel-ratio, 1), 0.125));
+        }
+
+        //
+        :where(*) {
+            @include compute_os_conditions;
+            @include compute_cs_size_to_os;
+            @include compute_from_os_to_cs;
+        }
+
+        //
+        .center-self {
+            @include use-inset;
+            @include centered-with-offset();
+        }
+
+        //
+        .fixed { @include use-inset; position: fixed !important; }
+        .absolute { @include use-inset; position: absolute !important; }
     }
 
     //
-    .center-self {
-        @include use-inset;
-        @include centered-with-offset();
+    :where(body) {
+        @include fit-viewport();
     }
 
-    //
-    .fixed { @include use-inset; position: fixed !important; }
-    .absolute { @include use-inset; position: absolute !important; }
 }
