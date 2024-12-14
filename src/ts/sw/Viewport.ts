@@ -15,7 +15,7 @@ export const getAvailSize = ()=>{
 
 //
 export const availSize = getAvailSize();
-export const updateVP = ()=>{
+export const updateVP = (ev?: any)=>{
     const rule = document.documentElement;
     Object.assign(availSize, getAvailSize());
     Object.entries(availSize).forEach(([propName, propValue]) => {
@@ -28,10 +28,11 @@ export const updateVP = ()=>{
 
 //
 export const viewportHandler = (event?: any) => {
-    const layoutViewport = document.body;
-    const viewport = event?.target || visualViewport;
-    updateVP();
+    //const layoutViewport = document.body;
+    //const viewport = event?.target || visualViewport;
+    updateVP(event);
 
+    /*
     //
     document.documentElement.style.setProperty(
         "--visual-width",
@@ -47,5 +48,5 @@ export const viewportHandler = (event?: any) => {
         "--visual-height",
         cvh + "px",
         ""
-    );
+    );*/
 }
