@@ -23,10 +23,14 @@ export const zoomOf = (element = document.documentElement) => {
     // legacy element
     if (element == document.documentElement) { return zoomValue || 1; };
 
-    // legacy browser
-    const container = ((element.matches("ui-orientbox") ? element : null) || element.closest("ui-orientbox") || document.body) as HTMLElement;
-    const computed  = container ? getComputedStyle(container) : null;
-    return parseFloat(computed?.zIndex || "1") || 1;
+    // getting zoom performance broken...
+    const container: any = ((element.matches("ui-orientbox") ? element : null) || element.closest("ui-orientbox") || document.body) as HTMLElement;
+    return container?.zoom || 1;
+
+    //
+    if (element?.currentCSSZoom) {
+        return element?.currentCSSZoom || 1;
+    }
 }
 
 //
@@ -54,9 +58,10 @@ export const unfixedClientZoom = (element = document.documentElement)=>{
 export const orientOf = (element = document.documentElement) => {
     // legacy browser
     const container: any = ((element.matches("ui-orientbox") ? element : null) || element.closest("ui-orientbox") || element);
-    if (container?.orient != null) return container?.orient;
-    const computed = element ? getComputedStyle(element) : null;
-    return parseFloat(computed?.getPropertyValue("--orient") || "0") || 0;
+    return container?.orient || 0;
+    //if (container?.orient != null) return container?.orient;
+    //const computed = element ? getComputedStyle(element) : null;
+    //return parseFloat(computed?.getPropertyValue("--orient") || "0") || 0;
 }
 
 //
