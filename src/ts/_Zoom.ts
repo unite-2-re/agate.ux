@@ -24,7 +24,7 @@ export const zoomOf = (element = document.documentElement) => {
     if (element == document.documentElement) { return zoomValue || 1; };
 
     // getting zoom performance broken...
-    const container: any = ((element.matches("ui-orientbox") ? element : null) || element.closest("ui-orientbox") || document.body) as HTMLElement;
+    const container: any = ((element?.matches?.("ui-orientbox") ? element : null) || element?.closest?.("ui-orientbox") || document.body) as HTMLElement;
     return container?.zoom || 1;
 
     //
@@ -57,7 +57,7 @@ export const unfixedClientZoom = (element = document.documentElement)=>{
 //
 export const orientOf = (element = document.documentElement) => {
     // legacy browser
-    const container: any = ((element.matches("ui-orientbox") ? element : null) || element.closest("ui-orientbox") || element);
+    const container: any = ((element?.matches?.("ui-orientbox") ? element : null) || element?.closest?.("ui-orientbox") || element);
     return container?.orient || 0;
     //if (container?.orient != null) return container?.orient;
     //const computed = element ? getComputedStyle(element) : null;

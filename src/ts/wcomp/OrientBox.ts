@@ -60,7 +60,7 @@ export class UIOrientBox extends HTMLElement {
         const pointerMap   = new Map<number, any>();
         const pointerCache = new Map<number, any>();
         const pxy_event: [any, any] = [(ev)=>{
-            const el = (ev.target.matches("ui-orientbox") ? ev.target : null) || ev.target.closest("ui-orientbox");
+            const el = (ev?.target?.matches?.("ui-orientbox") ? ev.target : null) || ev?.target?.closest?.("ui-orientbox");
             if (el != self || !(el||self)?.contains?.(ev.target)) { return true; }; //
 
             //
