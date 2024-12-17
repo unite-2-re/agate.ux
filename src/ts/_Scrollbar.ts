@@ -251,7 +251,7 @@ export class ScrollBar {
             const self = weak?.deref?.() as any;
 
             //
-            //if (!CSS.supports("timeline-scope", "--tm-x, --tm-y")) {
+            if (!CSS.supports("timeline-scope", "--tm-x, --tm-y")) {
                 setProperty(
                     self?.holder,
                     "--scroll-top",
@@ -264,7 +264,7 @@ export class ScrollBar {
                     "--scroll-left",
                     (self?.content?.scrollLeft || "0") as string
                 );
-            //}
+            }
 
             //
             self?.holder?.dispatchEvent?.(new CustomEvent("scroll-change", {
