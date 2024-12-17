@@ -65,7 +65,7 @@ export const orientOf = (element = document.documentElement) => {
 }
 
 //
-export const getBoundingOrientRect = (element, orient = null)=>{
+export const getBoundingOrientRect = (element, orient: number|null|undefined = null)=>{
     const zoom = unfixedClientZoom(element) || 1;
     const box = element?.getBoundingClientRect?.();
     const nbx = {

@@ -3,7 +3,7 @@ import styles from "./OrientBox.scss?inline&compress";
 
 // @ts-ignore
 import html from "./OrientBox.html?raw";
-import { cvt_cs_to_os } from "../_Utils";
+import { cvt_cs_to_os, cvt_rel_cs_to_os } from "../_Utils";
 import { getBoundingOrientRect, getZoom, orientOf, zoomOf } from "../_Zoom.js";
 
 //
@@ -19,12 +19,12 @@ export class UIOrientBox extends HTMLElement {
     #initialized: boolean = false;
 
     //
-    get orient() { return parseInt(this.getAttribute("orient") || "0"); };
-    set orient(ox) { const nw = (ox || 0)?.toFixed?.(0) || (""+(ox || 0)); if (this.getAttribute("orient") != nw) { this.setAttribute("orient", nw); }; };
+    get orient() { return parseInt(this.getAttribute("orient") || "0") || 0; };
+    set orient(nw) { if (this.getAttribute("orient") != (nw as unknown as string)) { this.setAttribute("orient", ((nw || 0) as unknown as string)); }; };
 
     //
     get zoom() { return parseFloat(this.getAttribute("zoom") || "1") || 1; };
-    set zoom(ox) { this.setAttribute("zoom", (ox || 1)?.toFixed?.(0) || (""+(ox || 1))); };
+    set zoom(nw) { if (this.getAttribute("zoom") != (nw as unknown as string)) { this.setAttribute("zoom", ((nw || 1) as unknown as string)); }; };
 
     //
     constructor() {
@@ -61,18 +61,22 @@ export class UIOrientBox extends HTMLElement {
         const pointerCache = new Map<number, any>();
         const pxy_event: [any, any] = [(ev)=>{
             const el = (ev.target.matches("ui-orientbox") ? ev.target : null) || ev.target.closest("ui-orientbox");
-            if (el != self || !(el||self)?.contains?.(ev.target)) { return true; };
+            if (el != self || !(el||self)?.contains?.(ev.target)) { return true; }; //
 
             //
+            const zoom: number = zoomOf(ev?.target || el) || 1;
+            const coord: [number, number] = [(ev?.clientX || 0) / zoom, (ev?.clientY || 0) / zoom];
             const cache: any = pointerCache?.get?.(ev?.pointerId || 0) || {
-                client: null,
+                client: coord,
                 orient: null,
-                boundingBox: null
+                boundingBox: null,
+                movement: [0, 0]
             };
 
             //
+            cache.delta = [cache.client[0], cache.client[1]];
             cache.orient = null;
-            cache.client = null;
+            cache.client = coord;
 
             //
             const pointer = pointerMap?.get?.(ev?.pointerId || 0) || {
@@ -80,23 +84,18 @@ export class UIOrientBox extends HTMLElement {
                 event: ev,
                 target: ev?.target || el,
                 cs_box: size,
+                cap_element: null,
                 pointerType: ev?.pointerType || "mouse",
                 pointerId: ev?.pointerId || 0,
-                cap_element: null,
-                __client: ()=>{
-                    const zoom = zoomOf(ev?.target || el);//cache.client ? 1 : zoomOf(ev?.target || this);
-                    return [(ev?.clientX || 0) / zoom, (ev?.clientY || 0) / zoom];
-                },
 
                 //
-                get client() { return (cache.client ??= pointer?.__client?.()); },
-                get orient() { return (cache.orient ??= cvt_cs_to_os([...pointer.client] as [number, number], size, orientOf(ev.target || el))); },
-                get boundingBox() { return (cache.boundingBox ??= getBoundingOrientRect(ev?.target || el, orientOf(ev.target || el))); },
+                get client() { return cache.client; },
+                get orient() { return cache.orient ??= cvt_cs_to_os([...pointer.client] as [number, number], size, orientOf(ev.target || el) || 0); },
+                get movement() { return cvt_rel_cs_to_os([cache.client[0] - cache.delta[0], cache.client[1] - cache.delta[1]], orientOf(ev.target || el) || 0); },
+                get boundingBox() { return (cache.boundingBox ??= getBoundingOrientRect(ev?.target || el, orientOf(ev.target || el) || 0)); },
 
                 //
-                capture(element = ev?.target || el) {
-                    return (pointer.cap_element = element?.setPointerCapture?.(ev?.pointerId || 0));
-                },
+                capture(element = ev?.target || el) { return (pointer.cap_element = element?.setPointerCapture?.(ev?.pointerId || 0)); },
                 release(element = null) {
                     (element || pointer.cap_element || ev?.target || el)?.releasePointerCapture?.(ev?.pointerId || 0);
                     pointer.cap_element = null;
@@ -109,18 +108,14 @@ export class UIOrientBox extends HTMLElement {
                 event: ev,
                 target: ev?.target || el,
                 cs_box: size,
-                pointerId: ev?.pointerId || 0,
-                __client: ()=>{
-                    const zoom = cache.client ? 1 : zoomOf(ev?.target || el);
-                    return [(ev?.clientX || 0) / zoom, (ev?.clientY || 0) / zoom];
-                },
+                pointerId: ev?.pointerId || 0
             });
 
             //
             if (!pointerMap?.has?.(ev?.pointerId || 0)) {
                 pointerMap?.set?.(ev?.pointerId || 0, pointer);
                 pointerCache?.set?.(ev?.pointerId || 0, cache);
-            }
+            };
 
             //
             if (!(ev?.target || el)?.dispatchEvent?.(new CustomEvent("ag-" + (ev?.type||"pointer"), {
@@ -136,7 +131,7 @@ export class UIOrientBox extends HTMLElement {
                 if (ev?.type == "pointercancel") {
                     pointer?.release?.();
                 }
-            }
+            };
         }, {passive: false, capture: true, once: false}];
 
         //
@@ -144,7 +139,6 @@ export class UIOrientBox extends HTMLElement {
         const resizeObserver = new ResizeObserver((entries) => {
             for (const entry of entries) {
                 if (entry?.contentBoxSize) {
-                    //const zoom = zoomOf(this);
                     const contentBoxSize = entry?.contentBoxSize?.[0];
                     size[0] = (contentBoxSize?.inlineSize || this.clientWidth);
                     size[1] = (contentBoxSize?.blockSize || this.clientHeight);
