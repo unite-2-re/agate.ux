@@ -74,3 +74,4 @@ export const fixOrientToScreen = (element)=>{
 export * from "./ts/_Utils";
 export * from "./ts/_Detect";
 export * from "./ts/_Zoom";
+export * from "./ts/_Scrollbar";
