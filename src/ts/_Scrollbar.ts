@@ -134,17 +134,18 @@ export class ScrollBar {
             if (self) {
                 const sizePercent = Math.min(
                     self.content[[borderBoxWidth, borderBoxHeight][axis]] /
-                    self.content[["scrollWidth", "scrollHeight"][axis]],
+                    (self.content[["scrollWidth", "scrollHeight"][axis]] || 1),
                     1
                 );
 
                 //
-                setProperty(self.scrollbar, "--scroll-size", this.content[["scrollWidth", "scrollHeight"][axis]]);
-                if (sizePercent >= 0.999) {
+                setProperty(self.scrollbar, "--scroll-coef", sizePercent);
+                setProperty(self.scrollbar, "--scroll-size", (self.content[["scrollWidth", "scrollHeight"][axis]] || 1));
+                /*if (sizePercent >= 0.999) {
                     setProperty(self.scrollbar, "visibility", "collapse", "important");
                 } else {
                     setProperty(self.scrollbar, "visibility", "visible", "important");
-                }
+                }*/
             }
         };
 
@@ -246,7 +247,7 @@ export class ScrollBar {
             const self = weak?.deref?.() as any;
 
             //
-            if (!CSS.supports("timeline-scope", "--tm-x, --tm-y")) {
+            //if (!CSS.supports("timeline-scope", "--tm-x, --tm-y")) {
                 setProperty(
                     self?.holder,
                     "--scroll-top",
@@ -259,7 +260,7 @@ export class ScrollBar {
                     "--scroll-left",
                     (self?.content?.scrollLeft || "0") as string
                 );
-            }
+            //}
 
             //
             self?.holder?.dispatchEvent?.(new CustomEvent("scroll-change", {
@@ -294,6 +295,14 @@ export class ScrollBar {
             if (self) {
                 self.content[borderBoxWidth] = box.inlineSize;
                 self.content[borderBoxHeight] = box.blockSize;
+
+                const sizePercent = Math.min(
+                    self.content[[borderBoxWidth, borderBoxHeight][axis]] /
+                    (self.content[["scrollWidth", "scrollHeight"][axis]] || 1),
+                    1
+                );
+
+                setProperty(self.scrollbar, "--scroll-coef", sizePercent);
             }
         });
 
