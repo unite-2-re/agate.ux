@@ -126,6 +126,9 @@ export class ScrollBar {
         };
 
         //
+        setProperty(this.scrollbar, "visibility", "collapse");
+
+        //
         const status_w = new WeakRef(this.status);
         const weak     = new WeakRef(this);
         const computeScroll = (ev: any | null = null) => {
@@ -143,9 +146,9 @@ export class ScrollBar {
 
                 //
                 if (sizePercent >= 0.999) {
-                    setProperty(self.scrollbar, "visibility", "collapse");
+                    setProperty(self.scrollbar, "visibility", "collapse", "important");
                 } else {
-                    setProperty(self.scrollbar, "visibility", "visible");
+                    setProperty(self.scrollbar, "visibility", "visible", "important");
                 }
             }
         };
@@ -279,7 +282,8 @@ export class ScrollBar {
         this.holder.addEventListener("change", computeScroll);
 
         // inputs support also needed...
-        (new MutationObserver(computeScroll)).observe(this.holder, { childList: true, subtree: true, characterData: false, attributes: false });
+        (new MutationObserver(computeScroll)).observe(this.holder, { childList: true, subtree: true, characterData: true, attributes: false });
+        requestIdleCallback(computeScroll, {timeout: 1000});
 
         //
         observeBorderBox(this.scrollbar, (box) => {
@@ -296,18 +300,8 @@ export class ScrollBar {
             if (self) {
                 self.content[borderBoxWidth] = box.inlineSize;
                 self.content[borderBoxHeight] = box.blockSize;
-
-                const sizePercent = Math.min(
-                    self.content[[borderBoxWidth, borderBoxHeight][axis]] /
-                    (self.content[["scrollWidth", "scrollHeight"][axis]] || 1),
-                    1
-                );
-
-                setProperty(self.scrollbar, "--scroll-coef", sizePercent);
+                computeScroll();
             }
         });
-
-        //
-        requestIdleCallback(computeScroll, {timeout: 1000});
     }
 }
