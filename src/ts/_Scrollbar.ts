@@ -84,14 +84,13 @@ export const setProperty = (target, name, value, importance = "")=>{
     if ("attributeStyleMap" in target) {
         const raw = target.attributeStyleMap.get(name);
         const prop = raw?.[0] ?? raw?.value;
-        if (parseFloat(prop) != value && prop != value || prop == null) {
-            //if (raw?.[0] != null) { raw[0] = value; } else
-            if (raw?.value != null) { raw.value = value; } else
+        if (prop != value || prop == null) {
+            if (raw?.value != null && !(raw instanceof CSSKeywordValue)) { raw.value = value; } else
             { target.attributeStyleMap.set(name, value); };
         }
     } else {
         const prop = target?.style?.getPropertyValue?.(name);
-        if (parseFloat(prop) != value && prop != value || prop == null) {
+        if (prop != value || prop == null) {
             target?.style?.setProperty?.(name, value, importance);
         }
     }
@@ -141,11 +140,13 @@ export class ScrollBar {
                 //
                 setProperty(self.scrollbar, "--scroll-coef", sizePercent);
                 setProperty(self.scrollbar, "--scroll-size", (self.content[["scrollWidth", "scrollHeight"][axis]] || 1));
-                /*if (sizePercent >= 0.999) {
-                    setProperty(self.scrollbar, "visibility", "collapse", "important");
+
+                //
+                if (sizePercent >= 0.999) {
+                    setProperty(self.scrollbar, "visibility", "collapse");
                 } else {
-                    setProperty(self.scrollbar, "visibility", "visible", "important");
-                }*/
+                    setProperty(self.scrollbar, "visibility", "visible");
+                }
             }
         };
 
