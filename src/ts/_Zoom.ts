@@ -13,9 +13,6 @@ export const getZoom = ()=>{
 let zoomValue = getZoom() || 1;
 document.documentElement.addEventListener("scaling", ()=>{ zoomValue = getZoom() || 1; });
 document.documentElement.addEventListener("resize", ()=>{ zoomValue = getZoom() || 1; });
-if (!document.documentElement.classList.contains("__exp-use-zoom")) {
-    document.documentElement.classList.add("__exp-use-zoom");
-}
 addEventListener("resize", ()=>{ zoomValue = getZoom() || 1; });
 
 //

@@ -35,21 +35,24 @@ export const orientationNumberMap = {
 
 
 //
-@use "LogicFb" as flg;
-@use "LogicSign" as slg;
+@use "lib/LogicFb" as flg;
+@use "lib/LogicSign" as slg;
+
+//
+@use "lib/Logic" as lg;
 
 //
 @mixin compute_os_conditions {
     // reversion condition
     @supports (opacity: sign(0.5)) {
-        --in-rev-cond-x: calc(1 - #{slg.lor(slg.eq(var(--orient, 0), 0), slg.eq(var(--orient, 0), 1))} );
-        --in-rev-cond-y: calc(1 - #{slg.lor(slg.eq(var(--orient, 0), 0), slg.eq(var(--orient, 0), 3))} );
+        --in-rev-cond-x: calc(1 - #{lg.lor(slg.eq(var(--orient, 0), 0), slg.eq(var(--orient, 0), 1))} );
+        --in-rev-cond-y: calc(1 - #{lg.lor(slg.eq(var(--orient, 0), 0), slg.eq(var(--orient, 0), 3))} );
     }
 
     // reversion condition (alt)
     @supports not (opacity: sign(0.5)){
-        --in-rev-cond-x: calc(1 - #{flg.lor(flg.eq(var(--orient, 0), 0), flg.eq(var(--orient, 0), 1))} );
-        --in-rev-cond-y: calc(1 - #{flg.lor(flg.eq(var(--orient, 0), 0), flg.eq(var(--orient, 0), 3))} );
+        --in-rev-cond-x: calc(1 - #{lg.lor(flg.eq(var(--orient, 0), 0), flg.eq(var(--orient, 0), 1))} );
+        --in-rev-cond-y: calc(1 - #{lg.lor(flg.eq(var(--orient, 0), 0), flg.eq(var(--orient, 0), 3))} );
     }
 
     //
@@ -73,12 +76,12 @@ export const orientationNumberMap = {
 @mixin compute_os_size_to_cs {
     // size swapping
     & { //
-        --cs-size-x: #{slg.mix(var(--os-size-x, 100cqb), var(--os-size-y, 100cqi), var(--in-swap-cond, 0))};
-        --cs-size-y: #{slg.mix(var(--os-size-y, 100cqi), var(--os-size-x, 100cqb), var(--in-swap-cond, 0))};
+        --cs-size-x: #{lg.mix(var(--os-size-x, 100cqb), var(--os-size-y, 100cqi), var(--in-swap-cond, 0))};
+        --cs-size-y: #{lg.mix(var(--os-size-y, 100cqi), var(--os-size-x, 100cqb), var(--in-swap-cond, 0))};
 
         //
-        --cs-self-size-x: #{slg.mix(var(--os-self-size-y, 100cqb), var(--os-self-size-x, 100cqi), var(--in-swap-cond, 0))};
-        --cs-self-size-y: #{slg.mix(var(--os-self-size-x, 100cqi), var(--os-self-size-y, 100cqb), var(--in-swap-cond, 0))};
+        --cs-self-size-x: #{lg.mix(var(--os-self-size-y, 100cqb), var(--os-self-size-x, 100cqi), var(--in-swap-cond, 0))};
+        --cs-self-size-y: #{lg.mix(var(--os-self-size-x, 100cqi), var(--os-self-size-y, 100cqb), var(--in-swap-cond, 0))};
     }
 }
 
@@ -86,12 +89,12 @@ export const orientationNumberMap = {
 @mixin compute_cs_size_to_os {
     // size swapping
     & { //
-        --os-size-x: #{slg.mix(var(--cs-size-x, 100cqb), var(--cs-size-y, 100cqi), var(--in-swap-cond, 0))};
-        --os-size-y: #{slg.mix(var(--cs-size-y, 100cqi), var(--cs-size-x, 100cqb), var(--in-swap-cond, 0))};
+        --os-size-x: #{lg.mix(var(--cs-size-x, 100cqb), var(--cs-size-y, 100cqi), var(--in-swap-cond, 0))};
+        --os-size-y: #{lg.mix(var(--cs-size-y, 100cqi), var(--cs-size-x, 100cqb), var(--in-swap-cond, 0))};
 
         //
-        --os-self-size-x: #{slg.mix(var(--cs-self-size-y, 100cqb), var(--cs-self-size-x, 100cqi), var(--in-swap-cond, 0))};
-        --os-self-size-y: #{slg.mix(var(--cs-self-size-x, 100cqi), var(--cs-self-size-y, 100cqb), var(--in-swap-cond, 0))};
+        --os-self-size-x: #{lg.mix(var(--cs-self-size-y, 100cqb), var(--cs-self-size-x, 100cqi), var(--in-swap-cond, 0))};
+        --os-self-size-y: #{lg.mix(var(--cs-self-size-x, 100cqi), var(--cs-self-size-y, 100cqb), var(--in-swap-cond, 0))};
     }
 }
 
@@ -102,18 +105,18 @@ export const orientationNumberMap = {
 
     //
     & { // component swap condition
-        --in-inset-x: #{slg.mix(var(--os-inset-x, 0px), var(--os-inset-y, 0px), var(--in-swap-cond, 0))};
-        --in-inset-y: #{slg.mix(var(--os-inset-y, 0px), var(--os-inset-x, 0px), var(--in-swap-cond, 0))};
+        --in-inset-x: #{lg.mix(var(--os-inset-x, 0px), var(--os-inset-y, 0px), var(--in-swap-cond, 0))};
+        --in-inset-y: #{lg.mix(var(--os-inset-y, 0px), var(--os-inset-x, 0px), var(--in-swap-cond, 0))};
 
         //
-        --in-drag-x: #{slg.mix(var(--os-drag-x, 0px), var(--os-drag-y, 0px), var(--in-swap-cond, 0))};
-        --in-drag-y: #{slg.mix(var(--os-drag-y, 0px), var(--os-drag-x, 0px), var(--in-swap-cond, 0))};
+        --in-drag-x: #{lg.mix(var(--os-drag-x, 0px), var(--os-drag-y, 0px), var(--in-swap-cond, 0))};
+        --in-drag-y: #{lg.mix(var(--os-drag-y, 0px), var(--os-drag-x, 0px), var(--in-swap-cond, 0))};
     }
 
     // as alternative, you can swap before with os-size
     & { // inset position with reverse
-        --cs-inset-x: #{slg.mix(var(--in-inset-x, 0px), calc(var(--cs-size-x, 100cqi) - var(--in-inset-x, 0px)), var(--in-rev-cond-x, 0))};
-        --cs-inset-y: #{slg.mix(var(--in-inset-y, 0px), calc(var(--cs-size-y, 100cqb) - var(--in-inset-y, 0px)), var(--in-rev-cond-y, 0))};
+        --cs-inset-x: #{lg.mix(var(--in-inset-x, 0px), calc(var(--cs-size-x, 100cqi) - var(--in-inset-x, 0px)), var(--in-rev-cond-x, 0))};
+        --cs-inset-y: #{lg.mix(var(--in-inset-y, 0px), calc(var(--cs-size-y, 100cqb) - var(--in-inset-y, 0px)), var(--in-rev-cond-y, 0))};
 
         // drag offset with reversion
         --cs-drag-x: calc(var(--in-drag-x, 0px) * var(--in-rev-vx, 1));
@@ -127,8 +130,8 @@ export const orientationNumberMap = {
 
     // as alternative, you can swap with os-size after
     & { // component swap condition
-        --in-inset-x: #{slg.mix(var(--cs-inset-x, 0px), calc(var(--cs-size-x, 100cqi) - var(--cs-inset-x, 0px)), var(--in-rev-cond-x, 0))};
-        --in-inset-y: #{slg.mix(var(--cs-inset-y, 0px), calc(var(--cs-size-y, 100cqi) - var(--cs-inset-y, 0px)), var(--in-rev-cond-y, 0))};
+        --in-inset-x: #{lg.mix(var(--cs-inset-x, 0px), calc(var(--cs-size-x, 100cqi) - var(--cs-inset-x, 0px)), var(--in-rev-cond-x, 0))};
+        --in-inset-y: #{lg.mix(var(--cs-inset-y, 0px), calc(var(--cs-size-y, 100cqi) - var(--cs-inset-y, 0px)), var(--in-rev-cond-y, 0))};
 
         //
         --in-drag-x: calc(var(--cs-drag-x, 0px) * var(--in-rev-vx, 1));
@@ -137,12 +140,12 @@ export const orientationNumberMap = {
 
     // reverse for orientation space
     & {
-        --os-inset-x: #{slg.mix(var(--in-inset-x, 0px), var(--in-inset-y, 0px), var(--in-swap-cond, 0))};
-        --os-inset-y: #{slg.mix(var(--in-inset-y, 0px), var(--in-inset-x, 0px), var(--in-swap-cond, 0))};
+        --os-inset-x: #{lg.mix(var(--in-inset-x, 0px), var(--in-inset-y, 0px), var(--in-swap-cond, 0))};
+        --os-inset-y: #{lg.mix(var(--in-inset-y, 0px), var(--in-inset-x, 0px), var(--in-swap-cond, 0))};
 
         //
-        --os-drag-x: #{slg.mix(var(--in-drag-y, 0px), var(--in-drag-x, 0px), var(--in-swap-cond, 0))};
-        --os-drag-y: #{slg.mix(var(--in-drag-x, 0px), var(--in-drag-y, 0px), var(--in-swap-cond, 0))};
+        --os-drag-x: #{lg.mix(var(--in-drag-y, 0px), var(--in-drag-x, 0px), var(--in-swap-cond, 0))};
+        --os-drag-y: #{lg.mix(var(--in-drag-x, 0px), var(--in-drag-y, 0px), var(--in-swap-cond, 0))};
     }
 
 }

@@ -1,5 +1,7 @@
 //
 @scope(:root, :host, :scope) {
+    @property --ppx { syntax: "<length-percentage>"; initial-value: 1px; inherits: true; };
+    @property --zpx { syntax: "<length-percentage>"; initial-value: 1px; inherits: true; };
 
     //
     @property --ox-orient { syntax: "<number>"; initial-value: 0; inherits: true; }
@@ -7,12 +9,13 @@
     @property --in-orient { syntax: "<number>"; initial-value: 0; inherits: true; }
 
     //
+    @property --scaling { syntax: "<number>"; initial-value: 1; inherits: true; };
     @property --resize-x { syntax: "<number>"; initial-value: 0; inherits: true; }
     @property --resize-y { syntax: "<number>"; initial-value: 0; inherits: true; }
     @property --drag-x { syntax: "<number>"; initial-value: 0; inherits: true; }
     @property --drag-y { syntax: "<number>"; initial-value: 0; inherits: true; }
     @property --orient { syntax: "<number>"; initial-value: 0; inherits: true; }
-    @property --zoom { syntax: "<number>"; initial-value: 1; inherits: true; }
+    @property --zoom { syntax: "<number>"; initial-value: 1; inherits: true; };
 
     //
     @property --vp-i-size {
@@ -25,20 +28,6 @@
     @property --vp-b-size {
         syntax: "<length-percentage>";
         initial-value: 0px;
-        inherits: true;
-    }
-
-    //
-    @property --zpx {
-        syntax: "<length-percentage>";
-        initial-value: 1px;
-        inherits: true;
-    }
-
-    //
-    @property --ppx {
-        syntax: "<length-percentage>";
-        initial-value: 1px;
         inherits: true;
     }
 

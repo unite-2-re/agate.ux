@@ -1,0 +1,28 @@
+@use "sass:string";
+
+//
+@function mix($a, $b, $i) {
+    @return string.unquote("calc(#{$b} * #{$i} + #{$a} * calc(1 - #{$i}))");
+}
+
+//
+@function land($a, $b) {
+    @return string.unquote("calc(#{$a} * #{$b})"); // make our logic simpler
+    //@return string.unquote("round(to-zero, clamp(0, calc(calc(#{$a} * #{$b}) * 10000), 1), 1)");
+}
+
+//
+@function lor($a, $b) {
+    @return string.unquote("max(#{$a}, #{$b})"); // make our logic simpler
+    //@return string.unquote("round(to-zero, clamp(0, calc(max(#{$a}, #{$b}) * 10000), 1), 1)");
+}
+
+// currently un-used...
+@function lenToNum($l, $d: 1px) {
+    @return string.unquote("tan(atan2(#{$l}, #{$d}))");
+}
+
+//
+@function inv-mul($a, $b) {
+    @return string.unquote("calc(1.0 - calc(1.0 - #{$a}) * #{$b})");
+}
