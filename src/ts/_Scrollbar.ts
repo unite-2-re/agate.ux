@@ -160,7 +160,7 @@ export class ScrollBar {
 
             //
             if (status && status?.pointerId >= 0) {
-                status.scroll += (status.point - status.delta) * ((self?.content?.[["scrollWidth", "scrollHeight"][axis]] || 0) / (self?.scrollbar?.[[borderBoxWidth, borderBoxHeight][axis]] || 1));
+                status.scroll += (status.point - status.delta) * ((self?.content?.[["scrollWidth", "scrollHeight"][axis]] || 0) / (self?.content?.[[borderBoxWidth, borderBoxHeight][axis]] || 1));
                 status.delta   = status.point;
 
                 //
@@ -284,22 +284,10 @@ export class ScrollBar {
         // inputs support also needed...
         (new MutationObserver(computeScroll)).observe(this.holder, { childList: true, subtree: true, characterData: true, attributes: false });
         requestIdleCallback(computeScroll, {timeout: 1000});
-
-        //
-        observeBorderBox(this.scrollbar, (box) => {
-            const self = weak?.deref?.();
-            if (self) {
-                self.scrollbar[borderBoxWidth] = box.inlineSize;
-                self.scrollbar[borderBoxHeight] = box.blockSize;
-            }
-        });
-
-        //
         observeBorderBox(this.content, (box) => {
             const self = weak?.deref?.();
             if (self) {
-                self.content[borderBoxWidth] = box.inlineSize;
-                self.content[borderBoxHeight] = box.blockSize;
+                setProperty(self.scrollbar, "--content-size", self.content[[borderBoxWidth, borderBoxHeight][axis]] = box[["inlineSize", "blockSize"][axis]]);
                 computeScroll();
             }
         });
