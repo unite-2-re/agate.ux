@@ -42,6 +42,24 @@ export const properties = [
         inherits: true,
         initialValue: "1",
     },
+    {
+        name: "--percent",
+        syntax: "<number>",
+        inherits: true,
+        initialValue: "0",
+    },
+    {
+        name: "--percent-y",
+        syntax: "<number>",
+        inherits: true,
+        initialValue: "0",
+    },
+    {
+        name: "--percent-x",
+        syntax: "<number>",
+        inherits: true,
+        initialValue: "0",
+    }
 ];
 
 // define properties

@@ -3,9 +3,9 @@ import { loadBlobStyle } from "/externals/lib/dom.js";
 export type StyleTuple = [selector: string, sheet: object];
 
 //
-import { viewportHandler } from "./ts/sw/Viewport";
-import { UIOrientBox } from "./ts/wcomp/OrientBox";
+import { updateVP } from "./ts/sw/Viewport";
 import { availSize } from "./ts/sw/Viewport";
+import { UIOrientBox } from "./ts/wcomp/OrientBox";
 
 //
 export const classes: StyleTuple[] = [
@@ -51,10 +51,7 @@ import styles from "./scss/_Main.scss?inline&compress";
 //
 const initialize = ()=>{
     loadBlobStyle(styles);
-    whenAnyScreenChanges((e?: any) => {
-        viewportHandler(e);
-        //setStyleRules(classes);
-    });
+    whenAnyScreenChanges(updateVP);
 };
 
 //

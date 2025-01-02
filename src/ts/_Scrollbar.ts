@@ -6,39 +6,6 @@ export const UUIDv4 = () => {
 };
 
 //
-const regProp = (options: any)=>{
-    try {
-        CSS?.registerProperty?.(options);
-    } catch(e) {
-        console.warn(e);
-    };
-};
-
-//
-regProp?.({
-    name: "--percent",
-    syntax: "<number>",
-    inherits: true,
-    initialValue: "0",
-});
-
-//
-regProp?.({
-    name: "--percent-y",
-    syntax: "<number>",
-    inherits: true,
-    initialValue: "0",
-});
-
-//
-regProp?.({
-    name: "--percent-x",
-    syntax: "<number>",
-    inherits: true,
-    initialValue: "0",
-});
-
-//
 const onBorderObserve = new WeakMap<HTMLElement, Function[]>();
 export const observeBorderBox = (element, cb) => {
     if (!onBorderObserve.has(element)) {
@@ -77,7 +44,7 @@ export interface ScrollBarStatus {
     scroll: number;
     delta: number;
     point: number;
-}
+};
 
 //
 export const setProperty = (target, name, value, importance = "")=>{
@@ -214,7 +181,7 @@ export class ScrollBar {
         //
         this.scrollbar
             ?.querySelector?.(".thumb")
-            ?.addEventListener?.("pointerdown", (evc) => {
+            ?.addEventListener?.("pointerdown", (evc: any) => {
                 const ev     = evc?.detail || evc;
                 const status = status_w?.deref?.();
                 const self   = weak?.deref?.();

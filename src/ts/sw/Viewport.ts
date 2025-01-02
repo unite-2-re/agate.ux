@@ -25,28 +25,3 @@ export const updateVP = (ev?: any)=>{
         }
     });
 }
-
-//
-export const viewportHandler = (event?: any) => {
-    //const layoutViewport = document.body;
-    //const viewport = event?.target || visualViewport;
-    updateVP(event);
-
-    /*
-    //
-    document.documentElement.style.setProperty(
-        "--visual-width",
-        (viewport?.width || 1) + "px",
-        ""
-    );
-
-    //
-    const vvh = viewport?.height || 1;
-    const dff = vvh - (layoutViewport.getBoundingClientRect().height || window.innerHeight || 1);
-    const cvh = Math.min(Math.max(vvh - dff, viewport?.offsetTop || 0) - (viewport?.offsetTop || 0), (screen.availHeight || screen.height || 1));
-    document.documentElement.style.setProperty(
-        "--visual-height",
-        cvh + "px",
-        ""
-    );*/
-}

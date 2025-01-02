@@ -48,39 +48,6 @@ export function getOffsetParentChain(element: Element): Element[] {
 };
 
 //
-export function getElementZoom(element: Element): number {
-    let zoom = 1;
-    let currentElement: Element | null = element;
-
-    //
-    while (currentElement) {
-        if ('currentCSSZoom' in (currentElement as any)) {
-            const currentCSSZoom = (currentElement as any).currentCSSZoom;
-            if (typeof currentCSSZoom === 'number') {
-                return (zoom *= currentCSSZoom);
-            }
-        }
-
-        //
-        const style = getComputedStyle(currentElement);
-        if (style.zoom && style.zoom !== 'normal') {
-            return (zoom *= parseFloat(style.zoom));
-        }
-
-        //
-        if ((style.zoom && style.zoom !== 'normal') || 'currentCSSZoom' in (currentElement as any)) {
-            return zoom;
-        }
-
-        //
-        currentElement = (currentElement as HTMLElement)?.offsetParent ?? currentElement?.parentElement;
-    }
-
-    //
-    return zoom;
-};
-
-//
 export function isNearlyIdentity(matrix: DOMMatrix, epsilon: number = 1e-6): boolean {
     return (
         Math.abs(matrix.a - 1) < epsilon &&
@@ -115,23 +82,34 @@ export const getTransformOrigin = (el)=>{
 };
 
 //
-export const url = (type, ...source) => {
-    return URL.createObjectURL(new Blob(source, {type}));
-};
+export const getElementZoom = (element: Element): number => {
+    let zoom = 1;
+    let currentElement: Element | null = element;
 
-//
-export const html = (source, type: DOMParserSupportedType = 'text/html') => {
-    const parser = new DOMParser();
-    const parsed = parser.parseFromString(source, type);
-    return parsed.querySelector('template') ?? parsed.querySelector("*");
-};
+    //
+    while (currentElement) {
+        if ('currentCSSZoom' in (currentElement as any)) {
+            const currentCSSZoom = (currentElement as any).currentCSSZoom;
+            if (typeof currentCSSZoom === 'number') {
+                return (zoom *= currentCSSZoom);
+            }
+        }
 
-//
-export const MOC = (element: HTMLElement | null, selector: string): boolean => {
-    return (!!element?.matches?.(selector) || !!element?.closest?.(selector));
-};
+        //
+        const style = getComputedStyle(currentElement);
+        if (style.zoom && style.zoom !== 'normal') {
+            return (zoom *= parseFloat(style.zoom));
+        }
 
-//
-export const MOCElement = (element: HTMLElement | null, selector: string): HTMLElement | null => {
-    return ((!!element?.matches?.(selector) ? element : null) || element?.closest?.(selector)) as HTMLElement | null;
-};
+        //
+        if ((style.zoom && style.zoom !== 'normal') || 'currentCSSZoom' in (currentElement as any)) {
+            return zoom;
+        }
+
+        //
+        currentElement = (currentElement as HTMLElement)?.offsetParent ?? currentElement?.parentElement;
+    }
+
+    //
+    return zoom;
+}

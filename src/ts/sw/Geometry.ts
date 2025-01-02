@@ -3,7 +3,7 @@
  */
 
 //
-import { isNearlyIdentity, parseOrigin, getElementZoom, getOffsetParentChain, type Point, getTransform, getTransformOrigin } from "./Utils";
+import { isNearlyIdentity, parseOrigin, getOffsetParentChain, type Point, getTransform, getTransformOrigin, getElementZoom } from "./Utils";
 
 //
 export const transformationMatrixCache = new WeakMap<Element, DOMMatrix>();
