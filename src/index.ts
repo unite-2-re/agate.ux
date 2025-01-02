@@ -1,6 +1,16 @@
-import { classes, loadBlobStyle, setStyleRules } from "./ts/sw/StyleRules";
+// @ts-ignore
+import { loadBlobStyle } from "/externals/lib/dom.js";
+export type StyleTuple = [selector: string, sheet: object];
+
+//
 import { viewportHandler } from "./ts/sw/Viewport";
 import { UIOrientBox } from "./ts/wcomp/OrientBox";
+import { availSize } from "./ts/sw/Viewport";
+
+//
+export const classes: StyleTuple[] = [
+    [":root, :host, :scope", availSize]
+];
 
 //
 export const getCorrectOrientation = () => {

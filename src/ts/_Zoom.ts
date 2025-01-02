@@ -2,6 +2,39 @@
 import { cvt_cs_to_os } from "./_Utils";
 
 //
+export const getElementZoom = (element: Element): number => {
+    let zoom = 1;
+    let currentElement: Element | null = element;
+
+    //
+    while (currentElement) {
+        if ('currentCSSZoom' in (currentElement as any)) {
+            const currentCSSZoom = (currentElement as any).currentCSSZoom;
+            if (typeof currentCSSZoom === 'number') {
+                return (zoom *= currentCSSZoom);
+            }
+        }
+
+        //
+        const style = getComputedStyle(currentElement);
+        if (style.zoom && style.zoom !== 'normal') {
+            return (zoom *= parseFloat(style.zoom));
+        }
+
+        //
+        if ((style.zoom && style.zoom !== 'normal') || 'currentCSSZoom' in (currentElement as any)) {
+            return zoom;
+        }
+
+        //
+        currentElement = (currentElement as HTMLElement)?.offsetParent ?? currentElement?.parentElement;
+    }
+
+    //
+    return zoom;
+}
+
+//
 export const getZoom = ()=>{
     const zoomSupport = "currentCSSZoom" in document.documentElement;
     // @ts-ignore
