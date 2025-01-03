@@ -250,7 +250,7 @@ export class ScrollBar {
 
         // inputs support also needed...
         (new MutationObserver(computeScroll)).observe(this.holder, { childList: true, subtree: true, characterData: true, attributes: false });
-        requestIdleCallback(computeScroll, {timeout: 1000});
+        requestIdleCallback(computeScroll, {timeout: 100});
         observeBorderBox(this.content, (box) => {
             const self = weak?.deref?.();
             if (self) {
