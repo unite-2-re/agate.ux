@@ -358,8 +358,8 @@ export const orientationNumberMap = {
     //
     :root, :where(html) {
         background-color: transparent;
-        container-type: normal;
-        container-name: html root;
+        container-type: size;
+        container-name: html root !important;
         contain: none;
         overflow: visible;
         position: fixed;
@@ -377,11 +377,12 @@ export const orientationNumberMap = {
             position: relative !important;
             background-color: transparent;
             inset: auto !important;
+            inset-block-end: max(env(titlebar-area-height, 0px), 0px) !important;
             container-type: normal;
-            contain: none;
             place-content: start;
             place-items: start;
             place-self: start;
+            contain: none;
         }
 
 
@@ -411,55 +412,73 @@ export const orientationNumberMap = {
                     env(safe-area-inset-bottom, 0px)
                 )
             ), 2rem);
+        };
+
+        //
+        @media (display-mode: browser) {
+            @at-root :not(:fullscreen) & {
+                --hide-cutout-fact: 0px; // may not hidden
+                --hide-status-fact: 0px; // practically always hidden
+            }
         }
 
         //
-        @media (display-mode: fullscreen) {
+        @media (display-mode: fullscreen) or (display-mode: window-controls-overlay) {
             --hide-cutout-fact: 0px; // may not hidden
             --hide-status-fact: 0px; // practically always hidden
-        }
+        };
 
         //
         @at-root :fullscreen & {
             --hide-status-fact: 0px; // practically always hidden
-        }
+        };
 
 
+
+
+        // apply orientation modifiers
+        @media (orientation: portrait)  {
+            inset-block-end: clamp(
+                 min(var(--hide-cutout-fact, 0px) , var(--hide-status-fact, 0px)),
+                calc(var(--hide-cutout-fact, 0px) + var(--hide-status-fact, 0px)),
+                 max(var(--hide-cutout-fact, 0px) , var(--hide-status-fact, 0px))
+            ) !important;
+        };
 
         //
-        @media (display-mode: window-controls-overlay) {
-            inset-block-end: 0px !important;
-        }
-
-        // browser display mode not recommended
-        @media (display-mode: standalone) or (display-node: minimal-ui) {
-            // in case of smartphone
-            @media (orientation: portrait)  { inset-block-end: clamp(
-                 min(var(--hide-cutout-fact, 0px), var(--hide-status-fact, 0px)),
-                calc(var(--hide-cutout-fact, 0px) + var(--hide-status-fact, 0px)),
-                 max(var(--hide-cutout-fact, 0px), var(--hide-status-fact, 0px))
-            ) !important; };
-
-            // TODO! accounting inverse orientation factor in inline inset
-            @media (orientation: landscape) { inset-inline-end: var(--hide-cutout-fact, 0px) !important; inset-block-end: var(--hide-status-fact, 0px) !important; };
-        }
-
-        // fullscreen-mode cutout may be broken...
-        @media (display-mode: browser) {
-            & { inset-block-end: max(env(titlebar-area-height, 0px), 0px) !important; }
+        @media (orientation: landscape) {
+            & {
+                inset-inline-end: var(--hide-cutout-fact, 0px) !important;
+                inset-inline-start: auto !important;
+                inset-block-end : var(--hide-status-fact, 0px) !important;
+            };
 
             //
-            @at-root :fullscreen & {
-                // TODO! accounting inverse orientation factor in inline inset
-                @media (orientation: portrait)  { inset-block-end: var(--hide-cutout-fact, 0px) !important; };
-                @media (orientation: landscape) { inset-inline-end: var(--hide-cutout-fact, 0px) !important; };
-            }
-        }
-    }
+            @container root style(--secondary: 0) {
+                inset-inline-end: var(--hide-cutout-fact, 0px) !important;
+                inset-inline-start: auto !important;
+            };
+
+            //
+            @container root style(--secondary: 1) {
+                //inset-inline-end: 3rem !important; // 3rem - navbar factor
+                inset-inline-end: 0px; // if immersive
+                inset-inline-start: auto;//var(--hide-cutout-fact, 0px) !important;
+            };
+
+            //
+            @media not ((display-mode: standalone) or (display-mode: minimal-ui)) {
+                @container root style(--secondary: 1) {
+                    inset-inline-end: auto !important;
+                    inset-inline-start: 0px !important;//var(--hide-cutout-fact, 0px) !important;
+                };
+            };
+        };
+    };
 
     //
     .native-portrait-optimized {
         @include native-optimized-swap-in-portrait;
-    }
+    };
 
-}
+};

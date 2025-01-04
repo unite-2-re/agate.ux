@@ -23,4 +23,7 @@ export const updateVP = (ev?: any)=>{
             rule?.style?.setProperty?.(propName, (propValue || "") as string, "");
         }
     });
+
+    // make secondary screen orientation detectable
+    document.documentElement.style.setProperty("--secondary", screen?.orientation?.type?.endsWith?.("secondary") ? "1" : "0");
 }

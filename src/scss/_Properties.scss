@@ -18,6 +18,9 @@
     @property --zoom { syntax: "<number>"; initial-value: 1; inherits: true; };
 
     //
+    @property --secondary { syntax: "<integer>"; initial-value: 0; inherits: true; }
+
+    //
     @property --avi {
         syntax: "<length-percentage>";
         initial-value: 0px;
