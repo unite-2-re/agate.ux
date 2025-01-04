@@ -290,6 +290,16 @@ export const orientationNumberMap = {
 
             //
             pointer-events: none;
+
+            //
+            writing-mode: horizontal-tb !important;
+            direction: ltr !important;
+        }
+
+        // by default, won't support rtl/vertical
+        :where(*) {
+            writing-mode: inherit;
+            direction: inherit;
         }
 
         //
