@@ -18,6 +18,20 @@
     @property --zoom { syntax: "<number>"; initial-value: 1; inherits: true; };
 
     //
+    @property --avi {
+        syntax: "<length-percentage>";
+        initial-value: 0px;
+        inherits: true;
+    }
+
+    //
+    @property --avb {
+        syntax: "<length-percentage>";
+        initial-value: 0px;
+        inherits: true;
+    }
+
+    //
     @property --vp-i-size {
         syntax: "<length-percentage>";
         initial-value: 0px;

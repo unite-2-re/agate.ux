@@ -221,16 +221,16 @@ export const orientationNumberMap = {
 
     //
     @media screen and ((display-mode: fullscreen) or (display-mode: standalone)) {
-        & { --avi: 100lvmin; --avb: 100lvmax; };
-        @media (orientation: portrait)  { --avi: 100lvi; --avb: 100lvb; };
-        @media (orientation: landscape) { --avi: 100lvb; --avb: 100lvi; };
+        & { --avi: 100dvmin; --avb: 100dvmax; };
+        @media (orientation: portrait)  { --avi: 100dvi; --avb: 100dvb; };
+        @media (orientation: landscape) { --avi: 100dvb; --avb: 100dvi; };
     }
 
     //
     @at-root :fullscreen & {
-        & { --avi: 100lvmin; --avb: 100lvmax; };
-        @media (orientation: portrait)  { --avi: 100lvi; --avb: 100lvb; };
-        @media (orientation: landscape) { --avi: 100lvb; --avb: 100lvi; };
+        & { --avi: 100dvmin; --avb: 100dvmax; };
+        @media (orientation: portrait)  { --avi: 100dvi; --avb: 100dvb; };
+        @media (orientation: landscape) { --avi: 100dvb; --avb: 100dvi; };
     }
 
 
@@ -242,14 +242,18 @@ export const orientationNumberMap = {
 
     //
     @media screen and ((display-mode: fullscreen) or (display-mode: standalone)) {
-        --vp-i-size: min(var(--avail-width , 100lvmin), var(--avi, 100lvmin));
-        --vp-b-size: min(var(--avail-height, 100lvmax), var(--avb, 100lvmax));
+        --vp-i-size: var(--avail-width , 100dvmin);
+        --vp-b-size: var(--avail-height, 100dvmax);
+        //--vp-i-size: min(var(--avail-width , 100dvmin), var(--avi, 100dvmin));
+        //--vp-b-size: min(var(--avail-height, 100dvmax), var(--avb, 100dvmax));
     }
 
     //
     @at-root :fullscreen & {
-        --vp-i-size: min(var(--avail-width , 100lvmin), var(--avi, 100lvmin));
-        --vp-b-size: min(var(--avail-height, 100lvmax), var(--avb, 100lvmax));
+        --vp-i-size: var(--avail-width , 100dvmin);
+        --vp-b-size: var(--avail-height, 100dvmax);
+        //--vp-i-size: min(var(--avail-width , 100dvmin), var(--avi, 100dvmin));
+        //--vp-b-size: min(var(--avail-height, 100dvmax), var(--avb, 100dvmax));
     }
 };
 
@@ -258,9 +262,9 @@ export const orientationNumberMap = {
     @include vp-vars;
 
     //
-                                  & { inline-size: min(var(--vp-i-size, 100lvi), 100lvi); block-size: min(calc(var(--vp-b-size, 100lvb) + max(env(safe-area-inset-top, 0px), 0px) + max(env(safe-area-inset-bottom, 0px), 0px)), 100lvb); max-inline-size: min(var(--vp-i-size, 100lvi), 100lvi); max-block-size: min(calc(var(--vp-b-size, 100lvb) + max(env(safe-area-inset-top, 0px), 0px) + max(env(safe-area-inset-bottom, 0rem), 0px)), 100lvb); }
-    @media (orientation: portrait)  { inline-size: min(var(--vp-i-size, 100lvi), 100lvi); block-size: min(calc(var(--vp-b-size, 100lvb) + max(env(safe-area-inset-top, 0px), 0px) + max(env(safe-area-inset-bottom, 0px), 0px)), 100lvb); max-inline-size: min(var(--vp-i-size, 100lvi), 100lvi); max-block-size: min(calc(var(--vp-b-size, 100lvb) + max(env(safe-area-inset-top, 0px), 0px) + max(env(safe-area-inset-bottom, 0rem), 0px)), 100lvb); };
-    @media (orientation: landscape) { inline-size: min(var(--vp-b-size, 100lvi), 100lvi); block-size: min(calc(var(--vp-i-size, 100lvb) + max(env(safe-area-inset-top, 0px), 0px) + max(env(safe-area-inset-bottom, 0px), 0px)), 100lvb); max-inline-size: min(var(--vp-b-size, 100lvi), 100lvi); max-block-size: min(calc(var(--vp-i-size, 100lvb) + max(env(safe-area-inset-top, 0px), 0px) + max(env(safe-area-inset-bottom, 0rem), 0px)), 100lvb); };
+                                  & { inline-size: var(--vp-i-size, 100dvi); block-size: calc(var(--vp-b-size, 100dvb) + max(env(safe-area-inset-top, 0px), 0px) + max(env(safe-area-inset-bottom, 0px), 0px)); max-inline-size: var(--vp-i-size, 100dvi); max-block-size: calc(var(--vp-b-size, 100dvb) + max(env(safe-area-inset-top, 0px), 0px) + max(env(safe-area-inset-bottom, 0rem), 0px)); };
+    @media (orientation: portrait)  { inline-size: var(--vp-i-size, 100dvi); block-size: calc(var(--vp-b-size, 100dvb) + max(env(safe-area-inset-top, 0px), 0px) + max(env(safe-area-inset-bottom, 0px), 0px)); max-inline-size: var(--vp-i-size, 100dvi); max-block-size: calc(var(--vp-b-size, 100dvb) + max(env(safe-area-inset-top, 0px), 0px) + max(env(safe-area-inset-bottom, 0rem), 0px)); };
+    @media (orientation: landscape) { inline-size: var(--vp-b-size, 100dvi); block-size: calc(var(--vp-i-size, 100dvb) + max(env(safe-area-inset-top, 0px), 0px) + max(env(safe-area-inset-bottom, 0px), 0px)); max-inline-size: var(--vp-b-size, 100dvi); max-block-size: calc(var(--vp-i-size, 100dvb) + max(env(safe-area-inset-top, 0px), 0px) + max(env(safe-area-inset-bottom, 0rem), 0px)); };
 };
 
 //
@@ -342,11 +346,15 @@ export const orientationNumberMap = {
     }
 
     //
-    :root, html {
-        @include fit-viewport();
-
-        //
-        & { position: fixed; inset: 0px; };
+    :root, :where(html) {
+        background-color: transparent;
+        container-type: normal;
+        container-name: html root;
+        contain: none;
+        overflow: visible;
+        position: fixed;
+        inset: 0px;
+        inset-block-end: auto;
     }
 
     //
@@ -357,6 +365,7 @@ export const orientationNumberMap = {
         & {
             overflow: hidden;
             position: fixed !important;
+            background-color: transparent;
             inset: 0px;
             inset-block-start: 0px;
             inset-block-end: max(env(safe-area-inset-top, 0px), 0px);
