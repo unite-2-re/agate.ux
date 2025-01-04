@@ -214,7 +214,7 @@ export const orientationNumberMap = {
 
 
 //
-@mixin vp-vars {
+@mixin use_dvp {
     & { --avi: 100dvmin; --avb: 100dvmax; };
     @media (orientation: portrait)  { --avi: 100dvi; --avb: 100dvb; };
     @media (orientation: landscape) { --avi: 100dvb; --avb: 100dvi; };
@@ -224,14 +224,34 @@ export const orientationNumberMap = {
         --vp-i-size: var(--avi, 100dvmin);
         --vp-b-size: var(--avb, 100dvmax);
     }
+}
+
+//
+@mixin use_lvp {
+    & { --avi: 100lvmin; --avb: 100lvmax; };
+    @media (orientation: portrait)  { --avi: 100lvi; --avb: 100lvb; };
+    @media (orientation: landscape) { --avi: 100lvb; --avb: 100lvi; };
 
     //
-    @media screen and ((display-mode: fullscreen) or (display-mode: standalone)) {
+    & {
+        --vp-i-size: var(--avi, 100lvmin);
+        --vp-b-size: var(--avb, 100lvmax);
+    }
+}
+
+//
+@mixin vp-vars {
+    @include use_dvp();
+    @media (display-mode: fullscreen) or (display-mode: standalone) { @include use_lvp(); };
+    @at-root :fullscreen & { @include use_lvp(); };
+
+    //
+    @media (display-mode: fullscreen) or (display-mode: standalone) {
         --vp-i-size: var(--avail-width , 100dvmin);
         --vp-b-size: var(--avail-height, 100dvmax);
         //--vp-i-size: min(var(--avail-width , 100dvmin), var(--avi, 100dvmin));
         //--vp-b-size: min(var(--avail-height, 100dvmax), var(--avb, 100dvmax));
-    }
+    };
 
     //
     @at-root :fullscreen & {
@@ -239,7 +259,7 @@ export const orientationNumberMap = {
         --vp-b-size: var(--avail-height, 100dvmax);
         //--vp-i-size: min(var(--avail-width , 100dvmin), var(--avi, 100dvmin));
         //--vp-b-size: min(var(--avail-height, 100dvmax), var(--avb, 100dvmax));
-    }
+    };
 };
 
 //
@@ -247,14 +267,14 @@ export const orientationNumberMap = {
     @include vp-vars;
 
     //
-                                  & { inline-size: var(--vp-i-size, 100dvi); block-size: var(--vp-b-size, 100dvb); };
-    @media (orientation: portrait)  { inline-size: var(--vp-i-size, 100dvi); block-size: var(--vp-b-size, 100dvb); };
-    @media (orientation: landscape) { inline-size: var(--vp-b-size, 100dvi); block-size: var(--vp-i-size, 100dvb); };
+                                  & { inline-size: var(--vp-i-size, 100lvi); block-size: var(--vp-b-size, 100lvb); };
+    @media (orientation: portrait)  { inline-size: var(--vp-i-size, 100lvi); block-size: var(--vp-b-size, 100lvb); };
+    @media (orientation: landscape) { inline-size: var(--vp-b-size, 100lvi); block-size: var(--vp-i-size, 100lvb); };
 
     //
-                                  & { max-inline-size: var(--vp-i-size, 100dvi); max-block-size: var(--vp-b-size, 100dvb); };
-    @media (orientation: portrait)  { max-inline-size: var(--vp-i-size, 100dvi); max-block-size: var(--vp-b-size, 100dvb); };
-    @media (orientation: landscape) { max-inline-size: var(--vp-b-size, 100dvi); max-block-size: var(--vp-i-size, 100dvb); };
+                                  & { max-inline-size: var(--vp-i-size, 100lvi); max-block-size: var(--vp-b-size, 100lvb); };
+    @media (orientation: portrait)  { max-inline-size: var(--vp-i-size, 100lvi); max-block-size: var(--vp-b-size, 100lvb); };
+    @media (orientation: landscape) { max-inline-size: var(--vp-b-size, 100lvi); max-block-size: var(--vp-i-size, 100lvb); };
 };
 
 //
@@ -354,11 +374,11 @@ export const orientationNumberMap = {
         //
         & {
             overflow: hidden;
-            position: fixed !important;
+            position: relative !important;
             background-color: transparent;
-            inset: 0px;
-            inset-block-start: 0px;
-            inset-block-end: 0px;
+            inset: auto !important;
+            inset-inline-end: 0px !important;
+            inset-block-end: 0px !important;
             container-type: normal;
             contain: none;
             place-content: start;
@@ -366,10 +386,24 @@ export const orientationNumberMap = {
             place-self: start;
         }
 
-        //
-        @media screen and (display-mode: standalone) {
-            inset-block-start: max(env(safe-area-inset-bottom, 0px), 0px);
-            inset-block-end: max(env(safe-area-inset-top, 0px), 0px);
+        // browser display mode not recommended
+        @media (display-mode: standalone) or (display-node: minimal-ui) {
+            inset-block-start: auto !important;//max(env(safe-area-inset-bottom, 0px), 0px);
+
+            // inverse orientation useless...
+            @media (orientation: portrait) { inset-block-end: max(env(safe-area-inset-top, 0px), 0px) !important; };
+            @media (orientation: landscape) { inset-inline-end: max(max(env(safe-area-inset-top, 0px), 0px), max(env(safe-area-inset-left, 0px), 0px), 0px) !important; inset-block-end: max(env(safe-area-inset-left, 0px), 0px) !important; };
+        }
+
+        // fullscreen-mode cutout may be broken...
+        @media (display-mode: browser) {
+            @at-root :fullscreen & {
+                inset-block-start: auto !important;//max(env(safe-area-inset-bottom, 0px), 0px);
+
+                // inverse orientation useless...
+                @media (orientation: portrait) { inset-block-end: max(env(safe-area-inset-top, 0px), 0px) !important; };
+                @media (orientation: landscape) { inset-inline-end: max(max(env(safe-area-inset-top, 0px), 0px), max(env(safe-area-inset-left, 0px), 0px), 0px) !important; };
+            }
         }
     }
 
