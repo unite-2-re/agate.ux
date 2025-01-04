@@ -377,8 +377,6 @@ export const orientationNumberMap = {
             position: relative !important;
             background-color: transparent;
             inset: auto !important;
-            inset-inline-end: 0px !important;
-            inset-block-end: 0px !important;
             container-type: normal;
             contain: none;
             place-content: start;
@@ -386,32 +384,76 @@ export const orientationNumberMap = {
             place-self: start;
         }
 
-        // browser display mode not recommended
-        @media (display-mode: standalone) or (display-node: minimal-ui) {
-            & { inset-block-start: auto !important; };
-            & { inset-block-end: max(env(titlebar-area-height, 0px), 0px) !important; };
 
-            // inverse orientation useless...
-            @media (orientation: portrait)  { inset-block-end: max(env(titlebar-area-height, 0px), max(env(safe-area-inset-top,  0px), 0px)) !important; };
-            @media (orientation: landscape) { inset-block-end: max(env(titlebar-area-height, 0px), max(env(safe-area-inset-left, 0px), 0px)) !important; inset-inline-end: max(env(safe-area-inset-top, 0px), max(env(safe-area-inset-left, 0px), 0px)) !important; };
+
+        //
+        & {
+            // according of status-bar area (default)
+            --hide-cutout-fact: clamp(0px, max(
+                max(
+                    env(safe-area-inset-top, 0px),
+                    env(safe-area-inset-left, 0px)
+                ),
+                max(
+                    env(safe-area-inset-right, 0px),
+                    env(safe-area-inset-bottom, 0px)
+                )
+            ), 2rem);
+
+            // hide any status bars when possible
+            --hide-status-fact: clamp(0px, max(
+                max(
+                    env(safe-area-inset-top, 0px),
+                    env(safe-area-inset-left, 0px)
+                ),
+                max(
+                    env(safe-area-inset-right, 0px),
+                    env(safe-area-inset-bottom, 0px)
+                )
+            ), 2rem);
         }
 
-        // fullscreen-mode cutout may be broken...
-        @media (display-mode: browser) {
-            & { inset-block-start: auto !important; };
-            & { inset-block-end: max(env(titlebar-area-height, 0px), 0px) !important; }
-
-            //
-            @at-root :fullscreen & {
-                // inverse orientation useless...
-                @media (orientation: portrait)  { inset-block-end : max(env(safe-area-inset-top, 0px), 0px) !important; };
-                @media (orientation: landscape) { inset-inline-end: max(env(safe-area-inset-top, 0px), max(env(safe-area-inset-left, 0px), 0px)) !important; };
-            }
+        //
+        @media (display-mode: fullscreen) {
+            --hide-cutout-fact: 0px; // may not hidden
+            --hide-status-fact: 0px; // practically always hidden
         }
+
+        //
+        @at-root :fullscreen & {
+            --hide-status-fact: 0px; // practically always hidden
+        }
+
+
 
         //
         @media (display-mode: window-controls-overlay) {
             inset-block-end: 0px !important;
+        }
+
+        // browser display mode not recommended
+        @media (display-mode: standalone) or (display-node: minimal-ui) {
+            // in case of smartphone
+            @media (orientation: portrait)  { inset-block-end: clamp(
+                 min(var(--hide-cutout-fact, 0px), var(--hide-status-fact, 0px)),
+                calc(var(--hide-cutout-fact, 0px) + var(--hide-status-fact, 0px)),
+                 max(var(--hide-cutout-fact, 0px), var(--hide-status-fact, 0px))
+            ) !important; };
+
+            // TODO! accounting inverse orientation factor in inline inset
+            @media (orientation: landscape) { inset-inline-end: var(--hide-cutout-fact, 0px) !important; inset-block-end: var(--hide-status-fact, 0px) !important; };
+        }
+
+        // fullscreen-mode cutout may be broken...
+        @media (display-mode: browser) {
+            & { inset-block-end: max(env(titlebar-area-height, 0px), 0px) !important; }
+
+            //
+            @at-root :fullscreen & {
+                // TODO! accounting inverse orientation factor in inline inset
+                @media (orientation: portrait)  { inset-block-end: var(--hide-cutout-fact, 0px) !important; };
+                @media (orientation: landscape) { inset-inline-end: var(--hide-cutout-fact, 0px) !important; };
+            }
         }
     }
 
