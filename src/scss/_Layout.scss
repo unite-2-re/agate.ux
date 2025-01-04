@@ -397,6 +397,9 @@ export const orientationNumberMap = {
 
         // fullscreen-mode cutout may be broken...
         @media (display-mode: browser) {
+            & { inset-block-end: max(env(titlebar-area-height, 0px), 0px) !important; }
+
+            //
             @at-root :fullscreen & {
                 inset-block-start: auto !important;//max(env(safe-area-inset-bottom, 0px), 0px);
 
@@ -404,6 +407,11 @@ export const orientationNumberMap = {
                 @media (orientation: portrait) { inset-block-end: max(env(safe-area-inset-top, 0px), 0px) !important; };
                 @media (orientation: landscape) { inset-inline-end: max(max(env(safe-area-inset-top, 0px), 0px), max(env(safe-area-inset-left, 0px), 0px), 0px) !important; };
             }
+        }
+
+        //
+        @media (display-mode: window-controls-overlay) {
+            inset-block-end: 0px !important;
         }
     }
 
