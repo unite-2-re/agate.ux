@@ -220,6 +220,21 @@ export const orientationNumberMap = {
     @media (orientation: landscape) { --avi: 100dvb; --avb: 100dvi; };
 
     //
+    @media screen and ((display-mode: fullscreen) or (display-mode: standalone)) {
+        & { --avi: 100lvmin; --avb: 100lvmax; };
+        @media (orientation: portrait)  { --avi: 100lvi; --avb: 100lvb; };
+        @media (orientation: landscape) { --avi: 100lvb; --avb: 100lvi; };
+    }
+
+    //
+    @at-root :fullscreen & {
+        & { --avi: 100lvmin; --avb: 100lvmax; };
+        @media (orientation: portrait)  { --avi: 100lvi; --avb: 100lvb; };
+        @media (orientation: landscape) { --avi: 100lvb; --avb: 100lvi; };
+    }
+
+
+    //
     & {
         --vp-i-size: var(--avi, 100dvi);
         --vp-b-size: var(--avb, 100dvb);
@@ -227,14 +242,14 @@ export const orientationNumberMap = {
 
     //
     @media screen and ((display-mode: fullscreen) or (display-mode: standalone)) {
-        --vp-i-size: min(var(--avail-width , 100dvmin), var(--avi, 100dvmin));
-        --vp-b-size: min(var(--avail-height, 100dvmax), var(--avb, 100dvmax));
+        --vp-i-size: min(var(--avail-width , 100lvmin), var(--avi, 100lvmin));
+        --vp-b-size: min(var(--avail-height, 100lvmax), var(--avb, 100lvmax));
     }
 
     //
     @at-root :fullscreen & {
-        --vp-i-size: min(var(--avail-width , 100dvmin), var(--avi, 100dvmin));
-        --vp-b-size: min(var(--avail-height, 100dvmax), var(--avb, 100dvmax));
+        --vp-i-size: min(var(--avail-width , 100lvmin), var(--avi, 100lvmin));
+        --vp-b-size: min(var(--avail-height, 100lvmax), var(--avb, 100lvmax));
     }
 };
 
@@ -243,9 +258,9 @@ export const orientationNumberMap = {
     @include vp-vars;
 
     //
-    & { inline-size: min(var(--vp-i-size, 100dvi), 100dvi); block-size: min(var(--vp-b-size, 100dvb), 100dvb); max-inline-size: min(var(--vp-i-size, 100dvi), 100dvi); max-block-size: min(var(--vp-b-size, 100dvb), 100dvb); }
-    @media (orientation: portrait) { inline-size: min(var(--vp-i-size, 100dvi), 100dvi); block-size: min(var(--vp-b-size, 100dvb), 100dvb); max-inline-size: min(var(--vp-i-size, 100dvi), 100dvi); max-block-size: min(var(--vp-b-size, 100dvb), 100dvb); };
-    @media (orientation: landscape) { inline-size: min(var(--vp-b-size, 100dvi), 100dvi); block-size: min(var(--vp-i-size, 100dvb), 100dvb); max-inline-size: min(var(--vp-b-size, 100dvi), 100dvi); max-block-size: min(var(--vp-i-size, 100dvb), 100dvb); };
+                                  & { inline-size: min(var(--vp-i-size, 100lvi), 100lvi); block-size: min(calc(var(--vp-b-size, 100lvb) + max(env(safe-area-inset-top, 0px), 0px) + max(env(safe-area-inset-bottom, 0px), 0px)), 100lvb); max-inline-size: min(var(--vp-i-size, 100lvi), 100lvi); max-block-size: min(calc(var(--vp-b-size, 100lvb) + max(env(safe-area-inset-top, 0px), 0px) + max(env(safe-area-inset-bottom, 0rem), 0px)), 100lvb); }
+    @media (orientation: portrait)  { inline-size: min(var(--vp-i-size, 100lvi), 100lvi); block-size: min(calc(var(--vp-b-size, 100lvb) + max(env(safe-area-inset-top, 0px), 0px) + max(env(safe-area-inset-bottom, 0px), 0px)), 100lvb); max-inline-size: min(var(--vp-i-size, 100lvi), 100lvi); max-block-size: min(calc(var(--vp-b-size, 100lvb) + max(env(safe-area-inset-top, 0px), 0px) + max(env(safe-area-inset-bottom, 0rem), 0px)), 100lvb); };
+    @media (orientation: landscape) { inline-size: min(var(--vp-b-size, 100lvi), 100lvi); block-size: min(calc(var(--vp-i-size, 100lvb) + max(env(safe-area-inset-top, 0px), 0px) + max(env(safe-area-inset-bottom, 0px), 0px)), 100lvb); max-inline-size: min(var(--vp-b-size, 100lvi), 100lvi); max-block-size: min(calc(var(--vp-i-size, 100lvb) + max(env(safe-area-inset-top, 0px), 0px) + max(env(safe-area-inset-bottom, 0rem), 0px)), 100lvb); };
 };
 
 //
@@ -267,11 +282,12 @@ export const orientationNumberMap = {
             container-type: size !important;
             contain: strict !important;
             background-color: transparent;
+            inset: 0px;
 
             //
             grid-column: 1 / -1;
             grid-row: 1 / -1;
-            place-self: center;
+            place-self: start;
 
             //
             min-inline-size: 1px;
@@ -280,9 +296,6 @@ export const orientationNumberMap = {
             block-size: 100%;
             max-inline-size: 100%;
             max-block-size: 100%;
-
-            //
-            inset: 0px;
 
             //
             zoom: max(var(--zoom, 1), 0.125);
@@ -329,8 +342,30 @@ export const orientationNumberMap = {
     }
 
     //
+    :root, html {
+        @include fit-viewport();
+
+        //
+        & { position: fixed; inset: 0px; };
+    }
+
+    //
     :where(body) {
         @include fit-viewport();
+
+        //
+        & {
+            overflow: hidden;
+            position: fixed !important;
+            inset: 0px;
+            inset-block-start: 0px;
+            inset-block-end: max(env(safe-area-inset-top, 0px), 0px);
+            container-type: size !important;
+            contain: strict !important;
+            place-content: start;
+            place-items: start;
+            place-self: start;
+        }
     }
 
     //
