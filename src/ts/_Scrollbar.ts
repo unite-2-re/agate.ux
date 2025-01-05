@@ -94,7 +94,7 @@ export class ScrollBar {
 
         //
         setProperty(this.scrollbar, "visibility", "collapse");
-        setProperty(this.scrollbar, "pointer-events", "none");
+        setProperty(this.scrollbar?.querySelector?.("*"), "pointer-events", "none");
 
         //
         const status_w = new WeakRef(this.status);
@@ -115,10 +115,10 @@ export class ScrollBar {
                 //
                 if (sizePercent >= 0.999) {
                     setProperty(self.scrollbar, "visibility", "collapse", "important");
-                    setProperty(self.scrollbar, "pointer-events", "none", "important");
+                    setProperty(self.scrollbar?.querySelector?.("*"), "pointer-events", "none", "important");
                 } else {
                     setProperty(self.scrollbar, "visibility", "visible", "important");
-                    setProperty(self.scrollbar, "pointer-events", "auto", "important");
+                    setProperty(self.scrollbar?.querySelector?.("*"), "pointer-events", "auto", "important");
                 }
             }
         };
