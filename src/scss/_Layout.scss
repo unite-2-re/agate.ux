@@ -385,7 +385,11 @@ export const orientationNumberMap = {
             contain: none;
         }
 
-
+        //
+        & {
+            --hide-nav-fact: 0px; // if immersive
+            //--hide-nav-fact: 3rem; //navbar factor
+        }
 
         //
         & {
@@ -448,30 +452,23 @@ export const orientationNumberMap = {
         //
         @media (orientation: landscape) {
             & {
-                inset-inline-end: var(--hide-cutout-fact, 0px) !important;
-                inset-inline-start: auto !important;
                 inset-block-end : var(--hide-status-fact, 0px) !important;
+                inset-inline-start: auto !important;
+            };
+
+            //
+            & {
+                inset-inline-end: var(--hide-cutout-fact, 0px) !important;
             };
 
             //
             @container root style(--secondary: 0) {
                 inset-inline-end: var(--hide-cutout-fact, 0px) !important;
-                inset-inline-start: auto !important;
             };
 
             //
             @container root style(--secondary: 1) {
-                //inset-inline-end: 3rem !important; // 3rem - navbar factor
-                inset-inline-end: 0px; // if immersive
-                inset-inline-start: auto;//var(--hide-cutout-fact, 0px) !important;
-            };
-
-            //
-            @media not ((display-mode: standalone) or (display-mode: minimal-ui)) {
-                @container root style(--secondary: 1) {
-                    inset-inline-end: auto !important;
-                    inset-inline-start: 0px !important;//var(--hide-cutout-fact, 0px) !important;
-                };
+                inset-inline-end: var(--hide-nav-fact, 0px) !important;
             };
         };
     };
