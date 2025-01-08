@@ -1,10 +1,10 @@
 import { isMobile, detectMobile } from "../_Detect";
 
 //
-export const getAvailSize = ()=>{
+export const getAvailSize = () => {
     const l = matchMedia("(orientation: landscape)")?.matches;
-    const w = Math.min(screen.width , screen.availWidth)  + "px";//((mob ? screen.width  : Math.max(window.innerWidth , screen.availWidth )) || 0) + "px";
-    const h = Math.min(screen.height, screen.availHeight) + "px";//((mob ? screen.height : Math.max(window.innerHeight, screen.availHeight)) || 0) + "px";
+    const w = screen.width  + "px";//((mob ? screen.width  : Math.max(window.innerWidth , screen.availWidth )) || 0) + "px";
+    const h = screen.height + "px";//((mob ? screen.height : Math.max(window.innerHeight, screen.availHeight)) || 0) + "px";
     return {
         "--avail-width" : l ? h : w,
         "--avail-height": l ? w : h,

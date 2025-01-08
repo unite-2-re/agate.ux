@@ -434,11 +434,11 @@ export const orientationNumberMap = {
 
         //
         @at-root :fullscreen & {
-            --hide-status-fact: 0px; // practically always hidden
+            & { --hide-status-fact: 0px; }; // practically always hidden
+            @media not ((hover: none) and (pointer: coarse)) {
+                --hide-cutout-fact: 0px; // fix in desktop
+            };
         };
-
-
-
 
         // apply orientation modifiers
         @media (orientation: portrait)  {
