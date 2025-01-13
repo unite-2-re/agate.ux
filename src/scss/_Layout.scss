@@ -201,8 +201,8 @@ export const orientationNumberMap = {
         #{$transforms}
         scale3d(var(--scale, 1), var(--scale, 1), var(--scale, 1)) 
         translate3d(
-            calc(var(--translate-x, 0px) - 50%),
-            calc(var(--translate-y, 0px) - 50%),
+            round(nearest, calc(var(--translate-x, 0px) - 50%), calc(1px / var(--pixel-ratio, 1))),
+            round(nearest, calc(var(--translate-y, 0px) - 50%), calc(1px / var(--pixel-ratio, 1))),
             0px
         );
     place-self: center;
@@ -210,7 +210,7 @@ export const orientationNumberMap = {
 
 //
 @mixin centered-with-offset {
-    @include centered-self("translate(var(--cs-drag-x, 0px), var(--cs-drag-y, 0px))");
+    @include centered-self("translate(round(nearest, var(--cs-drag-x, 0px), calc(1px / var(--pixel-ratio, 1))), round(nearest, var(--cs-drag-y, 0px), calc(1px / var(--pixel-ratio, 1))))");
 }
 
 //
