@@ -102,18 +102,18 @@ export class ScrollBar {
         const computeScroll = (ev: any | null = null) => {
             const self = weak?.deref?.();
             if (self) {
-                const sizePercent = Math.min(
-                    self.content[[borderBoxWidth, borderBoxHeight][axis]] /
+                const sizePercent = Math.max(Math.min(
+                    (self.content[[borderBoxWidth, borderBoxHeight][axis]] || 1) /
                     (self.content[["scrollWidth", "scrollHeight"][axis]] || 1),
                     1
-                );
+                ), 0);
 
                 //
                 setProperty(self.scrollbar, "--scroll-coef", sizePercent);
                 setProperty(self.scrollbar, "--scroll-size", (self.content[["scrollWidth", "scrollHeight"][axis]] || 1));
 
                 //
-                if (sizePercent >= 0.999) {
+                if (sizePercent >= 0.99) {
                     setProperty(self.scrollbar, "visibility", "collapse", "important");
                     setProperty(self.scrollbar?.querySelector?.("*"), "pointer-events", "none", "important");
                 } else {
