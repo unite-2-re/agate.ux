@@ -1,5 +1,6 @@
 //
-@scope(:root, :host, :scope) {
+@scope(:root, :host, :scope)
+{   //
     @property --ppx { syntax: "<length-percentage>"; initial-value: 1px; inherits: true; };
     @property --zpx { syntax: "<length-percentage>"; initial-value: 1px; inherits: true; };
 
@@ -135,11 +136,9 @@
     }
 };
 
-
 //
-@scope(:root, :host, :scope) {
-
-    //
+@scope(:root, :host, :scope)
+{
     @property --in-rev-cond-x { syntax: "<number>"; initial-value: 0; inherits: true; };
     @property --in-rev-cond-y { syntax: "<number>"; initial-value: 0; inherits: true; };
     @property --in-swap-cond { syntax: "<number>"; initial-value: 0; inherits: true; };
@@ -181,4 +180,4 @@
     //
     @property --rot   { syntax: "<angle>"; initial-value: 0deg; inherits: true; };
     @property --i-rot { syntax: "<angle>"; initial-value: 0deg; inherits: true; };
-}
+};
