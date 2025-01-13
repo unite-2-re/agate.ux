@@ -197,7 +197,14 @@ export const orientationNumberMap = {
 //
 @mixin centered-self($transforms: null) {
     transform-origin: 0% 0%;
-    transform: translate(calc(var(--translate-x, 0px) - 50%), calc(var(--translate-y, 0px) - 50%)) #{$transforms};
+    transform: 
+        #{$transforms}
+        scale3d(var(--scale, 1), var(--scale, 1), var(--scale, 1)) 
+        translate3d(
+            calc(var(--translate-x, 0px) - 50%),
+            calc(var(--translate-y, 0px) - 50%),
+            0px
+        );
     place-self: center;
 }
 
