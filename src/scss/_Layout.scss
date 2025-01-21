@@ -288,201 +288,206 @@ export const orientationNumberMap = {
 @layer ux-agate {
 
     //
-    ui-orientbox {
-        @include compute_os_conditions;
-        @include compute_cs_size_to_os;
-        @include compute_from_os_to_cs;
+    @media screen {
 
         //
-        & {
-            --cs-size-x: 100cqi;
-            --cs-size-y: 100cqb;
-
-            //
-            position: relative;
-            container-type: size !important;
-            contain: strict !important;
-            background-color: transparent;
-            inset: 0px;
-
-            //
-            grid-column: 1 / -1;
-            grid-row: 1 / -1;
-            place-self: start;
-
-            //
-            min-inline-size: 1px;
-            min-block-size: 1px;
-            inline-size: 100%;
-            block-size: 100%;
-            max-inline-size: 100%;
-            max-block-size: 100%;
-
-            //
-            zoom: max(var(--zoom, 1), 0.125);
-            font-size: 16px;
-
-            //
-            pointer-events: none;
-
-            //
-            writing-mode: horizontal-tb !important;
-            direction: ltr !important;
-        }
-
-        // by default, won't support rtl/vertical
-        :where(*) {
-            writing-mode: inherit;
-            direction: inherit;
-        }
-
-        //
-        & {
-            //
-            --zoom: max(var(--scaling, 1), 0.125);
-            --zpx: calc(1px / max(var(--zoom, 1), 0.125));
-            --ppx: calc(1px / max(var(--pixel-ratio, 1), 0.125));
-        }
-
-        //
-        :where(*) {
+        ui-orientbox {
             @include compute_os_conditions;
             @include compute_cs_size_to_os;
             @include compute_from_os_to_cs;
+
+            //
+            & {
+                --cs-size-x: 100cqi;
+                --cs-size-y: 100cqb;
+
+                //
+                position: relative;
+                container-type: size !important;
+                contain: strict !important;
+                background-color: transparent;
+                inset: 0px;
+
+                //
+                grid-column: 1 / -1;
+                grid-row: 1 / -1;
+                place-self: start;
+
+                //
+                min-inline-size: 1px;
+                min-block-size: 1px;
+                inline-size: 100%;
+                block-size: 100%;
+                max-inline-size: 100%;
+                max-block-size: 100%;
+
+                //
+                zoom: max(var(--zoom, 1), 0.125);
+                font-size: 16px;
+
+                //
+                pointer-events: none;
+
+                //
+                writing-mode: horizontal-tb !important;
+                direction: ltr !important;
+            }
+
+            // by default, won't support rtl/vertical
+            :where(*) {
+                writing-mode: inherit;
+                direction: inherit;
+            }
+
+            //
+            & {
+                //
+                --zoom: max(var(--scaling, 1), 0.125);
+                --zpx: calc(1px / max(var(--zoom, 1), 0.125));
+                --ppx: calc(1px / max(var(--pixel-ratio, 1), 0.125));
+            }
+
+            //
+            :where(*) {
+                @include compute_os_conditions;
+                @include compute_cs_size_to_os;
+                @include compute_from_os_to_cs;
+            }
+
+            //
+            .center-self {
+                @include use-inset;
+                @include centered-with-offset();
+            }
+
+            //
+            .fixed { @include use-inset; position: fixed !important; }
+            .absolute { @include use-inset; position: absolute !important; }
         }
 
         //
-        .center-self {
-            @include use-inset;
-            @include centered-with-offset();
-        }
-
-        //
-        .fixed { @include use-inset; position: fixed !important; }
-        .absolute { @include use-inset; position: absolute !important; }
-    }
-
-    //
-    :root, :where(html) {
-        background-color: transparent;
-        container-type: size;
-        container-name: html root !important;
-        contain: none;
-        overflow: visible;
-        position: fixed;
-        inset: 0px;
-        inset-block-end: auto;
-    }
-
-    //
-    :where(body) {
-        @include fit-viewport();
-
-        //
-        & {
-            overflow: visible;
-            position: relative !important;
+        :root, :where(html) {
             background-color: transparent;
-            inset: auto !important;
-            inset-block-end: max(env(titlebar-area-height, 0px), 0px) !important;
-            container-type: normal;
-            place-content: start;
-            place-items: start;
-            place-self: start;
+            container-type: size;
+            container-name: html root !important;
             contain: none;
+            overflow: visible;
+            position: fixed;
+            inset: 0px;
+            inset-block-end: auto;
         }
 
         //
-        & {
-            --hide-nav-fact: 0px; // if immersive
-            //--hide-nav-fact: 3rem; //navbar factor
-        }
+        :where(body) {
+            @include fit-viewport();
 
-        //
-        & {
-            // according of status-bar area (default)
-            --hide-cutout-fact: clamp(0px, max(
-                max(
-                    env(safe-area-inset-top, 0px),
-                    env(safe-area-inset-left, 0px)
-                ),
-                max(
-                    env(safe-area-inset-right, 0px),
-                    env(safe-area-inset-bottom, 0px)
-                )
-            ), 2rem);
+            //
+            & {
+                overflow: visible;
+                position: relative !important;
+                background-color: transparent;
+                inset: auto !important;
+                inset-block-end: max(env(titlebar-area-height, 0px), 0px) !important;
+                container-type: normal;
+                place-content: start;
+                place-items: start;
+                place-self: start;
+                contain: none;
+            }
 
-            // hide any status bars when possible
-            --hide-status-fact: clamp(0px, max(
-                max(
-                    env(safe-area-inset-top, 0px),
-                    env(safe-area-inset-left, 0px)
-                ),
-                max(
-                    env(safe-area-inset-right, 0px),
-                    env(safe-area-inset-bottom, 0px)
-                )
-            ), 2rem);
-        };
+            //
+            & {
+                --hide-nav-fact: 0px; // if immersive
+                //--hide-nav-fact: 3rem; //navbar factor
+            }
 
-        //
-        @media (display-mode: browser) {
-            @at-root :not(:fullscreen) & {
+            //
+            & {
+                // according of status-bar area (default)
+                --hide-cutout-fact: clamp(0px, max(
+                    max(
+                        env(safe-area-inset-top, 0px),
+                        env(safe-area-inset-left, 0px)
+                    ),
+                    max(
+                        env(safe-area-inset-right, 0px),
+                        env(safe-area-inset-bottom, 0px)
+                    )
+                ), 2rem);
+
+                // hide any status bars when possible
+                --hide-status-fact: clamp(0px, max(
+                    max(
+                        env(safe-area-inset-top, 0px),
+                        env(safe-area-inset-left, 0px)
+                    ),
+                    max(
+                        env(safe-area-inset-right, 0px),
+                        env(safe-area-inset-bottom, 0px)
+                    )
+                ), 2rem);
+            };
+
+            //
+            @media (display-mode: browser) {
+                @at-root :not(:fullscreen) & {
+                    --hide-cutout-fact: 0px; // may not hidden
+                    --hide-status-fact: 0px; // practically always hidden
+                }
+            }
+
+            //
+            @media (display-mode: fullscreen) or (display-mode: window-controls-overlay) {
                 --hide-cutout-fact: 0px; // may not hidden
                 --hide-status-fact: 0px; // practically always hidden
-            }
-        }
-
-        //
-        @media (display-mode: fullscreen) or (display-mode: window-controls-overlay) {
-            --hide-cutout-fact: 0px; // may not hidden
-            --hide-status-fact: 0px; // practically always hidden
-        };
-
-        //
-        @at-root :fullscreen & {
-            & { --hide-status-fact: 0px; }; // practically always hidden
-            //@media not ((hover: none) and (pointer: coarse)) {
-                & { --hide-cutout-fact: 0px; }; // fix in desktop
-            //};
-        };
-
-        // apply orientation modifiers
-        @media (orientation: portrait)  {
-            inset-block-end: clamp(
-                 min(var(--hide-cutout-fact, 0px) , var(--hide-status-fact, 0px)),
-                calc(var(--hide-cutout-fact, 0px) + var(--hide-status-fact, 0px)),
-                 max(var(--hide-cutout-fact, 0px) , var(--hide-status-fact, 0px))
-            ) !important;
-        };
-
-        //
-        @media (orientation: landscape) {
-            & {
-                inset-block-end : var(--hide-status-fact, 0px) !important;
-                inset-inline-start: auto !important;
             };
 
             //
-            & {
-                inset-inline-end: var(--hide-cutout-fact, 0px) !important;
+            @at-root :fullscreen & {
+                & { --hide-status-fact: 0px; }; // practically always hidden
+                //@media not ((hover: none) and (pointer: coarse)) {
+                    & { --hide-cutout-fact: 0px; }; // fix in desktop
+                //};
+            };
+
+            // apply orientation modifiers
+            @media (orientation: portrait)  {
+                inset-block-end: clamp(
+                    min(var(--hide-cutout-fact, 0px) , var(--hide-status-fact, 0px)),
+                    calc(var(--hide-cutout-fact, 0px) + var(--hide-status-fact, 0px)),
+                    max(var(--hide-cutout-fact, 0px) , var(--hide-status-fact, 0px))
+                ) !important;
             };
 
             //
-            @container root style(--secondary: 0) {
-                inset-inline-end: var(--hide-cutout-fact, 0px) !important;
-            };
+            @media (orientation: landscape) {
+                & {
+                    inset-block-end : var(--hide-status-fact, 0px) !important;
+                    inset-inline-start: auto !important;
+                };
 
-            //
-            @container root style(--secondary: 1) {
-                inset-inline-end: var(--hide-nav-fact, 0px) !important;
+                //
+                & {
+                    inset-inline-end: var(--hide-cutout-fact, 0px) !important;
+                };
+
+                //
+                @container root style(--secondary: 0) {
+                    inset-inline-end: var(--hide-cutout-fact, 0px) !important;
+                };
+
+                //
+                @container root style(--secondary: 1) {
+                    inset-inline-end: var(--hide-nav-fact, 0px) !important;
+                };
             };
         };
-    };
 
-    //
-    .native-portrait-optimized {
-        @include native-optimized-swap-in-portrait;
+        //
+        .native-portrait-optimized {
+            @include native-optimized-swap-in-portrait;
+        };
+
     };
 
 };
