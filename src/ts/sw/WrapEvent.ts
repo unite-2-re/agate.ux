@@ -19,7 +19,7 @@ export class DecorWith {
 
     //
     get(target, name, rec) {
-        return withCtx(target, target?.[name]) ?? this.#addition?.[name];
+        return withCtx(target, target?.[name]) ?? withCtx(this.#addition, this.#addition?.[name]);
     }
 
     //
