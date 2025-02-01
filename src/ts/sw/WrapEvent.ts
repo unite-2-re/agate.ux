@@ -3,6 +3,12 @@ import { getBoundingOrientRect, getZoom, orientOf, zoomOf } from "../_Zoom.js";
 import { elementPointerMap } from "../wcomp/OrientBox";
 
 //
+const withCtx = (target, got)=>{
+    if (typeof got == "function") { return got?.bind?.(target) ?? got; };
+    return got;
+}
+
+//
 export class DecorWith {
     #addition: any;
 
@@ -13,28 +19,28 @@ export class DecorWith {
 
     //
     get(target, name, rec) {
-        return Reflect.get(target, name, rec) ?? this.#addition[target, name];
+        return withCtx(target, target?.[name]) ?? this.#addition?.[name];
     }
 
     //
     set(target, name, val) {
         if (!Reflect.set(target, name, val)) {
-            this.#addition[target, name] = val;
+            this.#addition[name] = val;
         }
         return true;
     }
 }
 
 //
-export const wrapEvent = (cb)=>{
+export const agWrapEvent = (cb)=>{
 
     //
     const wpb = (ev: any)=>{
         const el = (ev?.target?.matches?.("ui-orientbox") ? ev.target : null) || ev?.target?.closest?.("ui-orientbox");
-        if (!el) { return true; }; //
+        if (!el) { return cb(ev); }; //
 
         //
-        const [pointerCache, pointerMap] = elementPointerMap.get(el);
+        const {pointerCache, pointerMap} = elementPointerMap.get(el);
         const zoom: number = zoomOf(ev?.target || el) || 1;
         const coord: [number, number] = [(ev?.clientX || 0) / zoom, (ev?.clientY || 0) / zoom];
         const cache: any = pointerCache?.get?.(ev?.pointerId || 0) || {
@@ -98,7 +104,7 @@ export const wrapEvent = (cb)=>{
         };
 
         //
-        cb(new Proxy(ev, new DecorWith(pointer)));
+        if (pointer && ev) { return cb(new Proxy(ev, new DecorWith(pointer))); };
     }
 
     //

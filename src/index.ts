@@ -6,7 +6,7 @@ export type StyleTuple = [selector: string, sheet: object];
 import { updateVP } from "./ts/sw/Viewport";
 import { availSize } from "./ts/sw/Viewport";
 import { UIOrientBox } from "./ts/wcomp/OrientBox";
-import { wrapEvent } from "./ts/sw/WrapEvent";
+import { agWrapEvent } from "./ts/sw/WrapEvent";
 
 //
 export const classes: StyleTuple[] = [
@@ -86,4 +86,4 @@ export * from "./ts/_Zoom";
 export * from "./ts/_Scrollbar";
 
 //
-export {wrapEvent};
+export {agWrapEvent};

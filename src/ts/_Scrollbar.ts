@@ -175,9 +175,9 @@ export class ScrollBar {
                 ev.target?.releasePointerCapture?.(ev.pointerId);
 
                 //
-                this.holder.removeEventListener("ag-pointermove", moveScroll);
-                this.holder.removeEventListener("ag-pointerup", stopScroll);
-                this.holder.removeEventListener("ag-pointercancel", stopScroll);
+                this.holder.removeEventListener("pointermove", moveScroll);
+                this.holder.removeEventListener("pointerup", stopScroll);
+                this.holder.removeEventListener("pointercancel", stopScroll);
             }
         };
 
