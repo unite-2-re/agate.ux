@@ -11,8 +11,10 @@ const preInit = URL.createObjectURL(new Blob([styles], {type: "text/css"}));
 const root = document.documentElement;
 
 //
+export const elementPointerMap = new WeakMap<any>()
 export class UIOrientBox extends HTMLElement {
     static observedAttributes = ["orient", "zoom"];
+    public size: [number, number] = [0, 0];
 
     //
     #themeStyle?: HTMLStyleElement;
@@ -56,86 +58,9 @@ export class UIOrientBox extends HTMLElement {
         this.style.setProperty("--zoom", this.getAttribute("zoom") || "1");
 
         //
-        const self = this;
-        const pointerMap   = new Map<number, any>();
-        const pointerCache = new Map<number, any>();
-        const pxy_event: [any, any] = [(ev)=>{
-            const el = (ev?.target?.matches?.("ui-orientbox") ? ev.target : null) || ev?.target?.closest?.("ui-orientbox");
-            if (el != self || !(el||self)?.contains?.(ev.target)) { return true; }; //
-
-            //
-            const zoom: number = zoomOf(ev?.target || el) || 1;
-            const coord: [number, number] = [(ev?.clientX || 0) / zoom, (ev?.clientY || 0) / zoom];
-            const cache: any = pointerCache?.get?.(ev?.pointerId || 0) || {
-                client: coord,
-                orient: null,
-                boundingBox: null,
-                movement: [0, 0]
-            };
-
-            //
-            cache.delta = [cache.client[0], cache.client[1]];
-            cache.orient = null;
-            cache.client = coord;
-
-            //
-            const pointer = pointerMap?.get?.(ev?.pointerId || 0) || {
-                type: "ag-" + (ev?.type||"pointer"),
-                event: ev,
-                target: ev?.target || el,
-                cs_box: size,
-                cap_element: null,
-                pointerType: ev?.pointerType || "mouse",
-                pointerId: ev?.pointerId || 0,
-
-                //
-                get client() { return cache.client; },
-                get orient() { return cache.orient ??= cvt_cs_to_os([...pointer.client] as [number, number], size, orientOf(ev.target || el) || 0); },
-                get movement() { return cvt_rel_cs_to_os([cache.client[0] - cache.delta[0], cache.client[1] - cache.delta[1]], orientOf(ev.target || el) || 0); },
-                get boundingBox() { return (cache.boundingBox ??= getBoundingOrientRect(ev?.target || el, orientOf(ev.target || el) || 0)); },
-
-                //
-                capture(element = ev?.target || el) { return (pointer.cap_element = element?.setPointerCapture?.(ev?.pointerId || 0)); },
-                release(element = null) {
-                    (element || pointer.cap_element || ev?.target || el)?.releasePointerCapture?.(ev?.pointerId || 0);
-                    pointer.cap_element = null;
-                },
-            };
-
-            //
-            Object.assign(pointer, {
-                type: "ag-" + (ev?.type||"pointer"),
-                event: ev,
-                target: ev?.target || el,
-                cs_box: size,
-                pointerId: ev?.pointerId || 0
-            });
-
-            //
-            if (!pointerMap?.has?.(ev?.pointerId || 0)) {
-                pointerMap?.set?.(ev?.pointerId || 0, pointer);
-                pointerCache?.set?.(ev?.pointerId || 0, cache);
-            };
-
-            //
-            if (!(ev?.target || el)?.dispatchEvent?.(new CustomEvent("ag-" + (ev?.type||"pointer"), {
-                bubbles: true,
-                cancelable: true,
-                detail: pointer
-            }))) { ev?.preventDefault?.(); };
-
-            //
-            if (ev?.type == "contextmenu" || ev?.type == "click" || ev?.type == "pointerup" || ev?.type == "pointercancel") {
-                pointerMap.delete(ev?.pointerId || 0);
-                pointerCache.delete(ev?.pointerId || 0);
-                if (ev?.type == "pointercancel") {
-                    pointer?.release?.();
-                }
-            };
-        }, {passive: false, capture: true, once: false}];
-
-        //
-        const size: [number, number] = [this.clientWidth, this.clientHeight];
+        const size = this.size;
+        size[0] = this.clientWidth;
+        size[1] = this.clientHeight;
         const resizeObserver = new ResizeObserver((entries) => {
             for (const entry of entries) {
                 if (entry?.contentBoxSize) {
@@ -148,16 +73,10 @@ export class UIOrientBox extends HTMLElement {
 
         //
         resizeObserver.observe(this, {box: "content-box"});
-        root.addEventListener("contextmenu", ...pxy_event);
-        root.addEventListener("pointerover", ...pxy_event);
-        root.addEventListener("pointerdown", ...pxy_event);
-        root.addEventListener("pointermove", ...pxy_event);
-        root.addEventListener("pointerenter", ...pxy_event);
-        root.addEventListener("pointerleave", ...pxy_event);
-        root.addEventListener("pointerout", ...pxy_event);
-        root.addEventListener("click", ...pxy_event);
-        root.addEventListener("pointerup", ...pxy_event);
-        root.addEventListener("pointercancel", ...pxy_event);
+        elementPointerMap.set(this, {
+            pointerMap: new Map<number, any>(),
+            pointerCache: new Map<number, any>()
+        });
     }
 
     //
