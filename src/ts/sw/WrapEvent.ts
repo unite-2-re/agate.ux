@@ -68,7 +68,8 @@ export const agWrapEvent = (cb)=>{
             //
             get client() { return cache.client; },
             get orient() { return cache.orient ??= cvt_cs_to_os([...pointer.client] as [number, number], el?.size, orientOf(ev.target || el) || 0); },
-            get movement() { return cvt_rel_cs_to_os([cache.client[0] - cache.delta[0], cache.client[1] - cache.delta[1]], orientOf(ev.target || el) || 0); },
+            //get movement() { return cvt_rel_cs_to_os([cache.client[0] - cache.delta[0], cache.client[1] - cache.delta[1]], orientOf(ev.target || el) || 0); },
+            get movement() { return [cache.client[0] - cache.delta[0], cache.client[1] - cache.delta[1]]; },
             get boundingBox() { return (cache.boundingBox ??= getBoundingOrientRect(ev?.target || el, orientOf(ev.target || el) || 0)); },
 
             //
