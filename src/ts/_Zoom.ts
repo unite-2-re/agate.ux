@@ -10,23 +10,25 @@ export const getZoom = ()=>{
 }
 
 //
-let zoomValue = getZoom() || 1;
-document.documentElement.addEventListener("scaling", ()=>{ zoomValue = getZoom() || 1; });
-document.documentElement.addEventListener("resize", ()=>{ zoomValue = getZoom() || 1; });
-addEventListener("resize", ()=>{ zoomValue = getZoom() || 1; });
+const zoomValues = new WeakMap<HTMLElement, number>();
 
 //
 export const zoomOf = (element = document.documentElement) => {
-    // legacy element
-    if (element == document.documentElement) { return zoomValue || 1; };
+    if (zoomValues.has(element)) return zoomValues.get(element);
 
     // getting zoom performance broken...
     const container: any = ((element?.matches?.("ui-orientbox") ? element : null) || element?.closest?.("ui-orientbox") || document.body) as HTMLElement;
-    return container?.zoom || 1;
 
-    //
+    // get software zoom value
+    if (container?.zoom) {
+        return (container?.zoom || 1);
+    }
+
+    // get and cache zoom value
     if (element?.currentCSSZoom) {
-        return element?.currentCSSZoom || 1;
+        const zoomValue = element?.currentCSSZoom || 1;
+        zoomValues?.set?.(element, zoomValue);
+        return zoomValue;
     }
 }
 

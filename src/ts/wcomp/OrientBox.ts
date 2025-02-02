@@ -3,12 +3,9 @@ import styles from "./OrientBox.scss?inline&compress";
 
 // @ts-ignore
 import html from "./OrientBox.html?raw";
-import { cvt_cs_to_os, cvt_rel_cs_to_os } from "../_Utils";
-import { getBoundingOrientRect, getZoom, orientOf, zoomOf } from "../_Zoom.js";
 
 //
 const preInit = URL.createObjectURL(new Blob([styles], {type: "text/css"}));
-const root = document.documentElement;
 
 //
 export const elementPointerMap = new WeakMap<any>()
