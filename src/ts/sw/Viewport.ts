@@ -5,9 +5,14 @@ export const getAvailSize = () => {
     const l = matchMedia("(orientation: landscape)")?.matches;
     const w = screen.width  + "px";//((mob ? screen.width  : Math.max(window.innerWidth , screen.availWidth )) || 0) + "px";
     const h = screen.height + "px";//((mob ? screen.height : Math.max(window.innerHeight, screen.availHeight)) || 0) + "px";
+    const aw = screen.availWidth  + "px";//((mob ? screen.width  : Math.max(window.innerWidth , screen.availWidth )) || 0) + "px";
+    const ah = screen.availHeight + "px";//((mob ? screen.height : Math.max(window.innerHeight, screen.availHeight)) || 0) + "px";
     return {
-        "--avail-width" : l ? h : w,
-        "--avail-height": l ? w : h,
+        "--screen-width" : l ? h : w,
+        "--screen-height": l ? w : h,
+        "--avail-width" : l ? ah : aw,
+        "--avail-height": l ? aw : ah,
+        "--view-height": (Math.min(screen.availHeight, window.innerHeight) + "px"),
         "--pixel-ratio": devicePixelRatio || 1,
     };
 }

@@ -254,18 +254,18 @@ export const orientationNumberMap = {
 
     //
     @media (display-mode: fullscreen) or (display-mode: standalone) {
-        --vp-i-size: var(--avail-width , 100dvmin);
-        --vp-b-size: var(--avail-height, 100dvmax);
-        //--vp-i-size: min(var(--avail-width , 100dvmin), var(--avi, 100dvmin));
-        //--vp-b-size: min(var(--avail-height, 100dvmax), var(--avb, 100dvmax));
+        --vp-i-size: var(--screen-width , 100dvmin);
+        --vp-b-size: var(--screen-height, 100dvmax);
+        //--vp-i-size: min(var(--screen-width , 100dvmin), var(--avi, 100dvmin));
+        //--vp-b-size: min(var(--screen-height, 100dvmax), var(--avb, 100dvmax));
     };
 
     //
     @at-root :fullscreen & {
-        --vp-i-size: var(--avail-width , 100dvmin);
-        --vp-b-size: var(--avail-height, 100dvmax);
-        //--vp-i-size: min(var(--avail-width , 100dvmin), var(--avi, 100dvmin));
-        //--vp-b-size: min(var(--avail-height, 100dvmax), var(--avb, 100dvmax));
+        --vp-i-size: var(--screen-width , 100dvmin);
+        --vp-b-size: var(--screen-height, 100dvmax);
+        //--vp-i-size: min(var(--screen-width , 100dvmin), var(--avi, 100dvmin));
+        //--vp-b-size: min(var(--screen-height, 100dvmax), var(--avb, 100dvmax));
     };
 };
 
@@ -450,36 +450,41 @@ export const orientationNumberMap = {
                 //};
             };
 
-            // apply orientation modifiers
-            @media (orientation: portrait)  {
-                inset-block-end: clamp(
-                    min(var(--hide-cutout-fact, 0px) , var(--hide-status-fact, 0px)),
-                    calc(var(--hide-cutout-fact, 0px) + var(--hide-status-fact, 0px)),
-                    max(var(--hide-cutout-fact, 0px) , var(--hide-status-fact, 0px))
-                ) !important;
-            };
-
             //
-            @media (orientation: landscape) {
-                & {
-                    inset-block-end : var(--hide-status-fact, 0px) !important;
-                    inset-inline-start: auto !important;
-                };
+            #viewport, #background {
 
-                //
-                & {
-                    inset-inline-end: var(--hide-cutout-fact, 0px) !important;
+                // apply orientation modifiers
+                @media (orientation: portrait)  {
+                    inset-block-end: clamp(
+                        min(var(--hide-cutout-fact, 0px) , var(--hide-status-fact, 0px)),
+                        calc(var(--hide-cutout-fact, 0px) + var(--hide-status-fact, 0px)),
+                        max(var(--hide-cutout-fact, 0px) , var(--hide-status-fact, 0px))
+                    ) !important;
                 };
-
+    
                 //
-                @container root style(--secondary: 0) {
-                    inset-inline-end: var(--hide-cutout-fact, 0px) !important;
+                @media (orientation: landscape) {
+                    & {
+                        inset-block-end : var(--hide-status-fact, 0px) !important;
+                        inset-inline-start: auto !important;
+                    };
+    
+                    //
+                    & {
+                        inset-inline-end: var(--hide-cutout-fact, 0px) !important;
+                    };
+    
+                    //
+                    @container root style(--secondary: 0) {
+                        inset-inline-end: var(--hide-cutout-fact, 0px) !important;
+                    };
+    
+                    //
+                    @container root style(--secondary: 1) {
+                        inset-inline-end: var(--hide-nav-fact, 0px) !important;
+                    };
                 };
-
-                //
-                @container root style(--secondary: 1) {
-                    inset-inline-end: var(--hide-nav-fact, 0px) !important;
-                };
+                
             };
         };
 

@@ -80,12 +80,6 @@
         }
 
 
-        //
-        @property --avail-width {
-            syntax: "<length-percentage>";
-            initial-value: 0px;
-            inherits: true;
-        }
 
         //
         @property --pixel-ratio {
@@ -94,12 +88,44 @@
             inherits: true;
         }
 
+
+
+        //
+        @property --screen-width {
+            syntax: "<length-percentage>";
+            initial-value: 100dvi;
+            inherits: true;
+        }
+
+        //
+        @property --screen-height {
+            syntax: "<length-percentage>";
+            initial-value: 100dvb;
+            inherits: true;
+        }
+
+
+        //
+        @property --avail-width {
+            syntax: "<length-percentage>";
+            initial-value: 100dvi;
+            inherits: true;
+        }
+
         //
         @property --avail-height {
             syntax: "<length-percentage>";
-            initial-value: 0px;
+            initial-value: 100dvb;
             inherits: true;
         }
+        
+        //
+        @property --view-height {
+            syntax: "<length-percentage>";
+            initial-value: 100dvb;
+            inherits: true;
+        }
+
 
         //
         @property --keyboard-inset-bottom {
