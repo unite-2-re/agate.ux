@@ -334,10 +334,10 @@ export const orientationNumberMap = {
             }
 
             // by default, won't support rtl/vertical
-            :where(*) {
+            /*:where(*) {
                 writing-mode: inherit;
                 direction: inherit;
-            }
+            }*/
 
             //
             & {
@@ -348,7 +348,9 @@ export const orientationNumberMap = {
             }
 
             //
-            :where(*) {
+            & > :where(*), 
+            & :where(ui-frame, .u2-grid-item, ui-modal)
+            {
                 @include compute_os_conditions;
                 @include compute_cs_size_to_os;
                 @include compute_from_os_to_cs;
