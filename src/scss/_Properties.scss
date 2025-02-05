@@ -1,7 +1,9 @@
 //
 @scope(:root, :host, :scope)
 {
-    @media screen {
+    //
+    @scope(:root, :host, :scope)
+    {   
         @property --ppx { syntax: "<length-percentage>"; initial-value: 1px; inherits: true; };
         @property --zpx { syntax: "<length-percentage>"; initial-value: 1px; inherits: true; };
 
@@ -12,160 +14,54 @@
 
         //
         @property --scaling { syntax: "<number>"; initial-value: 1; inherits: true; };
-        @property --resize-x { syntax: "<number>"; initial-value: 0; inherits: true; }
-        @property --resize-y { syntax: "<number>"; initial-value: 0; inherits: true; }
-        @property --drag-x { syntax: "<number>"; initial-value: 0; inherits: true; }
-        @property --drag-y { syntax: "<number>"; initial-value: 0; inherits: true; }
+        @property --resize-x { syntax: "<number>"; initial-value: 0; inherits: false; };
+        @property --resize-y { syntax: "<number>"; initial-value: 0; inherits: false; };
+        @property --drag-x { syntax: "<number>"; initial-value: 0; inherits: false; };
+        @property --drag-y { syntax: "<number>"; initial-value: 0; inherits: false; };
         @property --orient { syntax: "<number>"; initial-value: 0; inherits: true; }
         @property --zoom { syntax: "<number>"; initial-value: 1; inherits: true; };
 
         //
-        @property --secondary { syntax: "<integer>"; initial-value: 0; inherits: true; }
+        @property --secondary { syntax: "<integer>"; initial-value: 0; inherits: true; };
 
         //
-        @property --avi {
-            syntax: "<length-percentage>";
-            initial-value: 0px;
-            inherits: true;
-        }
+        @property --avi { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
+        @property --avb { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
 
         //
-        @property --avb {
-            syntax: "<length-percentage>";
-            initial-value: 0px;
-            inherits: true;
-        }
+        @property --vp-i-size { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
+        @property --vp-b-size { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
 
         //
-        @property --vp-i-size {
-            syntax: "<length-percentage>";
-            initial-value: 0px;
-            inherits: true;
-        }
-
-        //
-        @property --vp-b-size {
-            syntax: "<length-percentage>";
-            initial-value: 0px;
-            inherits: true;
-        }
-
-        //
-        @property --scale {
-            syntax: "<number>";
-            initial-value: 1;
-            inherits: true;
-        }
-
-        //
-        @property --opacity {
-            syntax: "<number>";
-            initial-value: 1;
-            inherits: true;
-        }
-
-
-        //
-        @property --border-width {
-            syntax: "<length-percentage>";
-            initial-value: 100%;
-            inherits: true;
-        }
-
-        //
-        @property --border-height {
-            syntax: "<length-percentage>";
-            initial-value: 100%;
-            inherits: true;
-        }
-
-
-
-        //
-        @property --pixel-ratio {
-            syntax: "<number>";
-            initial-value: 1;
-            inherits: true;
-        }
-
-
-
-        //
-        @property --screen-width {
-            syntax: "<length-percentage>";
-            initial-value: 100dvi;
-            inherits: true;
-        }
-
-        //
-        @property --screen-height {
-            syntax: "<length-percentage>";
-            initial-value: 100dvb;
-            inherits: true;
-        }
-
-
-        //
-        @property --avail-width {
-            syntax: "<length-percentage>";
-            initial-value: 100dvi;
-            inherits: true;
-        }
-
-        //
-        @property --avail-height {
-            syntax: "<length-percentage>";
-            initial-value: 100dvb;
-            inherits: true;
-        }
+        @property --border-width  { syntax: "<length-percentage>"; initial-value: 100%; inherits: true; };
+        @property --border-height { syntax: "<length-percentage>"; initial-value: 100%; inherits: true; };
         
         //
-        @property --view-height {
-            syntax: "<length-percentage>";
-            initial-value: 100dvb;
-            inherits: true;
-        }
-
+        @property --pixel-ratio { syntax: "<number>"; initial-value: 1; inherits: true; };
 
         //
-        @property --keyboard-inset-bottom {
-            syntax: "<length-percentage>";
-            initial-value: 0px;
-            inherits: true;
-        }
+        @property --screen-width  { syntax: "<length-percentage>"; initial-value: 100dvi; inherits: true; };
+        @property --screen-height { syntax: "<length-percentage>"; initial-value: 100dvb; inherits: true; };
 
         //
-        @property --keyboard-inset-height {
-            syntax: "<length-percentage>";
-            initial-value: 0px;
-            inherits: true;
-        }
+        @property --avail-width  { syntax: "<length-percentage>"; initial-value: 100dvi; inherits: true; };
+        @property --avail-height { syntax: "<length-percentage>"; initial-value: 100dvb; inherits: true; };
+        
+        //
+        @property --view-height  { syntax: "<length-percentage>"; initial-value: 100dvb; inherits: true; };
+    
+        //
+        @property --keyboard-inset-bottom { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
+        @property --keyboard-inset-height { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
 
         //
-        @property --translate-x {
-            syntax: "<length-percentage>";
-            initial-value: 0px;
-            inherits: true;
-        }
+        @property --translate-x { initial-value: 0px; syntax: "<length-percentage>"; inherits: false; };
+        @property --translate-y { initial-value: 0px; syntax: "<length-percentage>"; inherits: false; };
+        @property --opacity { initial-value: 1; syntax: "<number>"; inherits: false; };
+        @property --scale { initial-value: 1; syntax: "<number>"; inherits: false; };
+        @property --corrector { initial-value: 1; syntax: "<number>"; inherits: false; };
 
         //
-        @property --translate-y {
-            syntax: "<length-percentage>";
-            initial-value: 0px;
-            inherits: true;
-        }
-
-        //
-        @property --corrector {
-            syntax: "<number>";
-            initial-value: 1;
-            inherits: true;
-        }
-    };
-
-    //
-    @scope(:root, :host, :scope)
-    {
         @property --in-rev-cond-x { syntax: "<number>"; initial-value: 0; inherits: true; };
         @property --in-rev-cond-y { syntax: "<number>"; initial-value: 0; inherits: true; };
         @property --in-swap-cond { syntax: "<number>"; initial-value: 0; inherits: true; };

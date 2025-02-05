@@ -291,6 +291,139 @@ export const orientationNumberMap = {
     @media screen {
 
         //
+        :root, :host, :scope, :where(body) {
+            pointer-events: auto;
+
+            //
+            transition-behavior: allow-discrete;
+            interpolate-size: allow-keywords;
+            content-visibility: auto;
+            
+            //
+            --keyboard-inset-bottom: calc(max(env(keyboard-inset-bottom, 0px), 0px) / max(var(--zoom, 1), 0.125));
+            --keyboard-inset-height: calc(max(env(keyboard-inset-height, 0px), 0px) / max(var(--zoom, 1), 0.125));
+        }
+
+        //
+        :root, :where(html) {
+            translate: 0px 0px !important;
+            transform: none !important;
+            margin: 0px !important;
+            padding: 0px !important;
+            border: none 0px transparent !important;
+            outline: none 0px transparent !important;
+
+            //
+            background-color: transparent;
+            container-type: normal;
+            container-name: html root;
+            contain: none;
+            overflow: visible;
+            position: fixed;
+            inset: 0px;
+            inset-block-end: auto;
+
+            //
+            min-inline-size: 100dvi;
+            min-block-size: 100dvb;
+
+            //
+            inline-size: max-content;
+            block-size: max-content;
+
+            //
+            max-inline-size: none;
+            max-block-size: none;
+
+            //
+            place-content: start;
+            place-items: start;
+            place-self: start;
+
+            //
+            line-height: 0;
+            flex-direction: column;
+            display: flex;
+        };
+
+        //
+        :where(body) {
+
+            //
+            & {
+                translate: 0px 0px !important;
+                transform: none !important;
+                margin: 0px !important;
+
+                //
+                font-size: 0.9rem;
+
+                //
+                overflow: visible;
+                position: relative;
+                pointer-events: auto;
+                inset: 0px;
+
+                //
+                display: inline flex;
+                place-content: start;
+                place-items: start;
+                place-self: start;
+
+                //
+                background-color: var(--theme-base-color, transparent);
+
+                // if needs viewport
+                container-name: body;
+                container-type: normal;
+                contain: none;
+
+                //
+                min-inline-size: 100dvi;
+                min-block-size: 100dvb;
+
+                //
+                inline-size: 100%;
+                block-size: 100%;
+            }
+
+            //
+            & > :where(*) {
+                display: grid;
+                place-self: safe center;
+                grid-column: 1 / 1 span;
+                grid-row: 1 / 1 span;
+            }
+        }
+
+        //
+        ui-frame, ui-modal, .ui-grid-item
+        {
+            & {
+                isolation: isolate;
+                content-visibility: auto;
+                transform-origin: 50% 50%;
+                transform: 
+                    translate3d(
+                        round(nearest, var(--translate-x, 0%), calc(1px / var(--pixel-ratio, 1))), 
+                        round(nearest, var(--translate-y, 0%), calc(1px / var(--pixel-ratio, 1)))
+                        , 0) 
+                    scale3d(var(--scale, 1), var(--scale, 1), var(--scale, 1));
+                translate: 0% 0% 0%;
+                opacity: var(--opacity, 1);
+                rotate: 0deg;
+                scale: 1;
+
+                //
+                --opacity: 1;
+                --scale: 1;
+                --rotate: 0deg;
+                --translate-x: 0%;
+                --translate-y: 0%;
+            };
+        };
+
+        //
         ui-orientbox {
             @include compute_os_conditions;
             @include compute_cs_size_to_os;
