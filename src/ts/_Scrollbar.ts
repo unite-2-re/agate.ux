@@ -1,4 +1,5 @@
 import { zoomOf } from "./_Zoom.js";
+import "./sw/Properties.js";
 
 //
 export const UUIDv4 = () => {
@@ -95,6 +96,51 @@ export class ScrollBar {
         //
         setProperty(this.scrollbar, "visibility", "collapse");
         setProperty(this.scrollbar?.querySelector?.("*"), "pointer-events", "none");
+
+        // @ts-ignore
+        const timeline = typeof ScrollTimeline != "undefined" ? new ScrollTimeline({
+            source: content,
+            axis: ["inline", "block"][axis],
+        }) : null;
+
+        //
+        const axisLab = ["x","y"][axis];
+        const scrollFn: [[string, string], [string, string]] = [
+            ["--scroll-left", "calc(var(--percent-x, 0) * max(calc(var(--scroll-size, 1) - var(--content-size, 1)), 0))"],
+            ["--scroll-top" , "calc(var(--percent-y, 0) * max(calc(var(--scroll-size, 1) - var(--content-size, 1)), 0))"]
+        ]; //{[`--percent-${axisLab}`]: "0.0"}
+
+        // just works...
+        // (currently timeline and custom properties was broken)
+        if (timeline) {
+            const bar = this.scrollbar;//?.querySelector?.("& > *");
+            bar?.style?.setProperty?.(...(scrollFn[axis]), "");
+            bar?.animate?.(
+                //{[`--percent-${axisLab}`]: [0,1]},
+                {[`--percent-${axisLab}`]: [...Array.from({length: 100}, (x, i) => (i/100)), 1]},
+            //[{[`--percent-${axisLab}`]: 0.0, "offset": 0.0}, {[`--percent-${axisLab}`]: 1.0, "offset": 1.0}],
+            // @ts-ignore
+            { timeline, delay: 0, fill: "both", easing: "linear", rangeStart: "cover 0%", rangeEnd: "cover 100%", duration: 1 });
+        }
+
+        // if animation timeline not supported
+        if (!timeline) this.content.addEventListener("scroll", (ev)=>{
+            const self = weak?.deref?.() as any;
+
+            //
+            setProperty(
+                self?.holder,
+                "--scroll-top",
+                (self?.content?.scrollTop || "0") as string
+            );
+
+            //
+            setProperty(
+                self?.holder,
+                "--scroll-left",
+                (self?.content?.scrollLeft || "0") as string
+            );
+        });
 
         //
         const status_w = new WeakRef(this.status);
@@ -215,35 +261,6 @@ export class ScrollBar {
                     })();
                 }
             });
-
-        //
-        this.content.addEventListener("scroll", (ev)=>{
-            const self = weak?.deref?.() as any;
-
-            //
-            if (!CSS.supports("timeline-scope", "--tm-x, --tm-y")) {
-                setProperty(
-                    self?.holder,
-                    "--scroll-top",
-                    (self?.content?.scrollTop || "0") as string
-                );
-
-                //
-                setProperty(
-                    self?.holder,
-                    "--scroll-left",
-                    (self?.content?.scrollLeft || "0") as string
-                );
-            }
-
-            //
-            self?.holder?.dispatchEvent?.(new CustomEvent("scroll-change", {
-                detail: {
-                    scrollTop: self.content.scrollTop,
-                    scrollLeft: self.content.scrollLeft,
-                },
-            }));
-        });
 
         //
         this.holder.addEventListener("u2-hidden", computeScroll);

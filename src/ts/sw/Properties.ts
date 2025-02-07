@@ -59,6 +59,18 @@ export const properties = [
         syntax: "<number>",
         inherits: true,
         initialValue: "0",
+    },
+    {
+        name: "--scroll-left",
+        syntax: "<number>",
+        inherits: true,
+        initialValue: "0",
+    },
+    {
+        name: "--scroll-top",
+        syntax: "<number>",
+        inherits: true,
+        initialValue: "0",
     }
 ];
 
