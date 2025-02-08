@@ -113,11 +113,10 @@ const animateByTimeline = async (source: HTMLElement, properties = {}, timeline:
     if (!source) return;
     while(true) {
         if (timeline?.changed) {
-            // в теории можно и 'Object.entries(properties)' опустить в некоторых случаях
             Object.entries(properties).forEach(([name, $v])=>{
-                const values = $v as [any, any]; // ну тут очень упрощено, на деле всё на много сложнее может быть
+                const values = $v as [any, any];
                 const linear = (values[0] * (1 - timeline.currTime) + values[1] * timeline.currTime);
-                source.style.setProperty(name, ""+linear);
+                setProperty(source, name, linear);
             });
             timeline.changed = false;
         }
