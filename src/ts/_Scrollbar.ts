@@ -69,6 +69,68 @@ const borderBoxWidth  = Symbol("@content-box-width");
 const borderBoxHeight = Symbol("@content-box-height");
 
 //
+const axisConfig = [
+    {
+        name: "x", tName: "inline",
+        cssScrollProperty: ["--scroll-left", "calc(var(--percent-x, 0) * max(calc(var(--scroll-size, 1) - var(--content-size, 1)), 0))"] as [string, string],
+        cssPercentProperty: "--percent-x",
+        //getValue: () => content.scrollLeft
+    },
+    {
+        name: "y", tName: "block",
+        cssScrollProperty: ["--scroll-top", "calc(var(--percent-y, 0) * max(calc(var(--scroll-size, 1) - var(--content-size, 1)), 0))"] as [string, string],
+        cssPercentProperty: "--percent-y",
+        //getValue: () => content.scrollTop
+    }
+];
+
+//
+const effectProperty = {
+    delay: 0,
+    fill: "both",
+    easing: "linear",
+    rangeStart: "cover 0%",
+    rangeEnd: "cover 100%",
+    duration: 1
+};
+
+//
+const makeTimeline = (source, axis: number)=>{
+    const curr = { currTime: 0, changed: true };
+
+    // 
+    source.addEventListener("scroll", ()=>{ // borderBoxWidth и borderBoxHeight происходит из ResizeObserver
+        curr.currTime = source[["scrollLeft", "scrollTop"][axis]] / Math.max((source[["scrollWidth", "scrollHeight"][axis]] || 1) - (source[[borderBoxWidth, borderBoxHeight][axis]] || 1), 1);
+        curr.changed = true;
+    });
+
+    // возвращаем объект, который изменчив
+    return curr;
+}
+
+// 
+const animateByTimeline = async (source: HTMLElement, properties = {}, timeline: any = null)=>{
+    if (!source) return;
+    while(true) {
+        if (timeline?.changed) {
+            // в теории можно и 'Object.entries(properties)' опустить в некоторых случаях
+            Object.entries(properties).forEach(([name, $v])=>{
+                const values = $v as [any, any]; // ну тут очень упрощено, на деле всё на много сложнее может быть
+                const linear = (values[0] * (1 - timeline.currTime) + values[1] * timeline.currTime);
+                source.style.setProperty(name, ""+linear);
+            });
+            timeline.changed = false;
+        }
+        await new Promise((r)=>requestAnimationFrame(r));
+    }
+};
+
+//
+const stepped = (count = 100)=>{
+    return Array.from({ length: count }, (_, i) => i / count).concat([1]);
+}
+
+//
 export class ScrollBar {
     scrollbar: HTMLDivElement;
     holder: HTMLElement;
@@ -97,50 +159,28 @@ export class ScrollBar {
         setProperty(this.scrollbar, "visibility", "collapse");
         setProperty(this.scrollbar?.querySelector?.("*"), "pointer-events", "none");
 
-        // @ts-ignore
-        const timeline = typeof ScrollTimeline != "undefined" ? new ScrollTimeline({
-            source: content,
-            axis: ["inline", "block"][axis],
-        }) : null;
+        //
+        const currAxis = axisConfig[axis];
+        const bar = this.scrollbar; // элемент скроллбара
+        const source = this.content; // просто для уменьшения
 
         //
-        const axisLab = ["x","y"][axis];
-        const scrollFn: [[string, string], [string, string]] = [
-            ["--scroll-left", "calc(var(--percent-x, 0) * max(calc(var(--scroll-size, 1) - var(--content-size, 1)), 0))"],
-            ["--scroll-top" , "calc(var(--percent-y, 0) * max(calc(var(--scroll-size, 1) - var(--content-size, 1)), 0))"]
-        ]; //{[`--percent-${axisLab}`]: "0.0"}
+        bar?.style?.setProperty(...currAxis.cssScrollProperty, "");
 
-        // just works...
-        // (currently timeline and custom properties was broken)
-        if (timeline) {
-            const bar = this.scrollbar;//?.querySelector?.("& > *");
-            bar?.style?.setProperty?.(...(scrollFn[axis]), "");
-            bar?.animate?.(
-                //{[`--percent-${axisLab}`]: [0,1]},
-                {[`--percent-${axisLab}`]: [...Array.from({length: 100}, (x, i) => (i/100)), 1]},
-            //[{[`--percent-${axisLab}`]: 0.0, "offset": 0.0}, {[`--percent-${axisLab}`]: 1.0, "offset": 1.0}],
+        // @ts-ignore
+        const native = typeof ScrollTimeline != "undefined", // @ts-ignore
+              timeline: any = native ? new ScrollTimeline({ source, axis: currAxis.tName }) : makeTimeline(source, axis);
+
+        //
+        const properties = { [currAxis.cssPercentProperty]: native ? stepped(100) : [0,1] };
+        if (native) {
             // @ts-ignore
-            { timeline, delay: 0, fill: "both", easing: "linear", rangeStart: "cover 0%", rangeEnd: "cover 100%", duration: 1 });
+            bar?.animate(properties, { ...effectProperty, timeline });
+        } else {
+            animateByTimeline(bar, properties, timeline);
         }
 
-        // if animation timeline not supported
-        if (!timeline) this.content.addEventListener("scroll", (ev)=>{
-            const self = weak?.deref?.() as any;
 
-            //
-            setProperty(
-                self?.holder,
-                "--scroll-top",
-                (self?.content?.scrollTop || "0") as string
-            );
-
-            //
-            setProperty(
-                self?.holder,
-                "--scroll-left",
-                (self?.content?.scrollLeft || "0") as string
-            );
-        });
 
         //
         const status_w = new WeakRef(this.status);
@@ -159,13 +199,9 @@ export class ScrollBar {
                 setProperty(self.scrollbar, "--scroll-size", (self.content[["scrollWidth", "scrollHeight"][axis]] || 1));
 
                 //
-                if (sizePercent >= 0.99) {
-                    setProperty(self.scrollbar, "visibility", "collapse", "important");
-                    setProperty(self.scrollbar?.querySelector?.("*"), "pointer-events", "none", "important");
-                } else {
-                    setProperty(self.scrollbar, "visibility", "visible", "important");
-                    setProperty(self.scrollbar?.querySelector?.("*"), "pointer-events", "auto", "important");
-                }
+                const pt = sizePercent >= 0.99;
+                setProperty(self.scrollbar, "visibility", pt ? "collapse" : "visible", "important");
+                setProperty(self.scrollbar?.querySelector?.("*"), "pointer-events", pt ? "none" : "auto", "important");
             }
         };
 
