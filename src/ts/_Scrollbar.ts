@@ -99,9 +99,10 @@ const makeTimeline = (source, axis: number)=>{
     const curr = { currTime: 0, changed: true };
 
     // 
-    source.addEventListener("scroll", ()=>{ // borderBoxWidth и borderBoxHeight происходит из ResizeObserver
-        curr.currTime = source[["scrollLeft", "scrollTop"][axis]] / Math.max((source[["scrollWidth", "scrollHeight"][axis]] || 1) - (source[[borderBoxWidth, borderBoxHeight][axis]] || 1), 1);
-        curr.changed = true;
+    source.addEventListener("scroll", (ev)=>{ // borderBoxWidth и borderBoxHeight происходит из ResizeObserver
+        const tg = ev.target;
+        curr.currTime = tg[["scrollLeft", "scrollTop"][axis]] / Math.max((tg[["scrollWidth", "scrollHeight"][axis]] || 1) - (tg[[borderBoxWidth, borderBoxHeight][axis]] || 1), 1);
+        curr.changed  = true;
     });
 
     // возвращаем объект, который изменчив
@@ -110,13 +111,15 @@ const makeTimeline = (source, axis: number)=>{
 
 // 
 const animateByTimeline = async (source: HTMLElement, properties = {}, timeline: any = null)=>{
+    const target = new WeakRef(source);
     if (!source) return;
     while(true) {
+        if (!target?.deref?.()) break;
         if (timeline?.changed) {
             Object.entries(properties).forEach(([name, $v])=>{
                 const values = $v as [any, any];
                 const linear = (values[0] * (1 - timeline.currTime) + values[1] * timeline.currTime);
-                setProperty(source, name, linear);
+                setProperty(target?.deref?.(), name, linear);
             });
             timeline.changed = false;
         }
