@@ -35,41 +35,42 @@ export const orientationNumberMap = {
 
 
 //
-@use "lib/LogicFb" as flg;
-@use "lib/LogicSign" as slg;
+@use "lib/Logic" as lg;
+
+
+
+// in some cases, needs PostCSS polyfill
+/*@function --oriented(--portrait type(<length>), --landscape type(<length>))
+{
+    result: var(--portrait);
+    @media (orientation: portrait)  { result: var(--portrait); };
+    @media (orientation: landscape) { result: var(--landscape); };
+};
+*/
+
 
 //
-@use "lib/Logic" as lg;
+@mixin oriented($property, $portrait, $landscape) {
+    & { #{$property}: #{$portrait}; };
+    @media (orientation: portrait)  { #{$property}: #{$portrait}; };
+    @media (orientation: landscape) { #{$property}: #{$landscape}; };
+}
+
 
 //
 @mixin compute_os_conditions {
-    // reversion condition
-    @supports (opacity: sign(0.5)) {
-        --in-rev-cond-x: calc(1 - #{lg.lor(slg.eq(var(--orient, 0), 0), slg.eq(var(--orient, 0), 1))} );
-        --in-rev-cond-y: calc(1 - #{lg.lor(slg.eq(var(--orient, 0), 0), slg.eq(var(--orient, 0), 3))} );
-    }
-
-    // reversion condition (alt)
-    @supports not (opacity: sign(0.5)){
-        --in-rev-cond-x: calc(1 - #{lg.lor(flg.eq(var(--orient, 0), 0), flg.eq(var(--orient, 0), 1))} );
-        --in-rev-cond-y: calc(1 - #{lg.lor(flg.eq(var(--orient, 0), 0), flg.eq(var(--orient, 0), 3))} );
-    }
-
     //
-    & { // compute swap condition
+    & { // reversion condition
+        --in-rev-cond-x: calc(1 - #{lg.lor(lg.eq(var(--orient, 0), 0), lg.eq(var(--orient, 0), 1))} );
+        --in-rev-cond-y: calc(1 - #{lg.lor(lg.eq(var(--orient, 0), 0), lg.eq(var(--orient, 0), 3))} );
+
+        // compute swap condition
         --in-swap-cond: rem(var(--orient, 0), 2); // for coordinate swap condition
 
         // compute as negate coefficient
         --in-rev-vx: calc(var(--in-rev-cond-x, 1) * -2 + 1);
         --in-rev-vy: calc(var(--in-rev-cond-y, 1) * -2 + 1);
     }
-}
-
-//
-@mixin native-optimized-swap-in-portrait {
-    & { --in-swap-cond: 0; };
-    @media (orientation: portrait) { --in-swap-cond: 0; };
-    @media (orientation: landscape) { --in-swap-cond: 1; };
 }
 
 //
@@ -166,19 +167,13 @@ export const orientationNumberMap = {
 
 // in client-space, depends of writing-mode...
 @mixin portrait-size {
-                                    & { --cqi: 100cqi; --cqb: 100cqb; }
-    @media (orientation: portrait)    { --cqi: 100cqi; --cqb: 100cqb; }
-    @media (orientation: landscape)   { --cqi: 100cqb; --cqb: 100cqi; }
+    --cqi: 100cqmin; //@include oriented(--cqi, 100cqi, 100cqb);
+    --cqb: 100cqmax; //@include oriented(--cqb, 100cqb, 100cqi);
 }
-
-// in client-space, depends of writing-mode...
 @mixin landscape-size {
-                                    & { --cqi: 100cqi; --cqb: 100cqb; }
-    @media (orientation: landscape)   { --cqi: 100cqi; --cqb: 100cqb; }
-    @media (orientation: portrait)    { --cqi: 100cqb; --cqb: 100cqi; }
+    --cqi: 100cqmax; //@include oriented(--cqi, 100cqb, 100cqi);
+    --cqb: 100cqmin; //@include oriented(--cqb, 100cqi, 100cqb);
 }
-
-
 
 //
 @mixin init-os-size-by-native {
@@ -197,20 +192,17 @@ export const orientationNumberMap = {
 //
 @mixin centered-self($transforms: null) {
     transform-origin: 0% 0%;
-    transform: 
+    transform:
         #{$transforms}
-        scale3d(var(--scale, 1), var(--scale, 1), var(--scale, 1)) 
-        translate3d(
-            round(nearest, calc(var(--translate-x, 0px) - 50%), calc(1px / var(--pixel-ratio, 1))),
-            round(nearest, calc(var(--translate-y, 0px) - 50%), calc(1px / var(--pixel-ratio, 1))),
-            0px
-        );
+        scale3d(var(--scale, 1), var(--scale, 1), var(--scale, 1))
+        perfect-translate(calc(var(--translate-x, 0px) - 50%), calc(var(--translate-y, 0px) - 50%));
     place-self: center;
 }
 
 //
 @mixin centered-with-offset {
-    @include centered-self("translate(round(nearest, var(--cs-drag-x, 0px), calc(1px / var(--pixel-ratio, 1))), round(nearest, var(--cs-drag-y, 0px), calc(1px / var(--pixel-ratio, 1))))");
+    $translate: perfect-translate(var(--cs-drag-x, 0px), var(--cs-drag-y, 0px));
+    @include centered-self($translate);
 }
 
 //
@@ -220,13 +212,10 @@ export const orientationNumberMap = {
 
 
 
+
 //
 @mixin use_dvp {
     & { --avi: 100dvmin; --avb: 100dvmax; };
-    @media (orientation: portrait)  { --avi: 100dvi; --avb: 100dvb; };
-    @media (orientation: landscape) { --avi: 100dvb; --avb: 100dvi; };
-
-    //
     & {
         --vp-i-size: var(--avi, 100dvmin);
         --vp-b-size: var(--avb, 100dvmax);
@@ -236,53 +225,49 @@ export const orientationNumberMap = {
 //
 @mixin use_lvp {
     & { --avi: 100lvmin; --avb: 100lvmax; };
-    @media (orientation: portrait)  { --avi: 100lvi; --avb: 100lvb; };
-    @media (orientation: landscape) { --avi: 100lvb; --avb: 100lvi; };
-
-    //
     & {
         --vp-i-size: var(--avi, 100lvmin);
         --vp-b-size: var(--avb, 100lvmax);
     }
 }
 
+
+//
+@mixin when-fullscreen($selector: &) {
+    @media (display-mode: fullscreen) { @content; }
+    @at-root :fullscreen #{$selector} { @content; }
+}
+
+
 //
 @mixin vp-vars {
     @include use_dvp();
-    @media (display-mode: fullscreen) or (display-mode: standalone) { @include use_lvp(); };
-    @at-root :fullscreen & { @include use_lvp(); };
-
-    //
-    @media (display-mode: fullscreen) or (display-mode: standalone) {
-        --vp-i-size: var(--avail-width , 100dvmin);
-        --vp-b-size: var(--avail-height, 100dvmax);
-        //--vp-i-size: min(var(--avail-width , 100dvmin), var(--avi, 100dvmin));
-        //--vp-b-size: min(var(--avail-height, 100dvmax), var(--avb, 100dvmax));
-    };
-
-    //
-    @at-root :fullscreen & {
-        --vp-i-size: var(--avail-width , 100dvmin);
-        --vp-b-size: var(--avail-height, 100dvmax);
-        //--vp-i-size: min(var(--avail-width , 100dvmin), var(--avi, 100dvmin));
-        //--vp-b-size: min(var(--avail-height, 100dvmax), var(--avb, 100dvmax));
-    };
+    @include when-fullscreen() {
+        @include use_lvp();
+        & {
+            --vp-i-size: var(--avail-width , 100dvmin);
+            --vp-b-size: var(--avail-height, 100dvmax);
+        }
+    }
 };
+
 
 //
 @mixin fit-viewport {
     @include vp-vars;
-
-    //
-                                  & { inline-size: var(--vp-i-size, 100lvi); block-size: var(--vp-b-size, 100lvb); };
-    @media (orientation: portrait)  { inline-size: var(--vp-i-size, 100lvi); block-size: var(--vp-b-size, 100lvb); };
-    @media (orientation: landscape) { inline-size: var(--vp-b-size, 100lvi); block-size: var(--vp-i-size, 100lvb); };
-
-    //
-                                  & { max-inline-size: var(--vp-i-size, 100lvi); max-block-size: var(--vp-b-size, 100lvb); };
-    @media (orientation: portrait)  { max-inline-size: var(--vp-i-size, 100lvi); max-block-size: var(--vp-b-size, 100lvb); };
-    @media (orientation: landscape) { max-inline-size: var(--vp-b-size, 100lvi); max-block-size: var(--vp-i-size, 100lvb); };
+    & {
+        @include oriented(inline-size, var(--vp-i-size, 100lvi), var(--vp-b-size, 100lvb));
+        @include oriented(block-size, var(--vp-b-size, 100lvb), var(--vp-i-size, 100lvi));
+        @include oriented(max-inline-size, var(--vp-i-size, 100lvi), var(--vp-b-size, 100lvb));
+        @include oriented(max-block-size, var(--vp-b-size, 100lvb), var(--vp-i-size, 100lvi));
+    }
 };
+
+
+@function perfect-translate($x: 0px, $y: 0px) {
+    @return translate3d(round(nearest, #{$x}, calc(1px / var(--pixel-ratio, 1))), round(nearest, #{$y}, calc(1px / var(--pixel-ratio, 1))), 0)
+}
+
 
 //
 @layer ux-agate {
@@ -298,7 +283,7 @@ export const orientationNumberMap = {
             transition-behavior: allow-discrete;
             interpolate-size: allow-keywords;
             content-visibility: auto;
-            
+
             //
             --keyboard-inset-bottom: calc(max(env(keyboard-inset-bottom, 0px), 0px) / max(var(--zoom, 1), 0.125));
             --keyboard-inset-height: calc(max(env(keyboard-inset-height, 0px), 0px) / max(var(--zoom, 1), 0.125));
@@ -397,17 +382,13 @@ export const orientationNumberMap = {
         }
 
         //
-        ui-frame, ui-modal, .ui-grid-item
-        {
+        ui-frame, ui-modal, .ui-grid-item {
             & {
                 isolation: isolate;
                 content-visibility: auto;
                 transform-origin: 50% 50%;
-                transform: 
-                    translate3d(
-                        round(nearest, var(--translate-x, 0%), calc(1px / var(--pixel-ratio, 1))), 
-                        round(nearest, var(--translate-y, 0%), calc(1px / var(--pixel-ratio, 1)))
-                        , 0) 
+                transform:
+                    perfect-translate(var(--translate-x, 0%), var(--translate-y, 0%))
                     scale3d(var(--scale, 1), var(--scale, 1), var(--scale, 1));
                 translate: 0% 0% 0%;
                 opacity: var(--opacity, 1);
@@ -481,7 +462,7 @@ export const orientationNumberMap = {
             }
 
             //
-            & > :where(*), 
+            & > :where(*),
             & :where(ui-frame, .u2-grid-item, ui-modal)
             {
                 @include compute_os_conditions;
@@ -529,103 +510,11 @@ export const orientationNumberMap = {
                 place-self: start;
                 contain: none;
             }
-
-            //
-            & {
-                --hide-nav-fact: 0px; // if immersive
-                //--hide-nav-fact: 3rem; //navbar factor
-            }
-
-            //
-            & {
-                // according of status-bar area (default)
-                --hide-cutout-fact: clamp(0px, max(
-                    max(
-                        env(safe-area-inset-top, 0px),
-                        env(safe-area-inset-left, 0px)
-                    ),
-                    max(
-                        env(safe-area-inset-right, 0px),
-                        env(safe-area-inset-bottom, 0px)
-                    )
-                ), 2rem);
-
-                // hide any status bars when possible
-                --hide-status-fact: clamp(0px, max(
-                    max(
-                        env(safe-area-inset-top, 0px),
-                        env(safe-area-inset-left, 0px)
-                    ),
-                    max(
-                        env(safe-area-inset-right, 0px),
-                        env(safe-area-inset-bottom, 0px)
-                    )
-                ), 2rem);
-            };
-
-            //
-            @media (display-mode: browser) {
-                @at-root :not(:fullscreen) & {
-                    --hide-cutout-fact: 0px; // may not hidden
-                    --hide-status-fact: 0px; // practically always hidden
-                }
-            }
-
-            //
-            @media (display-mode: fullscreen) or (display-mode: window-controls-overlay) {
-                --hide-cutout-fact: 0px; // may not hidden
-                --hide-status-fact: 0px; // practically always hidden
-            };
-
-            //
-            @at-root :fullscreen & {
-                & { --hide-status-fact: 0px; }; // practically always hidden
-                //@media not ((hover: none) and (pointer: coarse)) {
-                    & { --hide-cutout-fact: 0px; }; // fix in desktop
-                //};
-            };
-
-            //
-            /*#viewport, #background {
-
-                // apply orientation modifiers
-                @media (orientation: portrait)  {
-                    inset-block-end: clamp(
-                        min(var(--hide-cutout-fact, 0px) , var(--hide-status-fact, 0px)),
-                        calc(var(--hide-cutout-fact, 0px) + var(--hide-status-fact, 0px)),
-                        max(var(--hide-cutout-fact, 0px) , var(--hide-status-fact, 0px))
-                    ) !important;
-                };
-    
-                //
-                @media (orientation: landscape) {
-                    & {
-                        inset-block-end : var(--hide-status-fact, 0px) !important;
-                        inset-inline-start: auto !important;
-                    };
-    
-                    //
-                    & {
-                        inset-inline-end: var(--hide-cutout-fact, 0px) !important;
-                    };
-    
-                    //
-                    @container root style(--secondary: 0) {
-                        inset-inline-end: var(--hide-cutout-fact, 0px) !important;
-                    };
-    
-                    //
-                    @container root style(--secondary: 1) {
-                        inset-inline-end: var(--hide-nav-fact, 0px) !important;
-                    };
-                };
-                
-            };*/
         };
 
         //
         .native-portrait-optimized {
-            @include native-optimized-swap-in-portrait;
+            @include oriented(--in-swap-cond, 0, 1);
         };
 
     };

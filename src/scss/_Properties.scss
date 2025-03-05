@@ -3,7 +3,7 @@
 {
     //
     @scope(:root, :host, :scope)
-    {   
+    {
         @property --ppx { syntax: "<length-percentage>"; initial-value: 1px; inherits: true; };
         @property --zpx { syntax: "<length-percentage>"; initial-value: 1px; inherits: true; };
 
@@ -35,7 +35,7 @@
         //
         @property --border-width  { syntax: "<length-percentage>"; initial-value: 100%; inherits: true; };
         @property --border-height { syntax: "<length-percentage>"; initial-value: 100%; inherits: true; };
-        
+
         //
         @property --pixel-ratio { syntax: "<number>"; initial-value: 1; inherits: true; };
 
@@ -46,10 +46,10 @@
         //
         @property --avail-width  { syntax: "<length-percentage>"; initial-value: 100dvi; inherits: true; };
         @property --avail-height { syntax: "<length-percentage>"; initial-value: 100dvb; inherits: true; };
-        
+
         //
         @property --view-height  { syntax: "<length-percentage>"; initial-value: 100dvb; inherits: true; };
-    
+
         //
         @property --keyboard-inset-bottom { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
         @property --keyboard-inset-height { syntax: "<length-percentage>"; initial-value: 0px; inherits: true; };
