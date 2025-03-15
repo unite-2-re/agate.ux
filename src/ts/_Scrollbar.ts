@@ -26,8 +26,8 @@ export const observeBorderBox = (element, cb) => {
 
         //
         cb?.({
-            inlineSize: element.offsetWidth,
-            blockSize: element.offsetHeight,
+            inlineSize: element?.offsetWidth || 1,
+            blockSize: element?.offsetHeight || 1,
         }, observer);
 
         //
@@ -49,6 +49,7 @@ export interface ScrollBarStatus {
 
 //
 export const setProperty = (target, name, value, importance = "")=>{
+    if (!target) return;
     if ("attributeStyleMap" in target) {
         const raw = target.attributeStyleMap.get(name);
         const prop = raw?.[0] ?? raw?.value;
@@ -98,7 +99,7 @@ const effectProperty = {
 const makeTimeline = (source, axis: number)=>{
     const curr = { currTime: 0, changed: true };
 
-    // 
+    //
     source.addEventListener("scroll", (ev)=>{ // borderBoxWidth и borderBoxHeight происходит из ResizeObserver
         const tg = ev.target;
         curr.currTime = tg[["scrollLeft", "scrollTop"][axis]] / Math.max((tg[["scrollWidth", "scrollHeight"][axis]] || 1) - (tg[[borderBoxWidth, borderBoxHeight][axis]] || 1), 1);
@@ -109,7 +110,7 @@ const makeTimeline = (source, axis: number)=>{
     return curr;
 }
 
-// 
+//
 const animateByTimeline = async (source: HTMLElement, properties = {}, timeline: any = null)=>{
     const target = new WeakRef(source);
     if (!source) return;
@@ -191,14 +192,14 @@ export class ScrollBar {
             const self = weak?.deref?.();
             if (self) {
                 const sizePercent = Math.max(Math.min(
-                    (self.content[[borderBoxWidth, borderBoxHeight][axis]] || 1) /
-                    (self.content[["scrollWidth", "scrollHeight"][axis]] || 1),
+                    (self.content?.[[borderBoxWidth, borderBoxHeight][axis]] || 1) /
+                    (self.content?.[["scrollWidth", "scrollHeight"][axis]] || 1),
                     1
                 ), 0);
 
                 //
                 setProperty(self.scrollbar, "--scroll-coef", sizePercent);
-                setProperty(self.scrollbar, "--scroll-size", (self.content[["scrollWidth", "scrollHeight"][axis]] || 1));
+                setProperty(self.scrollbar, "--scroll-size", (self?.content?.[["scrollWidth", "scrollHeight"][axis]] || 1));
 
                 //
                 const pt = sizePercent >= 0.99;
@@ -307,14 +308,18 @@ export class ScrollBar {
         this.holder.addEventListener("change", computeScroll);
 
         // inputs support also needed...
-        (new MutationObserver(computeScroll)).observe(this.holder, { childList: true, subtree: true, characterData: true, attributes: false });
-        requestIdleCallback(computeScroll, {timeout: 100});
-        observeBorderBox(this.content, (box) => {
-            const self = weak?.deref?.();
-            if (self) {
-                setProperty(self.scrollbar, "--content-size", self.content[[borderBoxWidth, borderBoxHeight][axis]] = box[["inlineSize", "blockSize"][axis]]);
-                computeScroll();
+        if (this.holder?.["@target"] || this.holder) {
+            (new MutationObserver(computeScroll)).observe(this.holder, { childList: true, subtree: true, characterData: true, attributes: false });
+            requestIdleCallback(computeScroll, {timeout: 100});
+            if (this.content) {
+                observeBorderBox(this.content, (box) => {
+                    const self = weak?.deref?.();
+                    if (self) {
+                        setProperty(self.scrollbar, "--content-size", self.content[[borderBoxWidth, borderBoxHeight][axis]] = box[["inlineSize", "blockSize"][axis]]);
+                        computeScroll();
+                    }
+                });
             }
-        });
+        }
     }
 }

@@ -51,8 +51,10 @@ export class UIOrientBox extends HTMLElement {
 
         //
         shadowRoot.appendChild(style);
-        this.style.setProperty("--orient", this.getAttribute("orient") || "0");
-        this.style.setProperty("--zoom", this.getAttribute("zoom") || "1");
+        requestAnimationFrame(()=>{
+            this.style.setProperty("--orient", this.getAttribute("orient") || "0");
+            this.style.setProperty("--zoom", this.getAttribute("zoom") || "1");
+        });
 
         //
         const size = this.size;

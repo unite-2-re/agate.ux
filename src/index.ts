@@ -44,7 +44,8 @@ export const whenAnyScreenChanges = (cb)=>{
     document?.documentElement.addEventListener("fullscreenchange", cb, {passive: true });
     matchMedia("(orientation: portrait)").addEventListener("change", cb, {passive: true });
     requestIdleCallback(cb, {timeout: 100});
-    cb();
+    requestAnimationFrame(cb);
+    //cb();
 };
 
 // @ts-ignore
