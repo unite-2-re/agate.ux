@@ -1,6 +1,9 @@
 import { zoomOf } from "./_Zoom.js";
 import "./sw/Properties.js";
 
+// @ts-ignore
+import {observeBySelector} from "/externals/lib/dom.js";
+
 //
 export const UUIDv4 = () => {
     return crypto?.randomUUID ? crypto?.randomUUID() : "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c => (+c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (+c / 4)))).toString(16));
@@ -205,6 +208,11 @@ export class ScrollBar {
                 const pt = sizePercent >= 0.99;
                 setProperty(self.scrollbar, "visibility", pt ? "collapse" : "visible", "important");
                 setProperty(self.scrollbar?.querySelector?.("*"), "pointer-events", pt ? "none" : "auto", "important");
+
+                //
+                const className = "has-scroll-" + ["x", "y"][axis];
+                if (!pt && !self.holder.classList.contains(className)) { self.holder.classList.add(className); } else
+                if ( pt &&  self.holder.classList.contains(className)) { self.holder.classList.remove(className); };
             }
         };
 
@@ -309,8 +317,9 @@ export class ScrollBar {
 
         // inputs support also needed...
         if (this.holder?.["@target"] || this.holder) {
-            (new MutationObserver(computeScroll)).observe(this.holder, { childList: true, subtree: true, characterData: true, attributes: false });
+            observeBySelector(this.holder, "*", computeScroll);
             requestIdleCallback(computeScroll, {timeout: 100});
+            requestAnimationFrame(computeScroll);
             if (this.content) {
                 observeBorderBox(this.content, (box) => {
                     const self = weak?.deref?.();
