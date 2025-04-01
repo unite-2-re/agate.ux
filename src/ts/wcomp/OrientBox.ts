@@ -7,6 +7,10 @@ import html from "./OrientBox.html?raw";
 //
 const preInit = URL.createObjectURL(new Blob([styles], {type: "text/css"}));
 
+// @ts-ignore /* @vite-ignore */
+import {importCdn} from "/externals/modules/cdnImport.mjs";
+export {importCdn};
+
 //
 export const elementPointerMap = new WeakMap<any>()
 export class UIOrientBox extends HTMLElement {
@@ -31,8 +35,7 @@ export class UIOrientBox extends HTMLElement {
         const shadowRoot = this.attachShadow({mode: "open"});
 
         // @ts-ignore
-        const THEME_URL = "/externals/core/theme.js";
-        import(/* @vite-ignore */ "" + `${THEME_URL}`).then((module)=>{
+        Promise.try(importCdn, ["/externals/core/theme.js"]).then((module)=>{
             // @ts-ignore
             this.#themeStyle = module?.default?.(this.shadowRoot);
             if (this.#themeStyle) { this.shadowRoot?.appendChild?.(this.#themeStyle); }
@@ -101,5 +104,5 @@ export class UIOrientBox extends HTMLElement {
 }
 
 //
-customElements.define("ui-orientbox", UIOrientBox);
+try { customElements.define("ui-orientbox", UIOrientBox); } catch(e) {};
 export default UIOrientBox;

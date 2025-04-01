@@ -1,8 +1,9 @@
 import { zoomOf } from "./_Zoom.js";
 import "./sw/Properties.js";
 
-// @ts-ignore
-import {observeBySelector} from "/externals/lib/dom.js";
+// @ts-ignore /* @vite-ignore */
+import {importCdn} from "/externals/modules/cdnImport.mjs";
+export {importCdn};
 
 //
 export const UUIDv4 = () => {
@@ -317,7 +318,12 @@ export class ScrollBar {
 
         // inputs support also needed...
         if (this.holder?.["@target"] || this.holder) {
-            observeBySelector(this.holder, "*", computeScroll);
+            // @ts-ignore
+            Promise.try(importCdn, ["/externals/lib/dom.js"])?.then?.(({observeBySelector})=>{
+                observeBySelector?.(this.holder, "*", computeScroll);
+            });
+
+            //
             requestIdleCallback(computeScroll, {timeout: 100});
             requestAnimationFrame(computeScroll);
             if (this.content) {

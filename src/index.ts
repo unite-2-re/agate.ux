@@ -1,6 +1,9 @@
-// @ts-ignore
-import { loadBlobStyle } from "/externals/lib/dom.js";
+//
 export type StyleTuple = [selector: string, sheet: object];
+
+// @ts-ignore /* @vite-ignore */
+import {importCdn} from "/externals/modules/cdnImport.mjs";
+export {importCdn};
 
 //
 import { updateVP } from "./ts/sw/Viewport";
@@ -50,10 +53,15 @@ export const whenAnyScreenChanges = (cb)=>{
 
 // @ts-ignore
 import styles from "./scss/_Main.scss?inline&compress";
+export const preInit = URL.createObjectURL(new Blob([styles], {type: "text/css"}));
 
 //
-const initialize = ()=>{
-    loadBlobStyle(styles);
+const initialize = async ()=>{
+    // @ts-ignore
+    const {loadBlobStyle} = await Promise.try(importCdn, ["/externals/lib/dom.js"]);
+
+    //
+    loadBlobStyle(preInit);
     whenAnyScreenChanges(updateVP);
 };
 

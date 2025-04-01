@@ -40,7 +40,9 @@ export const agWrapEvent = (cb)=>{
         if (!el) { return cb(ev); }; //
 
         //
-        const {pointerCache, pointerMap} = elementPointerMap.get(el);
+        let {pointerCache, pointerMap} = elementPointerMap?.get?.(el) || { pointerCache: new Map<number, any>(), pointerMap: new Map<number, any>() };
+
+        //
         const zoom: number = zoomOf(ev?.target || el) || 1;
         const coord: [number, number] = [(ev?.clientX || 0) / zoom, (ev?.clientY || 0) / zoom];
         const cache: any = pointerCache?.get?.(ev?.pointerId || 0) || {
@@ -49,6 +51,11 @@ export const agWrapEvent = (cb)=>{
             boundingBox: null,
             movement: [0, 0]
         };
+
+        //
+        if (!elementPointerMap?.get?.(el)) {
+            elementPointerMap?.set?.(el, { pointerMap, pointerCache });
+        }
 
         //
         cache.delta = [cache.client[0], cache.client[1]];
@@ -97,8 +104,8 @@ export const agWrapEvent = (cb)=>{
 
         //
         if (ev?.type == "contextmenu" || ev?.type == "click" || ev?.type == "pointerup" || ev?.type == "pointercancel") {
-            pointerMap.delete(ev?.pointerId || 0);
-            pointerCache.delete(ev?.pointerId || 0);
+            pointerMap?.delete?.(ev?.pointerId || 0);
+            pointerCache?.delete?.(ev?.pointerId || 0);
             if (ev?.type == "pointercancel") {
                 pointer?.release?.();
             }
