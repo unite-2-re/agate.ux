@@ -317,8 +317,8 @@ export const orientationNumberMap = {
             block-size: max-content;
 
             //
-            max-inline-size: none;
-            max-block-size: none;
+            max-inline-size: var(--screen-width, 100dvi) !important;
+            max-block-size: var(--screen-height, 100dvb) !important;
 
             //
             place-content: start;
@@ -370,6 +370,10 @@ export const orientationNumberMap = {
                 //
                 inline-size: 100%;
                 block-size: 100%;
+
+                //
+                max-inline-size: var(--screen-width, 100dvi) !important;
+                max-block-size: var(--screen-height, 100dvb) !important;
             }
 
             //
@@ -378,6 +382,10 @@ export const orientationNumberMap = {
                 place-self: safe center;
                 grid-column: 1 / 1 span;
                 grid-row: 1 / 1 span;
+
+                //
+                max-inline-size: min(var(--screen-width, 100dvi), 100%) !important;
+                max-block-size: min(var(--screen-height, 100dvb), 100%) !important;
             }
         }
 
@@ -445,6 +453,10 @@ export const orientationNumberMap = {
                 //
                 writing-mode: horizontal-tb !important;
                 direction: ltr !important;
+
+                //
+                max-inline-size: min(var(--screen-width, 100dvi), 100%) !important;
+                max-block-size: min(var(--screen-height, 100dvb), 100%) !important;
             }
 
             // by default, won't support rtl/vertical

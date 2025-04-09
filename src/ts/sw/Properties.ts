@@ -1,6 +1,18 @@
 //
 export const properties = [
     {
+        name: "--screen-width",
+        syntax: "<length-percentage>",
+        inherits: true,
+        initialValue: "0px",
+    },
+    {
+        name: "--screen-height",
+        syntax: "<length-percentage>",
+        inherits: true,
+        initialValue: "0px",
+    },
+    {
         name: "--visual-width",
         syntax: "<length-percentage>",
         inherits: true,
